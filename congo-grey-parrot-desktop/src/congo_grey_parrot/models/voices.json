@@ -1,0 +1,56 @@
+[
+  {
+    "id": "pt_BR-faber-medium",
+    "name": "Faber",
+    "language": "pt_BR",
+    "language_label": "Português (Brasil)",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx.json"
+  },
+  {
+    "id": "en_US-lessac-medium",
+    "name": "Lessac",
+    "language": "en_US",
+    "language_label": "Inglês (Estados Unidos)",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json"
+  },
+  {
+    "id": "de_DE-thorsten-medium",
+    "name": "Thorsten",
+    "language": "de_DE",
+    "language_label": "Alemão",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json"
+  },
+  {
+    "id": "es_ES-davefx-medium",
+    "name": "Davefx",
+    "language": "es_ES",
+    "language_label": "Espanhol",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx.json"
+  },
+  {
+    "id": "fr_FR-siwis-medium",
+    "name": "Siwis",
+    "language": "fr_FR",
+    "language_label": "Francês",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx.json"
+  },
+  {
+    "id": "it_IT-riccardo-x_low",
+    "name": "Riccardo",
+    "language": "it_IT",
+    "language_label": "Italiano",
+    "quality": "x_low",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx.json"
+  }
+]

@@ -1,0 +1,14 @@
+.venv/
+dist/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.env
+*.onnx
+*.wav
+.idea/
+.vscode/
+congo-grey-parrot-android/.gradle/
+congo-grey-parrot-android/**/build/
+congo-grey-parrot-android/local.properties

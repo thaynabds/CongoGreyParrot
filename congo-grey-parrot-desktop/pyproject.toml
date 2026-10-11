@@ -1,0 +1,40 @@
+[project]
+name = "congo-grey-parrot"
+version = "0.1.0"
+description = "Transcrição, leitura em voz alta, legendas, tradução e conversão de mídia, com salvamento local dos arquivos."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "PySide6>=6.7",
+    "numpy>=1.26",
+    "python-docx>=1.1",
+    "fpdf2>=2.7",
+    "pypdf>=5.0",
+]
+
+[project.optional-dependencies]
+transcribe = ["faster-whisper>=1.1.0"]
+speech = ["piper-tts>=1.2.0"]
+dev = ["pytest>=8.2"]
+
+[project.scripts]
+congo-grey-parrot = "congo_grey_parrot.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"congo_grey_parrot.models" = ["voices.json"]
+"congo_grey_parrot.ui" = ["assets/*.png", "assets/*.ico"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["congo_grey_parrot"]
+omit = ["*/ui/*", "*/main.py", "*/__main__.py"]
