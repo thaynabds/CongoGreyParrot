@@ -10,5 +10,6 @@ __pycache__/
 .idea/
 .vscode/
 congo-grey-parrot-android/.gradle/
+congo-grey-parrot-android/.kotlin/
 congo-grey-parrot-android/**/build/
 congo-grey-parrot-android/local.properties

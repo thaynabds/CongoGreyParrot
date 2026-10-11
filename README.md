@@ -2,14 +2,16 @@
 
 Dois programas locais, independentes, com o nome científico *Psittacus erithacus*. Um roda no computador. O outro é o aplicativo de celular. Nenhum dos dois exige conta nem servidor próprio.
 
-Não há instalador nem APK publicado neste momento. A tabela abaixo aponta para o código de cada um, que é o que existe para obter o programa.
+O repositório e o commit estão em [github.com/thaynabds/CongoGreyParrot](https://github.com/thaynabds/CongoGreyParrot).
 
-| Programa | Onde roda | Download |
+Nesta máquina já existem o programa de Linux e um APK de teste. Não há instalador de Windows, porque esse pacote só pode ser gerado no próprio Windows. Fonte: [PyInstaller](https://pyinstaller.org/en/stable/usage.html).
+
+| Programa | Onde roda | Arquivo |
 |---|---|---|
-| Congo Grey Parrot para computador | Windows e Linux | [Código do computador](congo-grey-parrot-desktop/). Não há arquivo de instalação publicado. |
-| Congo Grey Parrot para celular | Android | [Código do celular](congo-grey-parrot-android/). Não há APK publicado. |
+| Congo Grey Parrot para computador | Linux | Pasta local `congo-grey-parrot-desktop/dist/congo-grey-parrot/`. O instalador está em [instalar-linux.sh](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-desktop/instalar-linux.sh). |
+| Congo Grey Parrot para celular | Android 8 ou mais novo | [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk). É um APK de teste, assinado com a chave de depuração, não o pacote da Play Store. |
 
-A descrição longa do que o projeto pretende cobrir, com as fontes do Whisper e do Parolu, está em [docs/DESCRICAO.md](docs/DESCRICAO.md).
+A descrição longa do que o projeto pretende cobrir, com as fontes do Whisper e do Parolu, está em [docs/DESCRICAO.md](https://github.com/thaynabds/CongoGreyParrot/blob/main/docs/DESCRICAO.md).
 
 ## Computador
 

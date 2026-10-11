@@ -1,6 +1,6 @@
 # Congo Grey Parrot para computador
 
-O quadro completo dos dois programas, com o que cada um faz, está no [README da pasta principal](../README.md).
+O quadro completo dos dois programas, com o que cada um faz, está no [README da pasta principal](https://github.com/thaynabds/CongoGreyParrot/blob/main/README.md).
 
 Windows e Linux. Transcreve com faster-whisper, lê com Piper ou espeak-ng, exporta legendas e documentos, e converte mídia com FFmpeg. Salvar abre o seletor de nome e pasta. Baixar modelo ou voz também pede a pasta antes.
 
