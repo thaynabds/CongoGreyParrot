@@ -27,7 +27,11 @@ pip install -e ".[transcribe,speech,dev]"
 congo-grey-parrot
 ```
 
-No Windows, o ambiente é `.venv\Scripts\activate`. FFmpeg e espeak-ng são opcionais e vêm do sistema. O instalador do FFmpeg está em [ffmpeg.org/download.html](https://ffmpeg.org/download.html).
+No Windows, o ambiente é `.venv\Scripts\activate`. No Linux, a janela exige `libxcb-cursor0` a partir do Qt 6.5. FFmpeg e espeak-ng são opcionais e vêm do sistema. O instalador do FFmpeg está em [ffmpeg.org/download.html](https://ffmpeg.org/download.html). A exigência da biblioteca do cursor está em [Linux Requirements](https://doc.qt.io/qt-6/linux-requirements.html).
+
+```bash
+sudo apt install libxcb-cursor0 ffmpeg espeak-ng
+```
 
 | Tela | O que faz |
 |---|---|
