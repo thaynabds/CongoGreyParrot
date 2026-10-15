@@ -1,14 +1,18 @@
 # Project Congo Grey Parrot
 
-Dois programas locais, independentes, com o nome científico *Psittacus erithacus*. Um roda no computador. O outro é o aplicativo de celular. Nenhum dos dois exige conta nem servidor próprio.
+Quatro programas independentes, nomeados a partir do *Psittacus erithacus*. Cada um tem pasta, ambiente e dados próprios. Nenhum depende dos outros para funcionar.
 
-O bot de Discord faz parte deste mesmo projeto e deste mesmo repositório, mas é um programa separado. Ele tem pasta, ambiente e dados próprios. Abrir o programa de computador ou o celular não liga o bot, e ligar o bot não abre esses programas. O token fica só na máquina, fora do Git.
+**Autora:** [Thayná Batista da Silva](https://github.com/thaynabds)
+**Repositório:** [github.com/thaynabds/CongoGreyParrot](https://github.com/thaynabds/CongoGreyParrot)
 
-As anotações de reunião também fazem parte do projeto e também são um programa separado, na pasta `congo-grey-parrot-reunioes`. Elas não abrem o bot, a janela nem o celular.
+| Programa | Plataforma | Instalar |
+|---|---|---|
+| Computador | Linux | `./instalar.sh 1` |
+| Celular | Android 8 ou mais novo | `./instalar.sh 2` |
+| Bot de Discord | Servidor de Discord | `./instalar.sh 3` |
+| Anotações de reunião | Linux, sobre arquivos exportados do Teams, Meet ou Zoom | `./instalar.sh 4` |
 
-O repositório e o commit estão em [github.com/thaynabds/CongoGreyParrot](https://github.com/thaynabds/CongoGreyParrot).
-
-Nesta máquina já existem o programa de Linux e um APK de teste. Não há instalador de Windows, porque esse pacote só pode ser gerado no próprio Windows. Fonte: [PyInstaller](https://pyinstaller.org/en/stable/usage.html).
+A descrição completa do que o Whisper e o Piper fazem, com as fontes, está em [docs/DESCRICAO.md](https://github.com/thaynabds/CongoGreyParrot/blob/main/docs/DESCRICAO.md).
 
 ## Instalar
 
@@ -18,40 +22,31 @@ Na pasta deste repositório, no Linux:
 ./instalar.sh
 ```
 
-O script pergunta qual solução você quer. Também dá para escolher direto: `./instalar.sh 1` para o computador, `2` para o celular, `3` para o Discord e `4` para as reuniões. Cada uma continua sendo um programa separado.
-
-| Programa | Onde roda | Arquivo |
-|---|---|---|
-| Congo Grey Parrot para computador | Linux | `./instalar.sh 1`, na pasta `congo-grey-parrot-desktop`. |
-| Congo Grey Parrot para celular | Android 8 ou mais novo | [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk). É um APK de teste, assinado com a chave de depuração, não o pacote da Play Store. |
-| Bot de Discord, separado dos dois programas | Servidor de Discord, processo próprio no computador | Pasta `congo-grey-parrot-discord`. Não faz parte da janela nem do aplicativo de celular. |
-| Anotações de reunião, outro braço separado | Neste computador, sobre arquivos do Teams, do Meet ou de outra reunião | Pasta `congo-grey-parrot-reunioes`. Não entra na conta da reunião. |
-
-A descrição longa do que o projeto pretende cobrir, com as fontes do Whisper e do Parolu, está em [docs/DESCRICAO.md](https://github.com/thaynabds/CongoGreyParrot/blob/main/docs/DESCRICAO.md).
+O script pergunta qual programa instalar. Também dá para escolher direto: `./instalar.sh 1` para o computador, `2` para o celular, `3` para o Discord e `4` para as reuniões.
 
 ## Computador
 
-Transcreve com faster-whisper, lê texto com Piper ou espeak-ng, traduz fala para inglês, edita legenda, converte mídia com FFmpeg e grava documentos. O áudio e o texto ficam no computador. A rede só entra quando a pessoa confirma o download de um modelo ou de uma voz.
+Programa de desktop para Linux. Transcreve fala para texto com faster-whisper, lê texto em voz alta com Piper ou espeak-ng, traduz fala para inglês, edita legendas, converte mídia com FFmpeg e lida com documentos TXT, Markdown, DOCX e PDF. O áudio e o texto ficam no computador. A rede só é usada quando a pessoa confirma o download de um modelo ou de uma voz.
 
-No Linux, `./instalar.sh 1` cria o ambiente, instala a transcrição e a leitura, e coloca o programa no menu. A janela exige `libxcb-cursor0` a partir do Qt 6.5. O script também instala FFmpeg e espeak-ng quando eles faltam. A exigência da biblioteca do cursor está em [Linux Requirements](https://doc.qt.io/qt-6/linux-requirements.html). O instalador do FFmpeg está em [ffmpeg.org/download.html](https://ffmpeg.org/download.html).
+`./instalar.sh 1` cria o ambiente Python, instala as dependências e coloca o atalho no menu do sistema. A janela exige `libxcb-cursor0` a partir do Qt 6.5, documentado em [Linux Requirements](https://doc.qt.io/qt-6/linux-requirements.html). FFmpeg e espeak-ng são instalados automaticamente se estiverem faltando.
 
 | Tela | O que faz |
 |---|---|
-| Início | Abre as outras funções. |
-| Transcrever | Transcreve um ou vários arquivos. Detecta o idioma ou usa o idioma escolhido. Salva TXT, MD, DOCX, PDF, SRT, VTT, ASS, TSV, JSON ou JSONL. |
-| Texto para voz | Abre texto, lê, para, ajusta velocidade e salva WAV. MP3 e outros formatos só se o FFmpeg estiver instalado. |
-| Traduzir | Traduz fala para inglês com modelo multilíngue. O modelo turbo não entra nessa tarefa. |
-| Legendas | Edita tempos e texto, e pode gravar a legenda no vídeo. |
-| Converter mídia | Converte o arquivo para o formato escolhido. |
+| Início | Abre as outras telas. |
+| Transcrever | Transcreve um ou vários arquivos. Detecta o idioma ou usa o idioma definido. Salva TXT, MD, DOCX, PDF, SRT, VTT, ASS, TSV, JSON ou JSONL. |
+| Texto para voz | Abre texto, lê em voz alta, pausa, ajusta velocidade e salva WAV. MP3 e outros formatos exigem FFmpeg. |
+| Traduzir | Traduz fala para inglês com modelo multilíngue. O modelo turbo não aparece nessa tarefa. |
+| Legendas | Edita tempos e texto, incorpora faixa de legenda no vídeo ou grava a legenda na imagem. |
+| Converter mídia | Converte o arquivo para o formato escolhido via FFmpeg. |
 | Documentos | Abre TXT, Markdown, DOCX ou PDF com texto selecionável e salva de novo. |
-| Biblioteca | Lista a pasta de saída e permite gravar uma cópia em outro lugar. |
-| Modelos e vozes | Baixa ou remove modelo de transcrição e voz Piper. A pasta é escolhida antes do download. |
+| Biblioteca | Lista a pasta de saída e permite copiar arquivos para outro lugar. |
+| Modelos e vozes | Baixa ou remove modelo de transcrição e voz Piper. A pasta de destino é escolhida antes do download. |
 | Histórico | Mostra as exportações feitas neste computador. Limpar o histórico não apaga os arquivos. |
-| Configurações | Tema claro, escuro, alto contraste, Kuro, PinkVoid, RedVoid ou YellowVoid. Também há filtro de cor, tamanho da letra e pasta padrão de saída. |
+| Configurações | Tema claro, escuro, alto contraste, Kuro, PinkVoid, RedVoid ou YellowVoid. Filtro de cor, tamanho da letra e pasta padrão de saída. |
 
-Cada resultado abre o seletor de arquivo. A pessoa escolhe nome e pasta. O modelo de transcrição e a voz também pedem a pasta antes de baixar.
+Cada resultado abre o seletor de arquivo. O modelo de transcrição e a voz pedem a pasta antes de baixar.
 
-Os testes locais:
+Testes locais:
 
 ```bash
 pytest
@@ -59,35 +54,104 @@ pytest
 
 ## Celular
 
-O aplicativo grava, lê e guarda arquivos no aparelho. Não transcreve com Whisper. A gravação pode ser salva e aberta depois no programa de computador.
+Aplicativo Android para gravar áudio pelo microfone, ler texto em voz alta com uma voz offline e guardar arquivos no aparelho. Não transcreve com Whisper. Uma gravação salva pode ser aberta depois no programa de computador para transcrição.
+
+Para instalar, copie [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk) para um Android 8 ou mais novo e abra o arquivo. Se o sistema bloquear, permita a instalação por esse aplicativo, conforme a [documentação do Google](https://support.google.com/android/answer/2664792?hl=pt-BR). `./instalar.sh 2` mostra o mesmo passo a passo.
+
+O APK foi gerado pela linha de comando com o plugin Android Gradle 8.5.2. Para gerar de novo: `cd congo-grey-parrot-android && ./gradlew assembleDebug`. Documentação da montagem: [developer.android.com/build](https://developer.android.com/build).
 
 | Tela | O que faz |
 |---|---|
 | Início | Atalhos para gravar, ler e ver arquivos. |
-| Gravar | Grava pelo microfone. Depois da gravação, a pessoa escolhe a pasta e o nome. |
-| Ler | Lê o texto com uma voz instalada que não usa a rede. Ajusta a velocidade. Salvar texto e salvar áudio abrem o seletor do Android. |
+| Gravar | Grava pelo microfone. Depois da gravação, escolhe pasta e nome. |
+| Ler | Lê texto com uma voz instalada que não usa a rede. Ajusta velocidade. Salvar texto e salvar áudio abrem o seletor do Android. |
 | Arquivos | Lista as cópias guardadas no aplicativo, compartilha ou exclui. |
 | Ajustes | Tema claro, escuro, alto contraste, Kuro, PinkVoid, RedVoid ou YellowVoid, e filtro de cor. |
 
-O microfone só é pedido quando a gravação começa. O aplicativo não pede acesso a todo o armazenamento e não tem permissão de internet. O backup automático está desligado.
-
-Para instalar no celular, copie [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk) para um Android 8 ou mais novo e abra o arquivo. Se o sistema bloquear, permita a instalação por esse aplicativo, como explica o [Google](https://support.google.com/android/answer/2664792?hl=pt-BR). `./instalar.sh 2` mostra o mesmo caminho. Esse APK foi gerado em 15 de outubro de 2026 pela linha de comando, com o plugin Android Gradle 8.5.2, sem abrir o Android Studio. Ele inclui os botões de ajuda para instalar uma voz offline. Para gerar de novo neste computador: `cd congo-grey-parrot-android && ./gradlew assembleDebug`. A montagem do projeto Android está em [developer.android.com/build](https://developer.android.com/build).
+O microfone só é pedido quando a gravação começa. O aplicativo não pede acesso amplo ao armazenamento e não tem permissão de internet. O backup automático está desligado.
 
 ## Discord
 
-O bot faz parte do Project Congo Grey Parrot, na pasta `congo-grey-parrot-discord`, e não é a janela do computador nem o aplicativo de celular. Ele entra na chamada, transcreve ao vivo com o nome de quem falou e resume o que cada pessoa disse e quando. Com `/vtt conectar` ele guarda o link ou o webhook de uma mesa virtual, esteja ela na lista ou não. O bot não entra na conta dessas plataformas. Também rola dados, guarda ficha, iniciativa, presença, inventário e XP, toca sons locais e envia imagens. Cada função liga e desliga. A transcrição ao vivo começa desligada.
+Bot para servidores de Discord. Entra no canal de voz, transcreve ao vivo com o nome de quem falou, resume reuniões, toca áudio de várias fontes, rola dados, guarda fichas, iniciativa, presença, inventário e XP, conecta mesas virtuais e consulta regras na Open5e.
 
-A consulta de magia e monstro não copia o livro. Ela pergunta à [Open5e](https://open5e.com/) e cita a fonte. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications). A recepção de áudio da chamada usa [discord-ext-voice-recv](https://github.com/imayhaveborkedit/discord-ext-voice-recv).
+Cada função liga e desliga individualmente com `/funcoes ativar` e `/funcoes desativar`. A transcrição ao vivo começa desligada.
 
-`./instalar.sh 3` cria o ambiente e, se ainda não existir, o arquivo `.env`. Se o Ubuntu disser que falta `python3.12-venv`, o script instala esse pacote. Abra o `.env`, cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`, e ligue o bot com `congo-grey-parrot-discord/iniciar.sh`. O programa lê o `.env` sozinho. Não commite o `.env`.
+`./instalar.sh 3` cria o ambiente, instala as dependências e gera o arquivo `.env` se ainda não existir. Abra o `.env`, cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`, e ligue o bot com `congo-grey-parrot-discord/iniciar.sh`. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications).
 
-`/vtt`, `/dados` e os outros comandos com barra se digitam no Discord, no servidor, depois que o bot estiver online. Eles não são comandos do terminal. Para uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`.
+Os comandos com `/` se digitam no Discord, dentro do servidor, depois que o bot estiver online. Não são comandos do terminal.
+
+Para adicionar uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`. Veja `plugins/eco.py` como exemplo mínimo.
+
+### Funções principais
+
+| Grupo de comando | Função |
+|---|---|
+| `/dados` | Rolagem de dados com expressões como `2d6+3`, vantagem, desvantagem, percentil e pool. |
+| `/ficha` | Guarda e rola atributos por jogador. |
+| `/iniciativa` | Ordem de turno com adicionar, próximo e limpar. |
+| `/regra` | Consulta magia ou monstro na Open5e, com citação da fonte. |
+| `/som` | Toca arquivos de áudio locais no canal de voz: fundo em repetição ou efeito sobre o fundo. |
+| `/sessao` | Agenda sessões com botões de presença: confirmado, atrasado ou ausente. |
+| `/grupo` | Inventário compartilhado: itens, ouro e XP. |
+| `/reuniao` | Entra na chamada, transcreve ao vivo com o nome de cada pessoa e gera resumo. |
+| `/arquivo` | Transcreve um áudio enviado ou lê um texto com espeak-ng. |
+| `/vtt` | Conecta uma mesa virtual por link ou webhook. |
+| `/funcoes` | Liga, desliga, adiciona ou remove funções. |
+| `/musica` | Toca áudio no canal de voz: YouTube, Spotify, lista de reprodução salva ou arquivo enviado. |
+
+### Música no canal de voz
+
+O bot toca áudio do YouTube e do Spotify usando [yt-dlp](https://github.com/yt-dlp/yt-dlp). Para habilitar, instale o extra e ative a função:
+
+```bash
+pip install "congo-grey-parrot-discord[musica]"
+```
+
+Depois, no Discord:
+
+```
+/funcoes ativar musica
+```
+
+| Comando | O que faz |
+|---|---|
+| `/musica tocar <link ou busca>` | Toca um link do YouTube ou Spotify, ou busca por nome. Adiciona à fila se algo já estiver tocando. |
+| `/musica arquivo` | Toca um arquivo de áudio enviado diretamente no comando. Formatos suportados pelo FFmpeg. |
+| `/musica pular` | Pula a faixa atual. |
+| `/musica parar` | Para tudo, esvazia a fila e sai do canal. |
+| `/musica fila` | Mostra as faixas na fila. |
+| `/musica playlist criar <nome>` | Cria uma lista de reprodução nomeada para este servidor. |
+| `/musica playlist adicionar <nome> <link>` | Adiciona uma faixa a uma lista de reprodução. |
+| `/musica playlist tocar <nome>` | Coloca todas as faixas de uma lista na fila e começa a tocar. |
+| `/musica playlist ver <nome>` | Mostra as faixas de uma lista. |
+| `/musica playlist remover <nome> <posicao>` | Remove uma faixa da lista pelo número de posição. |
+| `/musica playlist apagar <nome>` | Apaga uma lista de reprodução inteira. |
+| `/musica playlist listar` | Mostra todas as listas criadas neste servidor. |
+
+As listas de reprodução são salvas por servidor em `playlists.json` na pasta de dados do bot. Cada lista pode ter quantas faixas quiser e ser editada a qualquer momento.
+
+O Spotify não disponibiliza o áudio diretamente. O bot extrai o nome da faixa e busca no YouTube via yt-dlp. FFmpeg precisa estar instalado para reprodução: [ffmpeg.org/download.html](https://ffmpeg.org/download.html).
+
+### Transcrição ao vivo
+
+A recepção de áudio da chamada usa [discord-ext-voice-recv](https://github.com/imayhaveborkedit/discord-ext-voice-recv). Transcrição local com faster-whisper: [github.com/SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper). Para habilitar:
+
+```bash
+pip install "congo-grey-parrot-discord[voz,transcribe]"
+```
+
+Depois ative no Discord:
+
+```
+/funcoes ativar reuniao
+/reuniao entrar
+```
 
 ## Reuniões
 
-Este braço anota quem falou o que no Teams, no Google Meet, no Zoom, no Webex, no Jitsi ou em qualquer outro nome de reunião. Ele não entra na chamada. O nome vem da transcrição que a própria plataforma deixa baixar. A ajuda do Teams está em [legendas e transcrição](https://learn.microsoft.com/microsoftteams/meeting-transcription-captions). A do Meet está em [transcrições do Google Meet](https://support.google.com/meet/answer/12849897).
+Anota quem falou o que em reuniões do Teams, Google Meet, Zoom, Webex, Jitsi ou qualquer plataforma que exporte transcrição. O programa não entra na chamada. Ele lê o arquivo de transcrição que a plataforma disponibiliza para download.
 
-Um áudio gravado só pelo microfone não separa as pessoas. Nesse caso a anotação fica como gravação local.
+Um áudio gravado só pelo microfone não separa os participantes. Nesse caso, a anotação fica como gravação local sem identificação de locutor.
 
 Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-grey-parrot-reunioes`:
 
@@ -97,7 +161,76 @@ Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-g
 ./congo-reunioes notas
 ```
 
-`./instalar.sh 4` também coloca `congo-reunioes` em `~/.local/bin`. A transcrição de áudio é que pede `python3.12-venv`, como explica a documentação do [venv](https://docs.python.org/3/library/venv.html).
+`./instalar.sh 4` também coloca `congo-reunioes` em `~/.local/bin`. A transcrição de áudio é que exige o ambiente virtual, como explica a documentação do [venv](https://docs.python.org/3/library/venv.html).
+
+Ajuda para exportar a transcrição: [Teams](https://learn.microsoft.com/microsoftteams/meeting-transcription-captions) e [Google Meet](https://support.google.com/meet/answer/12849897).
+
+## Acesso por IA
+
+Todos os programas foram projetados para ser instalados, configurados e usados por agentes de IA ou por pessoas, sem diferença no fluxo.
+
+### Instalação automatizada
+
+```bash
+# Instala todos os programas
+./instalar.sh 1
+./instalar.sh 3
+./instalar.sh 4
+
+# Ou todos de uma vez, sem interação
+for i in 1 3 4; do echo $i | ./instalar.sh; done
+```
+
+### Computador, via linha de comando
+
+```bash
+cd congo-grey-parrot-desktop
+source .venv/bin/activate
+
+# Transcrever um arquivo
+python -m congo_grey_parrot transcribe audio.mp3 --output_dir ./saida --output_format txt
+
+# Ler texto em voz alta e salvar WAV
+python -m congo_grey_parrot speak "Olá, mundo." --output saida.wav
+
+# Traduzir fala para inglês
+python -m congo_grey_parrot translate audio.mp3 --output_dir ./saida
+```
+
+### Anotações de reunião, via CLI
+
+```bash
+# Listar plataformas suportadas
+./congo-reunioes plataformas
+
+# Importar transcrição
+./congo-reunioes importar reuniao.vtt --plataforma teams
+
+# Ver notas salvas
+./congo-reunioes notas
+
+# Saída em JSON para processamento por IA
+./congo-reunioes notas --formato json
+```
+
+### Bot de Discord, via API REST
+
+O bot expõe os resultados no Discord, que tem API REST pública. Um agente de IA pode usar a API do Discord para enviar comandos de barra ao bot e ler as respostas, autenticando com um token de usuário ou de bot.
+
+Referência: [Discord REST API](https://discord.com/developers/docs/reference).
+
+### Android, via ADB
+
+```bash
+# Instalar o APK
+adb install congo-grey-parrot-android/CongoGreyParrot-debug.apk
+
+# Iniciar o aplicativo
+adb shell am start -n io.github.thaynabds.congogreyparrot/.MainActivity
+
+# Enviar arquivo de texto para o aplicativo
+adb push texto.txt /sdcard/Download/texto.txt
+```
 
 ## Onde os arquivos vão
 
@@ -106,10 +239,11 @@ Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-g
 | Salvar texto, áudio, legenda, documento ou conversão | Seletor com nome e pasta | Seletor do Android com nome e pasta |
 | Baixar modelo ou voz | Seletor de pasta, antes do download | Esta versão não baixa modelo nem voz |
 | Cópia interna | A pasta padrão fica em Configurações | A lista Arquivos guarda uma cópia na pasta privada do aplicativo |
+| Listas de reprodução do bot | `~/.local/share/congo-grey-parrot-discord/playlists.json` | Não se aplica |
 
 ## Licenças e fontes
 
-O código destes programas ainda não tem uma licença de distribuição escolhida.
+O código deste projeto ainda não tem uma licença de distribuição escolhida.
 
 - Whisper, licença MIT: [github.com/openai/whisper](https://github.com/openai/whisper)
 - faster-whisper: [github.com/SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper)
@@ -117,6 +251,7 @@ O código destes programas ainda não tem uma licença de distribuição escolhi
 - Vozes, cada uma com o próprio MODEL_CARD: [huggingface.co/rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices)
 - Parolu, referência de leitura local: [github.com/wbernard/parolu](https://github.com/wbernard/parolu)
 - FFmpeg: [ffmpeg.org](https://ffmpeg.org/)
+- yt-dlp: [github.com/yt-dlp/yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - Seletor de arquivo do Android: [CreateDocument](https://developer.android.com/reference/androidx/activity/result/contract/ActivityResultContracts.CreateDocument)
 - Discord, comandos de aplicativo: [discord.py interactions](https://discordpy.readthedocs.io/en/stable/interactions/api.html)
 - Open5e: [open5e.com](https://open5e.com/)

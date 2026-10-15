@@ -10,6 +10,7 @@ dependencies = [
 [project.optional-dependencies]
 voz = ["discord-ext-voice-recv>=0.5"]
 transcribe = ["faster-whisper>=1.1.0"]
+musica = ["yt-dlp>=2024.1"]
 dev = ["pytest>=8.2"]
 
 [project.scripts]
