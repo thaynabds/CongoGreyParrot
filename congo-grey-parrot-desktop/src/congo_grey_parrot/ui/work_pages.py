@@ -76,23 +76,26 @@ class HomePage(QWidget):
         layout.addLayout(row)
         self.status = QLabel()
         self.status.setWordWrap(True)
+        self.status.setTextFormat(Qt.TextFormat.RichText)
+        self.status.setOpenExternalLinks(True)
+        self.status.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         layout.addWidget(self.status)
         layout.addStretch(1)
         self.refresh()
 
     def refresh(self) -> None:
-        lines = ["Componentes neste computador:"]
-        lines.append(self._line("Transcrição faster-whisper", bool(self.session.transcription.engine_name())))
-        lines.append(self._line("Biblioteca Piper", "piper" in self.session.speech.available_engines()))
-        lines.append(self._line("espeak-ng", "espeak-ng" in self.session.speech.available_engines()))
         from congo_grey_parrot.media.ffmpeg_service import find_ffmpeg
+        from congo_grey_parrot.ui.setup_hints import component_html
 
-        lines.append(self._line("FFmpeg", find_ffmpeg() is not None))
-        self.status.setText("\n".join(lines))
-
-    @staticmethod
-    def _line(name: str, present: bool) -> str:
-        return f"{name}: {'disponível' if present else 'ausente'}"
+        engines = self.session.speech.available_engines()
+        self.status.setText(
+            component_html(
+                bool(self.session.transcription.engine_name()),
+                "piper" in engines,
+                "espeak-ng" in engines,
+                find_ffmpeg() is not None,
+            )
+        )
 
 
 class TranscribePage(QWidget):

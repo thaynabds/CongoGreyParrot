@@ -27,6 +27,20 @@ def test_xcb_cursor_message_skips_offscreen(monkeypatch):
     assert xcb_cursor_message() is None
 
 
+def test_missing_component_explains_the_install(tmp_path):
+    from congo_grey_parrot.ui.setup_hints import component_html
+
+    text = component_html(True, False, True, False)
+    assert "faster-whisper:</b> disponível" in text
+    assert "Biblioteca Piper:</b> ausente" in text
+    assert "pip install piper-tts" in text
+    assert "https://github.com/OHF-Voice/piper1-gpl" in text
+    assert "espeak-ng:</b> disponível" in text
+    assert "sudo apt install espeak-ng" not in text
+    assert "sudo apt install ffmpeg" in text
+    assert "https://ffmpeg.org/download.html" in text
+
+
 def test_launcher_uses_the_parrot_icon(tmp_path):
     source = icon_path()
     assert source.is_file()

@@ -1,7 +1,10 @@
 package org.congogreyparrot.ui
 
 import android.Manifest
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,6 +37,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -120,15 +124,55 @@ private fun Mark(@DrawableRes icon: Int, description: String, size: Int = 24) {
     )
 }
 
+private const val VOICE_HELP = "https://support.google.com/accessibility/android/answer/6006983?hl=pt-BR"
+
+private fun openVoiceHelp(context: android.content.Context) {
+    val settings = Intent("com.android.settings.TTS_SETTINGS").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    try {
+        context.startActivity(settings)
+    } catch (_: ActivityNotFoundException) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(VOICE_HELP)))
+    }
+}
+
 @Composable
 private fun HomeScreen(onOpen: (String) -> Unit) {
+    val context = LocalContext.current
+    val reader = remember { LocalReader(context) }
+    var voiceNote by remember { mutableStateOf("Verificando a voz instalada neste aparelho.") }
+    var voiceReady by remember { mutableStateOf(false) }
+    DisposableEffect(reader) {
+        reader.onChanged = {
+            voiceReady = reader.ready
+            voiceNote = reader.notice
+        }
+        voiceReady = reader.ready
+        if (reader.notice.isNotBlank()) {
+            voiceNote = reader.notice
+        }
+        onDispose {
+            reader.onChanged = null
+            reader.shutdown()
+        }
+    }
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Text("Congo Grey Parrot", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
         Text(
             "Grave, leia em voz alta e guarde os arquivos neste aparelho.",
-            modifier = Modifier.padding(top = 6.dp, bottom = 16.dp),
+            modifier = Modifier.padding(top = 6.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurface,
         )
+        Text(voiceNote, style = MaterialTheme.typography.bodyMedium)
+        if (!voiceReady) {
+            TextButton(onClick = { openVoiceHelp(context) }) {
+                Text("Abrir configurações de voz")
+            }
+            TextButton(onClick = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(VOICE_HELP)))
+            }) {
+                Text("Como instalar uma voz offline")
+            }
+        }
         ActionCard(
             icon = R.drawable.ic_mic,
             title = "Gravar áudio",
@@ -277,6 +321,7 @@ private fun ReadScreen() {
     var text by remember { mutableStateOf("") }
     var speed by remember { mutableFloatStateOf(1f) }
     var message by remember { mutableStateOf("A voz escolhida não usa a rede. Ao salvar, você escolhe a pasta.") }
+    var voiceReady by remember { mutableStateOf(false) }
     var pendingAudio by remember { mutableStateOf<File?>(null) }
     val saveText = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
         if (uri == null) {
@@ -307,7 +352,17 @@ private fun ReadScreen() {
             pendingAudio = file
             Handler(Looper.getMainLooper()).post { saveAudio.launch(file.name) }
         }
-        onDispose { reader.shutdown() }
+        reader.onChanged = {
+            voiceReady = reader.ready
+            if (!reader.ready && reader.notice.isNotBlank()) {
+                message = reader.notice
+            }
+        }
+        voiceReady = reader.ready
+        onDispose {
+            reader.onChanged = null
+            reader.shutdown()
+        }
     }
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
@@ -370,6 +425,16 @@ private fun ReadScreen() {
             Text("  Salvar áudio")
         }
         Text(message, modifier = Modifier.padding(top = 12.dp))
+        if (!voiceReady) {
+            TextButton(onClick = { openVoiceHelp(context) }) {
+                Text("Abrir configurações de voz")
+            }
+            TextButton(onClick = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(VOICE_HELP)))
+            }) {
+                Text("Como instalar uma voz offline")
+            }
+        }
     }
 }
 

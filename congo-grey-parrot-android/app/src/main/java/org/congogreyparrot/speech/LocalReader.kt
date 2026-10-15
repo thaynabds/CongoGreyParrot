@@ -1,6 +1,8 @@
 package org.congogreyparrot.speech
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import java.io.File
@@ -13,11 +15,13 @@ class LocalReader(context: Context) : TextToSpeech.OnInitListener {
     var notice: String = ""
         private set
     var onFileReady: ((File) -> Unit)? = null
+    var onChanged: (() -> Unit)? = null
 
     override fun onInit(status: Int) {
         if (status != TextToSpeech.SUCCESS) {
             ready = false
-            notice = "O motor de voz do Android não iniciou."
+            notice = "O motor de voz do Android não iniciou. Abra as configurações de texto para fala e escolha um mecanismo instalado."
+            notifyChanged()
             return
         }
         engine.language = Locale("pt", "BR")
@@ -27,12 +31,19 @@ class LocalReader(context: Context) : TextToSpeech.OnInitListener {
             ?: offline.firstOrNull()
         if (chosen == null) {
             ready = false
-            notice = "Não há voz instalada que funcione sem internet."
+            notice = "Não há voz instalada que funcione sem internet. Nas configurações de texto para fala, baixe uma voz em português que não use a rede."
+            notifyChanged()
             return
         }
         engine.voice = chosen
         ready = true
-        notice = ""
+        notice = "Voz offline disponível neste aparelho."
+        notifyChanged()
+    }
+
+    private fun notifyChanged() {
+        val callback = onChanged ?: return
+        Handler(Looper.getMainLooper()).post { callback() }
     }
 
     fun speak(text: String, speed: Float) {
