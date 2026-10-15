@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QMainWindow,
     QPushButton,
+    QScrollArea,
+    QSizePolicy,
     QStackedWidget,
     QVBoxLayout,
     QWidget,
@@ -28,12 +30,26 @@ from congo_grey_parrot.ui.widgets import TaskPanel
 from congo_grey_parrot.ui.work_pages import HomePage, SpeechPage, SubtitlePage, TranscribePage, TranslatePage
 
 
+class _FitArea(QScrollArea):
+    def minimumSizeHint(self) -> QSize:  # noqa: N802
+        return QSize(480, 320)
+
+
 class MainWindow(QMainWindow):
     def __init__(self, session):
         super().__init__()
         self.session = session
         self.setWindowTitle("Project Congo Grey Parrot")
-        self.resize(1200, 760)
+        self.setWindowFlags(
+            Qt.WindowType.Window
+            | Qt.WindowType.WindowTitleHint
+            | Qt.WindowType.WindowSystemMenuHint
+            | Qt.WindowType.WindowMinimizeButtonHint
+            | Qt.WindowType.WindowMaximizeButtonHint
+            | Qt.WindowType.WindowCloseButtonHint
+        )
+        self.setMinimumSize(720, 480)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.stack = QStackedWidget()
         self.home = HomePage(session)
         self.transcribe = TranscribePage(session)
@@ -93,17 +109,40 @@ class MainWindow(QMainWindow):
         layout.addWidget(nav)
         layout.addWidget(self.stack, 1)
         layout.addWidget(tasks)
-        nav.setFixedWidth(236)
+        nav.setMinimumWidth(180)
+        nav.setMaximumWidth(236)
         self._apply_nav_icons()
         session.bus.theme_changed.connect(self._apply_nav_icons)
-        tasks.setFixedWidth(260)
-        self.setCentralWidget(root)
+        tasks.setMinimumWidth(180)
+        tasks.setMaximumWidth(260)
+        scroll = _FitArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setWidget(root)
+        self.setCentralWidget(scroll)
+        self._fit_to_screen()
         self._apply_saved_filter()
         session.bus.open_page.connect(self.show_page)
         session.bus.import_files.connect(self._import)
         session.bus.open_speech_text.connect(self._speech_text)
         session.bus.open_subtitles.connect(self._subtitles)
         session.bus.history_changed.connect(self.home.refresh)
+
+    def minimumSizeHint(self) -> QSize:  # noqa: N802
+        return QSize(720, 480)
+
+    def _fit_to_screen(self) -> None:
+        from PySide6.QtWidgets import QApplication
+
+        screen = self.screen() or QApplication.primaryScreen()
+        if screen is None:
+            self.resize(1100, 700)
+            return
+        area = screen.availableGeometry()
+        self.resize(
+            min(1100, max(self.minimumWidth(), area.width() - 48)),
+            min(700, max(self.minimumHeight(), area.height() - 48)),
+        )
 
     def _apply_saved_filter(self) -> None:
         from PySide6.QtWidgets import QApplication
