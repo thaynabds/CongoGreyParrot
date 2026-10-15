@@ -2,7 +2,7 @@
 
 **Nome oficial:** Project Congo Grey Parrot  
 **Referência científica do nome:** *Psittacus erithacus*  
-**Produtos:** aplicação Desktop para Windows e Linux, e aplicativo Android independente, distribuído como APK.  
+**Produtos:** janela no Linux, APK Android, bot de Discord e anotações de reunião. Cada um é um programa separado, no mesmo repositório.  
 **Princípio de arquivo:** toda operação que produzir um resultado em arquivo oferece salvar, exportar ou baixar, no nome e na pasta escolhidos pela pessoa. Nada é enviado à nuvem sem autorização explícita.
 
 O Desktop e o Android não dependem um do outro, nem de conta, nem de servidor próprio. Depois que os modelos e as vozes necessários estiverem instalados, o uso básico é local.
