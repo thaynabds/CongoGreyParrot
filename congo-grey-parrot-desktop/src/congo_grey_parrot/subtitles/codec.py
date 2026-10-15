@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
 from congo_grey_parrot.core.errors import AppError
 from congo_grey_parrot.core.transcript import Segment, Transcript, transcript_from_dict
@@ -169,6 +170,25 @@ def render_jsonl(transcript: Transcript) -> str:
             )
         )
     return "\n".join(rows) + ("\n" if rows else "")
+
+
+def load_subtitle_file(path: Path) -> Transcript:
+    suffix = path.suffix.lower()
+    if suffix in {".ass", ".ssa"}:
+        raise AppError("ASS e SSA ainda não abrem nesta tela. Use SRT, VTT ou JSON.")
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise AppError("O arquivo não está em UTF-8.") from exc
+    except OSError as exc:
+        raise AppError(f"Não foi possível ler o arquivo. {exc}") from exc
+    if suffix == ".vtt":
+        return parse_vtt(raw)
+    if suffix == ".json":
+        return parse_transcript_json(raw, path.name)
+    if suffix == ".srt":
+        return parse_srt(raw)
+    raise AppError("Formato de legenda não suportado. Use SRT, VTT ou JSON.")
 
 
 def parse_srt(text: str) -> Transcript:

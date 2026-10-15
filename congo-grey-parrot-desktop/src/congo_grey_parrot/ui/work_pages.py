@@ -633,18 +633,12 @@ class SubtitlePage(QWidget):
         path = ask_open(self, "Legenda (*.srt *.vtt *.json)")
         if path is None:
             return
-        from congo_grey_parrot.subtitles.codec import parse_srt, parse_transcript_json, parse_vtt
+        from congo_grey_parrot.subtitles.codec import load_subtitle_file
 
         try:
-            raw = path.read_text(encoding="utf-8")
-            if path.suffix.lower() == ".srt":
-                transcript = parse_srt(raw)
-            elif path.suffix.lower() == ".vtt":
-                transcript = parse_vtt(raw)
-            else:
-                transcript = parse_transcript_json(raw, path.name)
-        except (AppError, UnicodeDecodeError) as exc:
-            warn(self, str(exc) if isinstance(exc, AppError) else "O arquivo não está em UTF-8.")
+            transcript = load_subtitle_file(path)
+        except AppError as exc:
+            warn(self, str(exc))
             return
         self.load_transcript(transcript)
 

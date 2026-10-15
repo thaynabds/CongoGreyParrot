@@ -156,12 +156,14 @@ class MainWindow(QMainWindow):
             self.show_page("documents")
 
     def _open_subtitle_file(self, path: Path) -> None:
-        from congo_grey_parrot.subtitles.codec import parse_srt, parse_vtt
+        from congo_grey_parrot.core.errors import AppError
+        from congo_grey_parrot.subtitles.codec import load_subtitle_file
+        from congo_grey_parrot.ui.dialogs import warn
 
         try:
-            raw = path.read_text(encoding="utf-8")
-            transcript = parse_vtt(raw) if path.suffix.lower() == ".vtt" else parse_srt(raw)
-        except Exception:
+            transcript = load_subtitle_file(path)
+        except AppError as exc:
+            warn(self, str(exc))
             return
         self.subtitles.load_transcript(transcript)
         self.show_page("subtitles")

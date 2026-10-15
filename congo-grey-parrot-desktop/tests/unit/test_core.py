@@ -12,6 +12,7 @@ from congo_grey_parrot.persistence.database import Database
 from congo_grey_parrot.speech.service import SpeechService, espeak_command, piper_length_scale
 from congo_grey_parrot.subtitles.codec import (
     CaptionOptions,
+    load_subtitle_file,
     parse_srt,
     parse_timestamp,
     render_json,
@@ -54,6 +55,20 @@ def test_validate_translation_models():
         validate_options(TranscribeOptions(model="small.en", language="pt"))
     with pytest.raises(AppError):
         validate_options(TranscribeOptions(clip_start=4, clip_end=2))
+
+
+def test_load_subtitle_file_explains_broken_and_unsupported(tmp_path: Path):
+    broken = tmp_path / "ruim.srt"
+    broken.write_text("isto nao e legenda\n", encoding="utf-8")
+    with pytest.raises(AppError, match="Não encontrei legendas"):
+        load_subtitle_file(broken)
+    ass = tmp_path / "cena.ass"
+    ass.write_text("Dialogue: 0,0:00:00.00,0:00:01.00,Default,oi\n", encoding="utf-8")
+    with pytest.raises(AppError, match="ASS e SSA"):
+        load_subtitle_file(ass)
+    good = tmp_path / "ok.srt"
+    good.write_text(render_srt(sample()), encoding="utf-8")
+    assert load_subtitle_file(good).segments
 
 
 def test_timestamps_and_captions(tmp_path: Path):
