@@ -1,3 +1,4 @@
+import os
 import random
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from congo_discord.domain.names import fantasy_name
 from congo_discord.domain.rules import spell_text
 from congo_discord.domain.summary import Utterance, render_meeting
 from congo_discord.domain.vtt_catalog import find_vtt
+from congo_discord.service.envfile import load_env_file
 from congo_discord.service.vtt_bridge import check_table_url, post_event
 from congo_discord.persistence.store import Store
 from congo_discord.service.meeting_audio import MeetingAudio
@@ -110,3 +112,13 @@ def test_audio_helpers_and_names():
     assert flushed and flushed[0][0] == "Ana"
     report = update_report(Path("/tmp/nao-e-repo-congo"), False)
     assert "Git" in report or "git" in report.lower()
+
+
+def test_env_file_fills_only_missing_keys(tmp_path, monkeypatch):
+    monkeypatch.delenv("DISCORD_TOKEN", raising=False)
+    monkeypatch.setenv("CONGO_DISCORD_OWNER_ID", "ja-definido")
+    path = tmp_path / ".env"
+    path.write_text('DISCORD_TOKEN="abc"\nCONGO_DISCORD_OWNER_ID=outro\n# comentario\n\n', encoding="utf-8")
+    load_env_file(path)
+    assert os.environ["DISCORD_TOKEN"] == "abc"
+    assert os.environ["CONGO_DISCORD_OWNER_ID"] == "ja-definido"

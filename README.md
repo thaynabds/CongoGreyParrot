@@ -10,9 +10,19 @@ O repositório e o commit estão em [github.com/thaynabds/CongoGreyParrot](https
 
 Nesta máquina já existem o programa de Linux e um APK de teste. Não há instalador de Windows, porque esse pacote só pode ser gerado no próprio Windows. Fonte: [PyInstaller](https://pyinstaller.org/en/stable/usage.html).
 
+## Instalar
+
+Na pasta deste repositório, no Linux:
+
+```bash
+./instalar.sh
+```
+
+O script pergunta qual solução você quer. Também dá para escolher direto: `./instalar.sh 1` para o computador, `2` para o celular, `3` para o Discord e `4` para as reuniões. Cada uma continua sendo um programa separado.
+
 | Programa | Onde roda | Arquivo |
 |---|---|---|
-| Congo Grey Parrot para computador | Linux | Pasta local `congo-grey-parrot-desktop/dist/congo-grey-parrot/`. O instalador está em [instalar-linux.sh](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-desktop/instalar-linux.sh). |
+| Congo Grey Parrot para computador | Linux | `./instalar.sh 1`, na pasta `congo-grey-parrot-desktop`. |
 | Congo Grey Parrot para celular | Android 8 ou mais novo | [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk). É um APK de teste, assinado com a chave de depuração, não o pacote da Play Store. |
 | Bot de Discord, separado dos dois programas | Servidor de Discord, processo próprio no computador | Pasta `congo-grey-parrot-discord`. Não faz parte da janela nem do aplicativo de celular. |
 | Anotações de reunião, outro braço separado | Neste computador, sobre arquivos do Teams, do Meet ou de outra reunião | Pasta `congo-grey-parrot-reunioes`. Não entra na conta da reunião. |
@@ -23,21 +33,7 @@ A descrição longa do que o projeto pretende cobrir, com as fontes do Whisper e
 
 Transcreve com faster-whisper, lê texto com Piper ou espeak-ng, traduz fala para inglês, edita legenda, converte mídia com FFmpeg e grava documentos. O áudio e o texto ficam no computador. A rede só entra quando a pessoa confirma o download de um modelo ou de uma voz.
 
-Para abrir a partir do código:
-
-```bash
-cd congo-grey-parrot-desktop
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[transcribe,speech,dev]"
-congo-grey-parrot
-```
-
-No Windows, o ambiente é `.venv\Scripts\activate`. No Linux, a janela exige `libxcb-cursor0` a partir do Qt 6.5. FFmpeg e espeak-ng são opcionais e vêm do sistema. O instalador do FFmpeg está em [ffmpeg.org/download.html](https://ffmpeg.org/download.html). A exigência da biblioteca do cursor está em [Linux Requirements](https://doc.qt.io/qt-6/linux-requirements.html).
-
-```bash
-sudo apt install libxcb-cursor0 ffmpeg espeak-ng
-```
+No Linux, `./instalar.sh 1` cria o ambiente, instala a transcrição e a leitura, e coloca o programa no menu. A janela exige `libxcb-cursor0` a partir do Qt 6.5. O script também instala FFmpeg e espeak-ng quando eles faltam. A exigência da biblioteca do cursor está em [Linux Requirements](https://doc.qt.io/qt-6/linux-requirements.html). O instalador do FFmpeg está em [ffmpeg.org/download.html](https://ffmpeg.org/download.html).
 
 | Tela | O que faz |
 |---|---|
@@ -75,7 +71,7 @@ O aplicativo grava, lê e guarda arquivos no aparelho. Não transcreve com Whisp
 
 O microfone só é pedido quando a gravação começa. O aplicativo não pede acesso a todo o armazenamento e não tem permissão de internet. O backup automático está desligado.
 
-Para gerar o APK, abra a pasta `congo-grey-parrot-android` no [Android Studio](https://developer.android.com/studio).
+Para instalar no celular, copie [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk) para um Android 8 ou mais novo e abra o arquivo. Se o sistema bloquear, permita a instalação por esse aplicativo, como explica o [Google](https://support.google.com/android/answer/2664792?hl=pt-BR). `./instalar.sh 2` mostra o mesmo caminho. Esse APK foi gerado em 10 de outubro de 2026. Os botões de ajuda para instalar uma voz offline estão no código e ainda não nesse arquivo. Para tê-los no celular, abra a pasta `congo-grey-parrot-android` no [Android Studio](https://developer.android.com/studio) e gere o APK de novo. A tentativa de gerar aqui não baixou o plugin Android Gradle 8.5.2.
 
 ## Discord
 
@@ -83,15 +79,7 @@ O bot faz parte do Project Congo Grey Parrot, na pasta `congo-grey-parrot-discor
 
 A consulta de magia e monstro não copia o livro. Ela pergunta à [Open5e](https://open5e.com/) e cita a fonte. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications). A recepção de áudio da chamada usa [discord-ext-voice-recv](https://github.com/imayhaveborkedit/discord-ext-voice-recv).
 
-```bash
-cd congo-grey-parrot-discord
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[voz,transcribe]"
-cp .env.example .env
-```
-
-Preencha `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID` no `.env` e exporte essas variáveis antes de `congo-discord`. Não commite o `.env`. Para uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`.
+`./instalar.sh 3` cria o ambiente e, se ainda não existir, o arquivo `.env`. Abra esse arquivo, cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`, e ligue o bot com `congo-grey-parrot-discord/iniciar.sh`. O programa lê o `.env` sozinho. Não commite o `.env`. Para uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`.
 
 ## Reuniões
 
@@ -99,11 +87,9 @@ Este braço anota quem falou o que no Teams, no Google Meet, no Zoom, no Webex, 
 
 Um áudio gravado só pelo microfone não separa as pessoas. Nesse caso a anotação fica como gravação local.
 
+`./instalar.sh 4` deixa o comando `congo-reunioes` pronto, em `~/.local/bin`. Depois:
+
 ```bash
-cd congo-grey-parrot-reunioes
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
 congo-reunioes plataformas
 congo-reunioes importar transcricao.vtt --plataforma teams
 congo-reunioes notas
