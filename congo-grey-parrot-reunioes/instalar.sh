@@ -10,7 +10,7 @@ ln -sfn "$root/congo-reunioes" "${HOME}/.local/bin/congo-reunioes"
 
 echo "Pronto. Estes comandos já funcionam, sem instalar biblioteca:"
 echo "  congo-reunioes plataformas"
-echo "  congo-reunioes importar transcricao.vtt --plataforma teams"
+echo "  congo-reunioes importar exemplo-teams.vtt --plataforma teams"
 echo "  congo-reunioes notas"
 echo "Se o terminal disser que não achou o comando, use o caminho completo:"
 echo "  $root/congo-reunioes plataformas"

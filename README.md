@@ -71,7 +71,7 @@ O aplicativo grava, lê e guarda arquivos no aparelho. Não transcreve com Whisp
 
 O microfone só é pedido quando a gravação começa. O aplicativo não pede acesso a todo o armazenamento e não tem permissão de internet. O backup automático está desligado.
 
-Para instalar no celular, copie [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk) para um Android 8 ou mais novo e abra o arquivo. Se o sistema bloquear, permita a instalação por esse aplicativo, como explica o [Google](https://support.google.com/android/answer/2664792?hl=pt-BR). `./instalar.sh 2` mostra o mesmo caminho. Esse APK foi gerado em 10 de outubro de 2026. Os botões de ajuda para instalar uma voz offline estão no código e ainda não nesse arquivo. Para tê-los no celular, abra a pasta `congo-grey-parrot-android` no [Android Studio](https://developer.android.com/studio) e gere o APK de novo. A tentativa de gerar aqui não baixou o plugin Android Gradle 8.5.2.
+Para instalar no celular, copie [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk) para um Android 8 ou mais novo e abra o arquivo. Se o sistema bloquear, permita a instalação por esse aplicativo, como explica o [Google](https://support.google.com/android/answer/2664792?hl=pt-BR). `./instalar.sh 2` mostra o mesmo caminho. Esse APK foi gerado em 15 de outubro de 2026 pela linha de comando, com o plugin Android Gradle 8.5.2, sem abrir o Android Studio. Ele inclui os botões de ajuda para instalar uma voz offline. Para gerar de novo neste computador: `cd congo-grey-parrot-android && ./gradlew assembleDebug`. A montagem do projeto Android está em [developer.android.com/build](https://developer.android.com/build).
 
 ## Discord
 
@@ -93,7 +93,7 @@ Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-g
 
 ```bash
 ./congo-reunioes plataformas
-./congo-reunioes importar transcricao.vtt --plataforma teams
+./congo-reunioes importar exemplo-teams.vtt --plataforma teams
 ./congo-reunioes notas
 ```
 
