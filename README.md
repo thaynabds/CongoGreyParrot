@@ -79,7 +79,9 @@ O bot faz parte do Project Congo Grey Parrot, na pasta `congo-grey-parrot-discor
 
 A consulta de magia e monstro não copia o livro. Ela pergunta à [Open5e](https://open5e.com/) e cita a fonte. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications). A recepção de áudio da chamada usa [discord-ext-voice-recv](https://github.com/imayhaveborkedit/discord-ext-voice-recv).
 
-`./instalar.sh 3` cria o ambiente e, se ainda não existir, o arquivo `.env`. Abra esse arquivo, cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`, e ligue o bot com `congo-grey-parrot-discord/iniciar.sh`. O programa lê o `.env` sozinho. Não commite o `.env`. Para uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`.
+`./instalar.sh 3` cria o ambiente e, se ainda não existir, o arquivo `.env`. Se o Ubuntu disser que falta `python3.12-venv`, o script instala esse pacote. Abra o `.env`, cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`, e ligue o bot com `congo-grey-parrot-discord/iniciar.sh`. O programa lê o `.env` sozinho. Não commite o `.env`.
+
+`/vtt`, `/dados` e os outros comandos com barra se digitam no Discord, no servidor, depois que o bot estiver online. Eles não são comandos do terminal. Para uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`.
 
 ## Reuniões
 
