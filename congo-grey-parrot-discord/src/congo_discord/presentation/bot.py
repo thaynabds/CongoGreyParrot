@@ -630,20 +630,29 @@ def _transcribe_path(bot: CongoBot, path: Path, translate: bool = False) -> str:
 
 
 def _speak(text: str) -> tuple[str | None, str]:
-    try:
-        from congo_grey_parrot.speech.service import SpeechService
-    except ImportError:
+    import shutil
+    import subprocess
+
+    binary = shutil.which("espeak-ng")
+    if binary is None:
         return None, (
-            "A leitura usa o programa de computador. Na pasta congo-grey-parrot-desktop: "
-            'pip install -e ".[speech]" e pip install piper-tts, ou sudo apt install espeak-ng.'
+            "Este bot não usa a janela do computador nem o aplicativo de celular. "
+            "Para ler texto aqui, instale o espeak-ng neste computador: sudo apt install espeak-ng. "
+            "https://github.com/espeak-ng/espeak-ng"
         )
     folder = Path(tempfile.mkdtemp())
     target = folder / "leitura.wav"
-    try:
-        engine = SpeechService().synthesize(text, target)
-    except Exception as exc:
-        return None, str(exc)
-    return str(target), f"Áudio gerado com {engine}."
+    completed = subprocess.run(
+        [binary, "-w", str(target), "--stdin"],
+        input=text,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode != 0 or not target.is_file():
+        detail = completed.stderr.strip() or "o espeak-ng não gerou o arquivo."
+        return None, detail
+    return str(target), "Áudio gerado com espeak-ng, neste bot."
 
 
 def _open5e(kind: str, name: str) -> str:
@@ -687,11 +696,6 @@ def main() -> None:
             f"{_DISCORD_APP} e nunca grave o token no repositório."
         )
     repo = Path(__file__).resolve().parents[4]
-    desktop = repo / "congo-grey-parrot-desktop" / "src"
-    if desktop.is_dir():
-        import sys
-
-        sys.path.append(str(desktop))
     data = Path(os.environ.get("CONGO_DISCORD_DATA", Path.home() / ".local" / "share" / "congo-grey-parrot-discord"))
     sounds = data / "sons"
     sounds.mkdir(parents=True, exist_ok=True)

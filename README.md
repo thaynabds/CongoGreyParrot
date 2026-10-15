@@ -1,6 +1,8 @@
 # Project Congo Grey Parrot
 
-Três programas independentes, com o nome científico *Psittacus erithacus*. Um roda no computador. Outro é o aplicativo de celular. O terceiro é um bot de Discord para a mesa de RPG e para a chamada de voz. O computador e o celular não exigem conta nem servidor próprio. O bot usa a conta do Discord e o token fica só na máquina, fora do Git.
+Dois programas locais, independentes, com o nome científico *Psittacus erithacus*. Um roda no computador. O outro é o aplicativo de celular. Nenhum dos dois exige conta nem servidor próprio.
+
+O bot de Discord faz parte deste mesmo projeto e deste mesmo repositório, mas é um programa separado. Ele tem pasta, ambiente e dados próprios. Abrir o programa de computador ou o celular não liga o bot, e ligar o bot não abre esses programas. O token fica só na máquina, fora do Git.
 
 O repositório e o commit estão em [github.com/thaynabds/CongoGreyParrot](https://github.com/thaynabds/CongoGreyParrot).
 
@@ -10,7 +12,7 @@ Nesta máquina já existem o programa de Linux e um APK de teste. Não há insta
 |---|---|---|
 | Congo Grey Parrot para computador | Linux | Pasta local `congo-grey-parrot-desktop/dist/congo-grey-parrot/`. O instalador está em [instalar-linux.sh](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-desktop/instalar-linux.sh). |
 | Congo Grey Parrot para celular | Android 8 ou mais novo | [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk). É um APK de teste, assinado com a chave de depuração, não o pacote da Play Store. |
-| Congo Grey Parrot para Discord | Servidor de Discord, com o processo rodando no computador | Pasta `congo-grey-parrot-discord`. O token não entra no repositório. |
+| Bot de Discord, separado dos dois programas | Servidor de Discord, processo próprio no computador | Pasta `congo-grey-parrot-discord`. Não faz parte da janela nem do aplicativo de celular. |
 
 A descrição longa do que o projeto pretende cobrir, com as fontes do Whisper e do Parolu, está em [docs/DESCRICAO.md](https://github.com/thaynabds/CongoGreyParrot/blob/main/docs/DESCRICAO.md).
 
@@ -74,7 +76,7 @@ Para gerar o APK, abra a pasta `congo-grey-parrot-android` no [Android Studio](h
 
 ## Discord
 
-O bot entra na chamada, transcreve ao vivo com o nome de quem falou e resume o que cada pessoa disse e quando. Também rola dados, guarda ficha, iniciativa, presença, inventário e XP, toca sons locais e envia imagens. Cada função liga e desliga. A transcrição ao vivo começa desligada.
+O bot faz parte do Project Congo Grey Parrot, na pasta `congo-grey-parrot-discord`, e não é a janela do computador nem o aplicativo de celular. Ele entra na chamada, transcreve ao vivo com o nome de quem falou e resume o que cada pessoa disse e quando. Também rola dados, guarda ficha, iniciativa, presença, inventário e XP, toca sons locais e envia imagens. Cada função liga e desliga. A transcrição ao vivo começa desligada.
 
 A consulta de magia e monstro não copia o livro. Ela pergunta à [Open5e](https://open5e.com/) e cita a fonte. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications). A recepção de áudio da chamada usa [discord-ext-voice-recv](https://github.com/imayhaveborkedit/discord-ext-voice-recv).
 
