@@ -98,6 +98,7 @@ Para adicionar uma função nova, coloque um arquivo `.py` na pasta `plugins`, r
 | `/vtt` | Conecta uma mesa virtual por link ou webhook. |
 | `/funcoes` | Liga, desliga, adiciona ou remove funções. |
 | `/musica` | Toca áudio no canal de voz: YouTube, Spotify, lista de reprodução salva ou arquivo enviado. |
+| `/navegador` | Relay de rolagens do navegador para o Discord. Captura dados do Roll20 e do Foundry VTT em tempo real. |
 
 ### Música no canal de voz
 
@@ -131,6 +132,35 @@ Depois, no Discord:
 As listas de reprodução são salvas por servidor em `playlists.json` na pasta de dados do bot. Cada lista pode ter quantas faixas quiser e ser editada a qualquer momento.
 
 O Spotify não disponibiliza o áudio diretamente. O bot extrai o nome da faixa e busca no YouTube via yt-dlp. FFmpeg precisa estar instalado para reprodução: [ffmpeg.org/download.html](https://ffmpeg.org/download.html).
+
+### Relay de rolagens do navegador
+
+O bot lê rolagens feitas no navegador (Roll20, Foundry VTT) em tempo real e posta no Discord. A arquitetura usa um servidor HTTP local que só aceita conexões de `127.0.0.1`, e um userscript Tampermonkey instalado no navegador.
+
+```
+Navegador (Roll20 / Foundry) -> Userscript -> POST localhost:7477/roll -> Bot -> Canal do Discord
+```
+
+Para ativar:
+
+```
+/funcoes ativar navegador
+/navegador ligar
+/navegador canal #rolagens
+/navegador userscript
+```
+
+O comando `/navegador userscript` envia o arquivo `.user.js` para instalar no [Tampermonkey](https://www.tampermonkey.net/) ou [Greasemonkey](https://www.greasespot.net/). Arraste o arquivo para a página de extensões do Tampermonkey.
+
+| Comando | O que faz |
+|---|---|
+| `/navegador ligar [porta]` | Inicia o servidor local (padrão: porta 7477). |
+| `/navegador desligar` | Para o servidor. |
+| `/navegador status` | Mostra se o relay está ativo e o canal configurado. |
+| `/navegador canal #canal` | Define o canal do Discord onde as rolagens aparecem. |
+| `/navegador userscript` | Envia o arquivo `.user.js` para instalar no Tampermonkey. |
+
+O userscript funciona em `app.roll20.net` e no Foundry VTT rodando em `localhost:30000`. Para outros VTTs, qualquer aplicativo que consiga fazer um POST para `http://127.0.0.1:7477/roll` com JSON `{"vtt": "nome", "player": "nome", "expression": "1d20+5", "total": "15", "detail": ""}` também funciona.
 
 ### Transcrição ao vivo
 
