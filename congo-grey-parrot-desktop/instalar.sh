@@ -4,20 +4,13 @@ set -euo pipefail
 root="$(cd "$(dirname "$0")" && pwd)"
 cd "$root"
 
-if ! command -v python3 >/dev/null 2>&1; then
-  echo "Falta o Python. No Ubuntu: sudo apt install python3 python3-venv python3-pip"
-  exit 1
-fi
-
-if ! python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)'; then
-  echo "Precisa do Python 3.11 ou mais novo."
-  python3 --version
-  exit 1
-fi
+# shellcheck source=../garantir-python.sh
+source "$root/../garantir-python.sh"
+garantir_python
 
 if command -v dpkg >/dev/null 2>&1; then
   missing=()
-  for pkg in python3-venv libxcb-cursor0 ffmpeg espeak-ng; do
+  for pkg in libxcb-cursor0 ffmpeg espeak-ng; do
     dpkg -s "$pkg" >/dev/null 2>&1 || missing+=("$pkg")
   done
   if ((${#missing[@]})); then
