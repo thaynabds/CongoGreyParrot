@@ -1,0 +1,27 @@
+[project]
+name = "congo-grey-parrot-discord"
+version = "0.1.0"
+description = "Bot de Discord para reunião e mesa de RPG, com funções que ligam e desligam."
+requires-python = ">=3.11"
+dependencies = [
+    "discord.py>=2.4",
+]
+
+[project.optional-dependencies]
+voz = ["discord-ext-voice-recv>=0.5"]
+transcribe = ["faster-whisper>=1.1.0"]
+dev = ["pytest>=8.2"]
+
+[project.scripts]
+congo-discord = "congo_discord.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
