@@ -6,6 +6,8 @@ from congo_discord.domain.dice import roll_expression, roll_pair, roll_percent, 
 from congo_discord.domain.names import fantasy_name
 from congo_discord.domain.rules import spell_text
 from congo_discord.domain.summary import Utterance, render_meeting
+from congo_discord.domain.vtt_catalog import find_vtt
+from congo_discord.service.vtt_bridge import check_table_url, post_event
 from congo_discord.persistence.store import Store
 from congo_discord.service.meeting_audio import MeetingAudio
 from congo_discord.service.updater import update_report
@@ -55,6 +57,45 @@ def test_spell_text_uses_the_payload_and_credits_the_source():
     assert "Luz" in text
     assert "Open5e" in text
     assert "Nenhum resultado" in spell_text({"results": []})
+
+
+def test_vtt_connects_known_and_unknown_tables(tmp_path: Path):
+    assert find_vtt("Roll20").site == "https://roll20.net/"
+    assert find_vtt("Owlbear Rodeo").key == "owlbear"
+    assert find_vtt("mesa da minha casa") is None
+    try:
+        check_table_url("javascript:alert(1)")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("endereço sem http deveria falhar")
+    store = Store(tmp_path / "vtt.sqlite3")
+    store.set_vtt("1", "Mesa da casa", "https://mesa.example/hook", "segredo", False)
+    saved = store.vtt("1")
+    assert saved["name"] == "Mesa da casa"
+    assert saved["token"] == "segredo"
+    assert store.clear_vtt("1")
+
+    class _Response:
+        status = 204
+
+        def read(self, _size):
+            return b"ok"
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+    def opener(request, timeout):
+        assert timeout == 8
+        assert request.get_header("Authorization") == "Bearer segredo"
+        return _Response()
+
+    status, _body = post_event("https://mesa.example/hook", "segredo", {"kind": "ping"}, opener)
+    assert status == 204
+    store.close()
 
 
 def test_audio_helpers_and_names():

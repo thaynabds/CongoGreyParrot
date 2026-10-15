@@ -14,7 +14,8 @@ CORE_FEATURES = {
     "agenda": "Marca a próxima sessão e registra presença.",
     "inventario": "Itens, ouro e XP do grupo.",
     "reuniao": "Entra na chamada, transcreve ao vivo e resume quem falou.",
-    "arquivo": "Transcreve um áudio enviado ou lê um texto, usando o programa de computador quando ele está instalado.",
+    "arquivo": "Transcreve um áudio enviado ou lê um texto neste bot.",
+    "vtt": "Envia eventos para uma mesa virtual, por link ou webhook, inclusive uma mesa que não esteja na lista.",
 }
 
 
@@ -65,6 +66,13 @@ class Store:
                 user_id text not null,
                 status text not null,
                 primary key (session_id, user_id)
+            );
+            create table if not exists vtt_links (
+                guild_id text primary key,
+                name text not null,
+                url text not null,
+                token text not null,
+                known integer not null
             );
             create table if not exists utterances (
                 id integer primary key autoincrement,
@@ -268,6 +276,32 @@ class Store:
     def clear_utterances(self, guild_id: str) -> None:
         self._conn.execute("delete from utterances where guild_id = ?", (guild_id,))
         self._conn.commit()
+
+    def set_vtt(self, guild_id: str, name: str, url: str, token: str, known: bool) -> None:
+        self._conn.execute(
+            """
+            insert into vtt_links (guild_id, name, url, token, known)
+            values (?, ?, ?, ?, ?)
+            on conflict(guild_id) do update set
+                name = excluded.name,
+                url = excluded.url,
+                token = excluded.token,
+                known = excluded.known
+            """,
+            (guild_id, name, url, token, 1 if known else 0),
+        )
+        self._conn.commit()
+
+    def vtt(self, guild_id: str) -> sqlite3.Row | None:
+        return self._conn.execute(
+            "select name, url, token, known from vtt_links where guild_id = ?",
+            (guild_id,),
+        ).fetchone()
+
+    def clear_vtt(self, guild_id: str) -> bool:
+        cursor = self._conn.execute("delete from vtt_links where guild_id = ?", (guild_id,))
+        self._conn.commit()
+        return cursor.rowcount > 0
 
     def close(self) -> None:
         self._conn.close()

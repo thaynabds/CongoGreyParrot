@@ -14,6 +14,7 @@ from congo_discord.domain.dice import roll_expression, roll_pair, roll_percent, 
 from congo_discord.domain.names import fantasy_name
 from congo_discord.domain.rules import spell_text
 from congo_discord.domain.summary import Utterance, render_meeting
+from congo_discord.presentation.vtt_commands import register_vtt, relay_roll
 from congo_discord.service.meeting_audio import MeetingAudio
 from congo_discord.service.plugins import load_plugins
 from congo_discord.service.updater import update_report
@@ -114,19 +115,28 @@ def register(bot: CongoBot) -> None:
     async def rolar(interaction: discord.Interaction, expressao: str) -> None:
         if not await gate(interaction, "dados"):
             return
-        await interaction.response.send_message(_roll_text(expressao))
+        text = _roll_text(expressao)
+        await interaction.response.send_message(text)
+        if "\n" in text:
+            await relay_roll(bot, interaction, text)
 
     @dados.command(name="vantagem", description="Rola a expressão duas vezes e fica com o maior total.")
     async def vantagem(interaction: discord.Interaction, expressao: str) -> None:
         if not await gate(interaction, "dados"):
             return
-        await interaction.response.send_message(_pair_text(expressao, high=True))
+        text = _pair_text(expressao, high=True)
+        await interaction.response.send_message(text)
+        if "\n" in text:
+            await relay_roll(bot, interaction, text)
 
     @dados.command(name="desvantagem", description="Rola a expressão duas vezes e fica com o menor total.")
     async def desvantagem(interaction: discord.Interaction, expressao: str) -> None:
         if not await gate(interaction, "dados"):
             return
-        await interaction.response.send_message(_pair_text(expressao, high=False))
+        text = _pair_text(expressao, high=False)
+        await interaction.response.send_message(text)
+        if "\n" in text:
+            await relay_roll(bot, interaction, text)
 
     @dados.command(name="percentil", description="Rola 1d100 contra uma perícia de 1 a 100.")
     async def percentil(interaction: discord.Interaction, pericia: int) -> None:
@@ -137,10 +147,12 @@ def register(bot: CongoBot) -> None:
         except ValueError as exc:
             await interaction.response.send_message(str(exc), ephemeral=True)
             return
-        await interaction.response.send_message(
+        text = (
             f"{result.expression}: {result.total}. {result.detail}. "
             "Isto é uma leitura simples de d100. A regra oficial do jogo continua no livro da editora."
         )
+        await interaction.response.send_message(text)
+        await relay_roll(bot, interaction, text)
 
     @dados.command(name="pool", description="Conta quantos dados atingiram o limite.")
     async def pool(interaction: discord.Interaction, quantidade: int, faces: int = 10, limite: int = 6) -> None:
@@ -151,7 +163,9 @@ def register(bot: CongoBot) -> None:
         except ValueError as exc:
             await interaction.response.send_message(str(exc), ephemeral=True)
             return
-        await interaction.response.send_message(f"Sucessos: {result.total}. Dados: {result.detail}.")
+        text = f"Sucessos: {result.total}. Dados: {result.detail}."
+        await interaction.response.send_message(text)
+        await relay_roll(bot, interaction, text)
 
     @dados.command(name="oculto", description="Rola e mostra o resultado só para quem chamou o comando.")
     async def oculto(interaction: discord.Interaction, expressao: str) -> None:
@@ -482,6 +496,7 @@ def register(bot: CongoBot) -> None:
 
     for group in (dados, ficha, iniciativa, regra, som, sessao, grupo, reuniao, arquivo, funcoes):
         bot.tree.add_command(group)
+    register_vtt(bot)
 
 
 def _roll_text(expression: str) -> str:

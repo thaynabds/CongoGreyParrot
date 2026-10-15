@@ -76,7 +76,7 @@ Para gerar o APK, abra a pasta `congo-grey-parrot-android` no [Android Studio](h
 
 ## Discord
 
-O bot faz parte do Project Congo Grey Parrot, na pasta `congo-grey-parrot-discord`, e não é a janela do computador nem o aplicativo de celular. Ele entra na chamada, transcreve ao vivo com o nome de quem falou e resume o que cada pessoa disse e quando. Também rola dados, guarda ficha, iniciativa, presença, inventário e XP, toca sons locais e envia imagens. Cada função liga e desliga. A transcrição ao vivo começa desligada.
+O bot faz parte do Project Congo Grey Parrot, na pasta `congo-grey-parrot-discord`, e não é a janela do computador nem o aplicativo de celular. Ele entra na chamada, transcreve ao vivo com o nome de quem falou e resume o que cada pessoa disse e quando. Com `/vtt conectar` ele guarda o link ou o webhook de uma mesa virtual, esteja ela na lista ou não. O bot não entra na conta dessas plataformas. Também rola dados, guarda ficha, iniciativa, presença, inventário e XP, toca sons locais e envia imagens. Cada função liga e desliga. A transcrição ao vivo começa desligada.
 
 A consulta de magia e monstro não copia o livro. Ela pergunta à [Open5e](https://open5e.com/) e cita a fonte. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications). A recepção de áudio da chamada usa [discord-ext-voice-recv](https://github.com/imayhaveborkedit/discord-ext-voice-recv).
 
