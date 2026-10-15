@@ -15,6 +15,7 @@ from congo_discord.domain.names import fantasy_name
 from congo_discord.domain.rules import spell_text
 from congo_discord.domain.summary import Utterance, render_meeting
 from congo_discord.presentation.vtt_commands import register_vtt, relay_roll
+from congo_discord.service.envfile import load_env_file
 from congo_discord.service.meeting_audio import MeetingAudio
 from congo_discord.service.plugins import load_plugins
 from congo_discord.service.updater import update_report
@@ -704,11 +705,12 @@ async def _switch(interaction: discord.Interaction, bot: CongoBot, name: str, en
 
 
 def main() -> None:
-    token = os.environ.get("DISCORD_TOKEN", "")
+    load_env_file(Path(__file__).resolve().parents[3] / ".env")
+    token = os.environ.get("DISCORD_TOKEN", "").strip()
     if not token:
         raise SystemExit(
-            "Defina DISCORD_TOKEN. Crie o aplicativo em "
-            f"{_DISCORD_APP} e nunca grave o token no repositório."
+            "Falta DISCORD_TOKEN. Abra o arquivo .env desta pasta, cole o token e rode de novo. "
+            f"Crie o aplicativo em {_DISCORD_APP}. Nunca grave o token no repositório."
         )
     repo = Path(__file__).resolve().parents[4]
     data = Path(os.environ.get("CONGO_DISCORD_DATA", Path.home() / ".local" / "share" / "congo-grey-parrot-discord"))

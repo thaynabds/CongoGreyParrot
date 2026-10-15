@@ -6,7 +6,8 @@ source="$root/dist/congo-grey-parrot"
 dest="${HOME}/.local/opt/congo-grey-parrot"
 
 if [[ ! -x "$source/congo-grey-parrot" ]]; then
-  echo "A pasta dist/congo-grey-parrot ainda não existe. Gere o programa com PyInstaller antes."
+  echo "A pasta dist/congo-grey-parrot ainda não existe."
+  echo "Para instalar a partir do código, rode: $root/instalar.sh"
   exit 1
 fi
 
