@@ -4,6 +4,8 @@ Dois programas locais, independentes, com o nome científico *Psittacus erithacu
 
 O bot de Discord faz parte deste mesmo projeto e deste mesmo repositório, mas é um programa separado. Ele tem pasta, ambiente e dados próprios. Abrir o programa de computador ou o celular não liga o bot, e ligar o bot não abre esses programas. O token fica só na máquina, fora do Git.
 
+As anotações de reunião também fazem parte do projeto e também são um programa separado, na pasta `congo-grey-parrot-reunioes`. Elas não abrem o bot, a janela nem o celular.
+
 O repositório e o commit estão em [github.com/thaynabds/CongoGreyParrot](https://github.com/thaynabds/CongoGreyParrot).
 
 Nesta máquina já existem o programa de Linux e um APK de teste. Não há instalador de Windows, porque esse pacote só pode ser gerado no próprio Windows. Fonte: [PyInstaller](https://pyinstaller.org/en/stable/usage.html).
@@ -13,6 +15,7 @@ Nesta máquina já existem o programa de Linux e um APK de teste. Não há insta
 | Congo Grey Parrot para computador | Linux | Pasta local `congo-grey-parrot-desktop/dist/congo-grey-parrot/`. O instalador está em [instalar-linux.sh](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-desktop/instalar-linux.sh). |
 | Congo Grey Parrot para celular | Android 8 ou mais novo | [CongoGreyParrot-debug.apk](https://github.com/thaynabds/CongoGreyParrot/blob/main/congo-grey-parrot-android/CongoGreyParrot-debug.apk). É um APK de teste, assinado com a chave de depuração, não o pacote da Play Store. |
 | Bot de Discord, separado dos dois programas | Servidor de Discord, processo próprio no computador | Pasta `congo-grey-parrot-discord`. Não faz parte da janela nem do aplicativo de celular. |
+| Anotações de reunião, outro braço separado | Neste computador, sobre arquivos do Teams, do Meet ou de outra reunião | Pasta `congo-grey-parrot-reunioes`. Não entra na conta da reunião. |
 
 A descrição longa do que o projeto pretende cobrir, com as fontes do Whisper e do Parolu, está em [docs/DESCRICAO.md](https://github.com/thaynabds/CongoGreyParrot/blob/main/docs/DESCRICAO.md).
 
@@ -89,6 +92,22 @@ cp .env.example .env
 ```
 
 Preencha `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID` no `.env` e exporte essas variáveis antes de `congo-discord`. Não commite o `.env`. Para uma função nova, coloque um arquivo `.py` na pasta `plugins`, reinicie o bot e use `/funcoes ativar`.
+
+## Reuniões
+
+Este braço anota quem falou o que no Teams, no Google Meet, no Zoom, no Webex, no Jitsi ou em qualquer outro nome de reunião. Ele não entra na chamada. O nome vem da transcrição que a própria plataforma deixa baixar. A ajuda do Teams está em [legendas e transcrição](https://learn.microsoft.com/microsoftteams/meeting-transcription-captions). A do Meet está em [transcrições do Google Meet](https://support.google.com/meet/answer/12849897).
+
+Um áudio gravado só pelo microfone não separa as pessoas. Nesse caso a anotação fica como gravação local.
+
+```bash
+cd congo-grey-parrot-reunioes
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+congo-reunioes plataformas
+congo-reunioes importar transcricao.vtt --plataforma teams
+congo-reunioes notas
+```
 
 ## Onde os arquivos vão
 
