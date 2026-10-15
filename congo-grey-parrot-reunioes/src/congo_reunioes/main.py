@@ -34,7 +34,15 @@ def main() -> None:
             print(catalog_text())
             return
         if args.command == "importar":
-            raw = Path(args.arquivo).read_text(encoding="utf-8")
+            path = Path(args.arquivo)
+            if not path.is_file():
+                example = Path(__file__).resolve().parents[2] / "exemplo-teams.vtt"
+                raise SystemExit(
+                    f"Não achei o arquivo: {path}\n"
+                    "Baixe a transcrição no Teams ou no Meet e use o caminho desse arquivo.\n"
+                    f"Para testar, use: {example}"
+                )
+            raw = path.read_text(encoding="utf-8")
             lines = parse_transcript(raw)
             label = platform_label(args.plataforma)
             count = store.add(label, lines)
