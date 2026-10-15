@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+
+root="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+py="python3"
+if [[ -x "$root/.venv/bin/python" ]]; then
+  py="$root/.venv/bin/python"
+fi
+export PYTHONPATH="$root/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "$py" -m congo_reunioes "$@"

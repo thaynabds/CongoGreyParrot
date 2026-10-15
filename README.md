@@ -89,13 +89,15 @@ Este braço anota quem falou o que no Teams, no Google Meet, no Zoom, no Webex, 
 
 Um áudio gravado só pelo microfone não separa as pessoas. Nesse caso a anotação fica como gravação local.
 
-`./instalar.sh 4` deixa o comando `congo-reunioes` pronto, em `~/.local/bin`. Depois:
+Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-grey-parrot-reunioes`:
 
 ```bash
-congo-reunioes plataformas
-congo-reunioes importar transcricao.vtt --plataforma teams
-congo-reunioes notas
+./congo-reunioes plataformas
+./congo-reunioes importar transcricao.vtt --plataforma teams
+./congo-reunioes notas
 ```
+
+`./instalar.sh 4` também coloca `congo-reunioes` em `~/.local/bin`. A transcrição de áudio é que pede `python3.12-venv`, como explica a documentação do [venv](https://docs.python.org/3/library/venv.html).
 
 ## Onde os arquivos vão
 
