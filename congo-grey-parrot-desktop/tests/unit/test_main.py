@@ -3,7 +3,7 @@ import ctypes
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
-from congo_grey_parrot.main import XCB_CURSOR_HINT, xcb_cursor_message
+from congo_grey_parrot.main import XCB_CURSOR_HINT, icon_path, publish_launcher, xcb_cursor_message
 from congo_grey_parrot.ui.session import Session
 from congo_grey_parrot.ui.window import MainWindow
 
@@ -25,6 +25,19 @@ def test_xcb_cursor_message_skips_offscreen(monkeypatch):
     monkeypatch.setattr("congo_grey_parrot.main.sys.platform", "linux")
     monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
     assert xcb_cursor_message() is None
+
+
+def test_launcher_uses_the_parrot_icon(tmp_path):
+    source = icon_path()
+    assert source.is_file()
+    desktop = publish_launcher(source, tmp_path)
+    assert desktop is not None
+    text = desktop.read_text(encoding="utf-8")
+    stored = tmp_path / ".local" / "share" / "icons" / "congo-grey-parrot.png"
+    assert stored.is_file()
+    assert stored.stat().st_size == source.stat().st_size
+    assert f"Icon={stored}" in text
+    assert "StartupWMClass=congo-grey-parrot" in text
 
 
 def test_window_keeps_standard_controls_and_can_shrink(tmp_path, monkeypatch):

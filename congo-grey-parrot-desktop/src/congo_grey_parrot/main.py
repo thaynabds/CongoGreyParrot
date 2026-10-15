@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication
 
 from congo_grey_parrot.ui.session import build_session
@@ -37,11 +37,70 @@ def xcb_cursor_message() -> str | None:
     return None
 
 
+def icon_path() -> Path:
+    return Path(__file__).resolve().parent / "ui" / "assets" / "icon.png"
+
+
 def application_icon() -> QIcon:
-    path = Path(__file__).resolve().parent / "ui" / "assets" / "icon.png"
+    path = icon_path()
     if not path.is_file():
         return QIcon()
-    return QIcon(str(path))
+    source = QPixmap(str(path))
+    if source.isNull():
+        return QIcon()
+    icon = QIcon()
+    for size in (16, 24, 32, 48, 64, 128, 256, 512):
+        icon.addPixmap(
+            source.scaled(
+                size,
+                size,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+    return icon
+
+
+def desktop_path(path: Path) -> str:
+    text = str(path)
+    if any(char in text for char in ' \t"\\'):
+        return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
+    return text
+
+
+def publish_launcher(icon: Path, root: Path | None = None) -> Path | None:
+    if not icon.is_file():
+        return None
+    base = root or Path.home()
+    icons = base / ".local" / "share" / "icons"
+    apps = base / ".local" / "share" / "applications"
+    icons.mkdir(parents=True, exist_ok=True)
+    apps.mkdir(parents=True, exist_ok=True)
+    stored = icons / "congo-grey-parrot.png"
+    if icon.resolve() != stored.resolve():
+        stored.write_bytes(icon.read_bytes())
+    executable = Path(sys.argv[0]).resolve()
+    if not os.access(executable, os.X_OK):
+        executable = Path(sys.executable).resolve()
+    desktop = apps / "congo-grey-parrot.desktop"
+    desktop.write_text(
+        "\n".join(
+            (
+                "[Desktop Entry]",
+                "Type=Application",
+                "Name=Congo Grey Parrot",
+                "Comment=Transcrição e leitura local",
+                f"Exec={desktop_path(executable)}",
+                f"Icon={stored}",
+                "Terminal=false",
+                "Categories=AudioVideo;Audio;",
+                "StartupWMClass=congo-grey-parrot",
+                "",
+            )
+        ),
+        encoding="utf-8",
+    )
+    return desktop
 
 
 def main() -> int:
@@ -53,8 +112,11 @@ def main() -> int:
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
     app = QApplication(sys.argv)
-    app.setApplicationName("Project Congo Grey Parrot")
-    app.setWindowIcon(application_icon())
+    app.setApplicationName("Congo Grey Parrot")
+    app.setDesktopFileName("congo-grey-parrot")
+    icon = application_icon()
+    app.setWindowIcon(icon)
+    publish_launcher(icon_path())
     app.setStyle("Fusion")
     session = build_session()
     scale = float(session.db.get_setting("font_scale", "1") or "1")

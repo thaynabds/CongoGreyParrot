@@ -14,6 +14,12 @@ mkdir -p "${HOME}/.local/opt" "${HOME}/.local/share/applications" "${HOME}/.loca
 rm -rf "$dest"
 cp -a "$source" "$dest"
 chmod +x "$dest/congo-grey-parrot"
+icon_src="$root/src/congo_grey_parrot/ui/assets/icon.png"
+mkdir -p "${HOME}/.local/share/icons"
+if [[ -f "$icon_src" ]]; then
+  cp "$icon_src" "${HOME}/.local/share/icons/congo-grey-parrot.png"
+  cp "$icon_src" "$dest/icon.png"
+fi
 
 cat > "${HOME}/.local/share/applications/congo-grey-parrot.desktop" <<EOF
 [Desktop Entry]
@@ -21,8 +27,10 @@ Type=Application
 Name=Congo Grey Parrot
 Comment=Transcrição e leitura local
 Exec=${dest}/congo-grey-parrot
+Icon=${HOME}/.local/share/icons/congo-grey-parrot.png
 Terminal=false
 Categories=AudioVideo;Audio;
+StartupWMClass=congo-grey-parrot
 EOF
 
 ln -sfn "$dest/congo-grey-parrot" "${HOME}/.local/bin/congo-grey-parrot"
