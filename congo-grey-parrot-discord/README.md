@@ -53,7 +53,15 @@ O modelo Whisper cobre mais de 90 idiomas, entre eles português, inglês, espan
 
 ## Foundry VTT
 
-O módulo está em `foundry/congo-grey-parrot`. Copie essa pasta para `Data/modules` do Foundry e ative no mundo. A pasta Data está em [Module Development](https://foundryvtt.com/article/module-development/). A instalação padrão do Foundry abre em `http://127.0.0.1:30000` ([Installation Guide](https://foundryvtt.com/article/installation/)).
+Dá para instalar sem entrar no Ubuntu da máquina virtual. Na página do Foundry, antes de abrir o mundo, abra Módulos, clique em Instalar módulo e cole este endereço:
+
+```
+https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/main/congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json
+```
+
+O Foundry baixa o pacote sozinho. Esse é o instalador da tela de configuração, descrito em [Add-on Modules](https://foundryvtt.com/article/modules/). Depois, entre no mundo e ative Congo Grey Parrot em Gerenciar módulos.
+
+O bot de Discord fica no computador de quem abre a mesa, não na máquina da Oracle. O módulo só fala com esse computador, em `http://127.0.0.1:7477`.
 
 Com o bot online, no Discord:
 

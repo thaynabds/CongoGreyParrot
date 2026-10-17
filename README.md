@@ -137,7 +137,9 @@ O Spotify não disponibiliza o áudio diretamente. O bot extrai o nome da faixa 
 
 ### Relay de rolagens do navegador
 
-O bot e o Foundry precisam rodar no mesmo computador. O módulo do Foundry fica em `congo-grey-parrot-discord/foundry/congo-grey-parrot`. Copie essa pasta para `Data/modules` do Foundry e ative o módulo no mundo. A pasta Data está descrita em [Module Development](https://foundryvtt.com/article/module-development/). O acesso local do Foundry, na instalação padrão, é `http://127.0.0.1:30000`, conforme o [guia de instalação](https://foundryvtt.com/article/installation/).
+O Foundry pode estar em outra máquina, inclusive numa virtual da Oracle. Quem administra a mesa instala o módulo pelo navegador, na tela de configuração, em Módulos, Instalar módulo, e cola o endereço do manifesto. Não precisa abrir o Ubuntu. O instalador está em [Add-on Modules](https://foundryvtt.com/article/modules/). O manifesto deste módulo é `https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/main/congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json`.
+
+O bot de Discord continua no computador de quem abre a mesa. O módulo, no navegador, só chama `http://127.0.0.1:7477` nessa máquina. A pasta Data, se alguém precisar copiar o módulo à mão, está em [Module Development](https://foundryvtt.com/article/module-development/).
 
 O módulo usa a API do Foundry (`createChatMessage`, `ChatMessage.create` e `game.users.activeGM`) e fala só com `http://127.0.0.1:7477` ou `http://localhost`. O chat público e as rolagens vão para o canal do Discord. `/dados` e `/navegador falar` voltam para o chat da mesa. Rolagem oculta do Foundry e `/dados oculto` não atravessam.
 
