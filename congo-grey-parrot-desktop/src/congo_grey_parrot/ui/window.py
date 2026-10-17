@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
+    QSplitter,
     QStackedWidget,
     QVBoxLayout,
     QWidget,
@@ -29,16 +30,18 @@ from congo_grey_parrot.ui.marks import icon_color, nav_icon
 from congo_grey_parrot.ui.widgets import TaskPanel
 from congo_grey_parrot.ui.work_pages import HomePage, SpeechPage, SubtitlePage, TranscribePage, TranslatePage
 
-
-class _FitArea(QScrollArea):
-    def minimumSizeHint(self) -> QSize:  # noqa: N802
-        return QSize(480, 320)
+_NAV_HIDE_THRESHOLD = 620
+_TASKS_HIDE_THRESHOLD = 860
+_NAV_WIDTH = 200
+_TASKS_WIDTH = 220
 
 
 class MainWindow(QMainWindow):
     def __init__(self, session):
         super().__init__()
         self.session = session
+        self._nav_visible = True
+        self._tasks_visible = True
         self.setWindowTitle("Project Congo Grey Parrot")
         self.setWindowFlags(
             Qt.WindowType.Window
@@ -48,7 +51,7 @@ class MainWindow(QMainWindow):
             | Qt.WindowType.WindowMaximizeButtonHint
             | Qt.WindowType.WindowCloseButtonHint
         )
-        self.setMinimumSize(720, 480)
+        self.setMinimumSize(520, 400)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.stack = QStackedWidget()
         self.home = HomePage(session)
@@ -82,9 +85,12 @@ class MainWindow(QMainWindow):
             ("history", "Histórico"),
             ("settings", "Configurações"),
         )
-        nav = QFrame()
-        nav.setObjectName("nav")
-        nav_layout = QVBoxLayout(nav)
+
+        # Nav sidebar
+        self._nav_frame = QFrame()
+        self._nav_frame.setObjectName("nav")
+        nav_layout = QVBoxLayout(self._nav_frame)
+        nav_layout.setContentsMargins(4, 8, 4, 8)
         group = QButtonGroup(self)
         group.setExclusive(True)
         self._buttons = {}
@@ -100,26 +106,58 @@ class MainWindow(QMainWindow):
             self._buttons[key] = button
         nav_layout.addStretch(1)
         self._buttons["home"].setChecked(True)
-        tasks = QFrame()
-        tasks.setObjectName("tasks")
-        task_layout = QVBoxLayout(tasks)
+
+        # Tasks sidebar
+        self._tasks_frame = QFrame()
+        self._tasks_frame.setObjectName("tasks")
+        task_layout = QVBoxLayout(self._tasks_frame)
         task_layout.addWidget(TaskPanel(session.tasks))
+
+        # Toggle buttons for sidebars
+        self._nav_toggle = QPushButton("☰")
+        self._nav_toggle.setFixedSize(34, 34)
+        self._nav_toggle.setToolTip("Mostrar/ocultar menu lateral")
+        self._nav_toggle.clicked.connect(self._toggle_nav)
+
+        self._tasks_toggle = QPushButton("✦")
+        self._tasks_toggle.setFixedSize(34, 34)
+        self._tasks_toggle.setToolTip("Mostrar/ocultar painel de tarefas")
+        self._tasks_toggle.clicked.connect(self._toggle_tasks)
+
+        # Top bar with toggle buttons
+        top_bar = QWidget()
+        top_bar.setFixedHeight(42)
+        top_layout = QHBoxLayout(top_bar)
+        top_layout.setContentsMargins(4, 4, 4, 4)
+        top_layout.addWidget(self._nav_toggle)
+        top_layout.addStretch(1)
+        top_layout.addWidget(self._tasks_toggle)
+
+        # Splitter: nav | content | tasks
+        self._splitter = QSplitter(Qt.Orientation.Horizontal)
+        self._splitter.addWidget(self._nav_frame)
+        self._splitter.addWidget(self.stack)
+        self._splitter.addWidget(self._tasks_frame)
+        self._splitter.setStretchFactor(0, 0)
+        self._splitter.setStretchFactor(1, 1)
+        self._splitter.setStretchFactor(2, 0)
+        self._splitter.setSizes([_NAV_WIDTH, 600, _TASKS_WIDTH])
+        self._splitter.setCollapsible(0, True)
+        self._splitter.setCollapsible(1, False)
+        self._splitter.setCollapsible(2, True)
+        self._splitter.setChildrenCollapsible(True)
+
+        # Root layout
         root = QWidget()
-        layout = QHBoxLayout(root)
-        layout.addWidget(nav)
-        layout.addWidget(self.stack, 1)
-        layout.addWidget(tasks)
-        nav.setMinimumWidth(180)
-        nav.setMaximumWidth(236)
+        root_layout = QVBoxLayout(root)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+        root_layout.addWidget(top_bar)
+        root_layout.addWidget(self._splitter, 1)
+
+        self.setCentralWidget(root)
         self._apply_nav_icons()
         session.bus.theme_changed.connect(self._apply_nav_icons)
-        tasks.setMinimumWidth(180)
-        tasks.setMaximumWidth(260)
-        scroll = _FitArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QFrame.Shape.NoFrame)
-        scroll.setWidget(root)
-        self.setCentralWidget(scroll)
         self._fit_to_screen()
         self._apply_saved_filter()
         session.bus.open_page.connect(self.show_page)
@@ -129,7 +167,7 @@ class MainWindow(QMainWindow):
         session.bus.history_changed.connect(self.home.refresh)
 
     def minimumSizeHint(self) -> QSize:  # noqa: N802
-        return QSize(720, 480)
+        return QSize(520, 400)
 
     def _fit_to_screen(self) -> None:
         from PySide6.QtWidgets import QApplication
@@ -139,10 +177,54 @@ class MainWindow(QMainWindow):
             self.resize(1100, 700)
             return
         area = screen.availableGeometry()
-        self.resize(
-            min(1100, max(self.minimumWidth(), area.width() - 48)),
-            min(700, max(self.minimumHeight(), area.height() - 48)),
-        )
+        w = min(1100, max(self.minimumWidth(), area.width() - 48))
+        h = min(700, max(self.minimumHeight(), area.height() - 48))
+        self.resize(w, h)
+        self._update_panels_for_width(w)
+
+    def _toggle_nav(self) -> None:
+        sizes = self._splitter.sizes()
+        if sizes[0] > 0:
+            self._splitter.setSizes([0, sizes[1] + sizes[0], sizes[2]])
+            self._nav_visible = False
+        else:
+            total = sum(sizes)
+            nav_w = min(_NAV_WIDTH, total // 4)
+            self._splitter.setSizes([nav_w, total - nav_w - sizes[2], sizes[2]])
+            self._nav_visible = True
+
+    def _toggle_tasks(self) -> None:
+        sizes = self._splitter.sizes()
+        if sizes[2] > 0:
+            self._splitter.setSizes([sizes[0], sizes[1] + sizes[2], 0])
+            self._tasks_visible = False
+        else:
+            total = sum(sizes)
+            tasks_w = min(_TASKS_WIDTH, total // 4)
+            self._splitter.setSizes([sizes[0], total - sizes[0] - tasks_w, tasks_w])
+            self._tasks_visible = True
+
+    def _update_panels_for_width(self, w: int) -> None:
+        sizes = self._splitter.sizes()
+        if w < _TASKS_HIDE_THRESHOLD and sizes[2] > 0:
+            self._splitter.setSizes([sizes[0], sizes[1] + sizes[2], 0])
+            self._tasks_visible = False
+        elif w >= _TASKS_HIDE_THRESHOLD and sizes[2] == 0 and self._tasks_visible:
+            total = sum(sizes)
+            tasks_w = _TASKS_WIDTH
+            self._splitter.setSizes([sizes[0], total - sizes[0] - tasks_w, tasks_w])
+        if w < _NAV_HIDE_THRESHOLD and sizes[0] > 0:
+            self._splitter.setSizes([0, sizes[1] + sizes[0], self._splitter.sizes()[2]])
+            self._nav_visible = False
+        elif w >= _NAV_HIDE_THRESHOLD and sizes[0] == 0 and self._nav_visible:
+            total = sum(self._splitter.sizes())
+            nav_w = _NAV_WIDTH
+            curr = self._splitter.sizes()
+            self._splitter.setSizes([nav_w, total - nav_w - curr[2], curr[2]])
+
+    def resizeEvent(self, event) -> None:  # noqa: N802
+        super().resizeEvent(event)
+        self._update_panels_for_width(event.size().width())
 
     def _apply_saved_filter(self) -> None:
         from PySide6.QtWidgets import QApplication

@@ -9,37 +9,55 @@
     "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx.json"
   },
   {
+    "id": "pt_PT-tugao-medium",
+    "name": "Tugão",
+    "language": "pt_PT",
+    "language_label": "Português (Portugal)",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_PT/tugao/medium/pt_PT-tugao-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_PT/tugao/medium/pt_PT-tugao-medium.onnx.json"
+  },
+  {
     "id": "en_US-lessac-medium",
     "name": "Lessac",
     "language": "en_US",
-    "language_label": "Inglês (Estados Unidos)",
+    "language_label": "English (US)",
     "quality": "medium",
     "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx",
     "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json"
   },
   {
-    "id": "de_DE-thorsten-medium",
-    "name": "Thorsten",
-    "language": "de_DE",
-    "language_label": "Alemão",
+    "id": "en_GB-alba-medium",
+    "name": "Alba",
+    "language": "en_GB",
+    "language_label": "English (GB)",
     "quality": "medium",
-    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx",
-    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json"
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/alba/medium/en_GB-alba-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/alba/medium/en_GB-alba-medium.onnx.json"
   },
   {
     "id": "es_ES-davefx-medium",
     "name": "Davefx",
     "language": "es_ES",
-    "language_label": "Espanhol",
+    "language_label": "Español (España)",
     "quality": "medium",
     "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx",
     "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx.json"
   },
   {
+    "id": "es_MX-claude-high",
+    "name": "Claude",
+    "language": "es_MX",
+    "language_label": "Español (México)",
+    "quality": "high",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/es/es_MX/claude/high/es_MX-claude-high.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/es/es_MX/claude/high/es_MX-claude-high.onnx.json"
+  },
+  {
     "id": "fr_FR-siwis-medium",
     "name": "Siwis",
     "language": "fr_FR",
-    "language_label": "Francês",
+    "language_label": "Français",
     "quality": "medium",
     "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx",
     "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx.json"
@@ -52,5 +70,41 @@
     "quality": "x_low",
     "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx",
     "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx.json"
+  },
+  {
+    "id": "de_DE-thorsten-medium",
+    "name": "Thorsten",
+    "language": "de_DE",
+    "language_label": "Deutsch",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json"
+  },
+  {
+    "id": "ru_RU-irina-medium",
+    "name": "Irina",
+    "language": "ru_RU",
+    "language_label": "Русский",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ru/ru_RU/irina/medium/ru_RU-irina-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ru/ru_RU/irina/medium/ru_RU-irina-medium.onnx.json"
+  },
+  {
+    "id": "zh_CN-huayan-x_low",
+    "name": "Huayan",
+    "language": "zh_CN",
+    "language_label": "中文 (普通话)",
+    "quality": "x_low",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/zh/zh_CN/huayan/x_low/zh_CN-huayan-x_low.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/zh/zh_CN/huayan/x_low/zh_CN-huayan-x_low.onnx.json"
+  },
+  {
+    "id": "ja_JP-kokoro-medium",
+    "name": "Kokoro",
+    "language": "ja_JP",
+    "language_label": "日本語",
+    "quality": "medium",
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ja/ja_JP/kokoro/medium/ja_JP-kokoro-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ja/ja_JP/kokoro/medium/ja_JP-kokoro-medium.onnx.json"
   }
 ]

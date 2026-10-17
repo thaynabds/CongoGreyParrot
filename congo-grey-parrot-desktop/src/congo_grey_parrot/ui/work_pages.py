@@ -2,21 +2,25 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDoubleSpinBox,
     QFormLayout,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
     QListWidget,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
+    QSizePolicy,
     QSlider,
     QVBoxLayout,
     QWidget,
+    QFrame,
 )
 
 from congo_grey_parrot.core.errors import AppError
@@ -41,11 +45,25 @@ from congo_grey_parrot.ui.widgets import DropFrame, PlayerBar
 
 def _header(layout: QVBoxLayout, title: str, hint: str) -> None:
     heading = QLabel(title)
-    heading.setStyleSheet("font-weight: 700;")
+    heading.setStyleSheet("font-weight: 700; font-size: 15px;")
     note = QLabel(hint)
     note.setWordWrap(True)
     layout.addWidget(heading)
     layout.addWidget(note)
+
+
+def _grid_buttons(pairs: list[tuple[str, object]], cols: int = 3) -> QWidget:
+    """Cria um widget com botoes dispostos em grade que se adapta ao tamanho."""
+    container = QWidget()
+    grid = QGridLayout(container)
+    grid.setSpacing(6)
+    grid.setContentsMargins(0, 0, 0, 0)
+    for i, (label, slot) in enumerate(pairs):
+        btn = QPushButton(label)
+        btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn.clicked.connect(slot)
+        grid.addWidget(btn, i // cols, i % cols)
+    return container
 
 
 class HomePage(QWidget):
@@ -61,19 +79,18 @@ class HomePage(QWidget):
         self.drop = DropFrame("Arraste áudio, vídeo, texto ou legenda para esta área.")
         self.drop.files_dropped.connect(lambda paths: session.bus.import_files.emit(paths))
         layout.addWidget(self.drop)
-        row = QHBoxLayout()
-        for label, page in (
+        shortcuts = [
             ("Transcrever", "transcribe"),
             ("Ler em voz alta", "speech"),
             ("Traduzir", "translate"),
             ("Legendas", "subtitles"),
             ("Converter", "convert"),
             ("Documentos", "documents"),
-        ):
-            button = QPushButton(label)
-            button.clicked.connect(lambda _checked=False, name=page: session.bus.open_page.emit(name))
-            row.addWidget(button)
-        layout.addLayout(row)
+        ]
+        layout.addWidget(_grid_buttons(
+            [(label, lambda _=False, name=page: session.bus.open_page.emit(name)) for label, page in shortcuts],
+            cols=3,
+        ))
         self.status = QLabel()
         self.status.setWordWrap(True)
         self.status.setTextFormat(Qt.TextFormat.RichText)
@@ -157,24 +174,19 @@ class TranscribePage(QWidget):
         self.run_button.clicked.connect(self._run)
         self.result = QPlainTextEdit()
         self.result.setPlaceholderText("O texto transcrito aparece aqui e pode ser editado.")
-        save_row = QHBoxLayout()
-        save_text = QPushButton("Salvar texto")
-        save_text.clicked.connect(self._save_text)
-        save_segments = QPushButton("Salvar segmentos")
-        save_segments.clicked.connect(self._save_segments)
-        to_subs = QPushButton("Abrir no editor de legendas")
-        to_subs.clicked.connect(self._to_subs)
-        to_speech = QPushButton("Ler este texto")
-        to_speech.clicked.connect(self._to_speech)
-        for button in (save_text, save_segments, to_subs, to_speech):
-            save_row.addWidget(button)
+        save_actions = _grid_buttons([
+            ("Salvar texto", self._save_text),
+            ("Salvar segmentos", self._save_segments),
+            ("Abrir no editor de legendas", self._to_subs),
+            ("Ler este texto", self._to_speech),
+        ], cols=2)
         self.player = PlayerBar()
         layout.addWidget(self.file_list)
         layout.addLayout(buttons)
         layout.addLayout(form)
         layout.addWidget(self.run_button)
         layout.addWidget(self.result, 1)
-        layout.addLayout(save_row)
+        layout.addWidget(save_actions)
         layout.addWidget(self.player)
 
     def add_files(self, paths: list[str] | list[Path]) -> None:
@@ -538,8 +550,7 @@ class SubtitlePage(QWidget):
         form.addRow("Início", self.start)
         form.addRow("Fim", self.end)
         form.addRow("Texto", self.line)
-        buttons = QHBoxLayout()
-        for label, slot in (
+        edit_actions = _grid_buttons([
             ("Importar", self._import),
             ("Adicionar trecho", self._add),
             ("Atualizar selecionado", self._update),
@@ -547,23 +558,16 @@ class SubtitlePage(QWidget):
             ("Unir com o próximo", self._merge),
             ("Deslocar +0,5 s", lambda: self._shift(0.5)),
             ("Deslocar -0,5 s", lambda: self._shift(-0.5)),
-        ):
-            button = QPushButton(label)
-            button.clicked.connect(slot)
-            buttons.addWidget(button)
-        save_row = QHBoxLayout()
-        save = QPushButton("Salvar legenda")
-        save.setObjectName("primary")
-        save.clicked.connect(self._save)
-        burn = QPushButton("Gravar legenda no vídeo")
-        burn.clicked.connect(self._burn)
-        save_row.addWidget(save)
-        save_row.addWidget(burn)
+        ], cols=4)
+        save_actions = _grid_buttons([
+            ("Salvar legenda", self._save),
+            ("Gravar legenda no vídeo", self._burn),
+        ], cols=2)
         self.table.currentRowChanged.connect(self._select)
         layout.addWidget(self.table, 1)
         layout.addLayout(form)
-        layout.addLayout(buttons)
-        layout.addLayout(save_row)
+        layout.addWidget(edit_actions)
+        layout.addWidget(save_actions)
 
     def load_transcript(self, transcript) -> None:
         self.source_name = transcript.source_name or "legenda"

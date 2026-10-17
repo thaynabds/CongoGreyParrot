@@ -1,25 +1,71 @@
-# Congo Grey Parrot para computador
+# Congo Grey Parrot — Computador
 
-O quadro completo dos dois programas, com o que cada um faz, está no [README da pasta principal](https://github.com/thaynabds/CongoGreyParrot/blob/main/README.md).
+> Selecione o idioma: **Português** | [English](README.en.md) | [Español](README.es.md) | [中文](README.zh.md)
 
-Windows e Linux. Transcreve com faster-whisper, lê com Piper ou espeak-ng, exporta legendas e documentos, e converte mídia com FFmpeg. Salvar abre o seletor de nome e pasta. Baixar modelo ou voz também pede a pasta antes.
+Programa de desktop para Linux. Transcreve fala para texto com Whisper, lê texto em voz alta com Piper ou espeak-ng, traduz fala para inglês, edita legendas, converte mídia com FFmpeg e trabalha com documentos TXT, Markdown, DOCX e PDF. Todo o processamento acontece no seu computador, sem enviar dados para a internet.
+
+## Instalar
 
 ```bash
 cd congo-grey-parrot-desktop
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[transcribe,speech,dev]"
-congo-grey-parrot
+./instalar.sh
 ```
 
-No Windows, ative o ambiente com `.venv\Scripts\activate`.
+O script faz tudo automaticamente: verifica o Python, instala as dependências do sistema, cria o ambiente isolado, instala o programa e oferece o download do modelo Whisper.
 
-FFmpeg: [ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+## Idiomas suportados para transcrição
 
-Leitura sem voz Piper:
+O modelo Whisper suporta mais de 90 idiomas, incluindo:
+
+| Idioma | Código |
+|---|---|
+| Português | `pt` |
+| Inglês | `en` |
+| Espanhol | `es` |
+| Francês | `fr` |
+| Italiano | `it` |
+| Russo | `ru` |
+| Chinês | `zh` |
+| Japonês | `ja` |
+| Árabe | `ar` |
+| Bengali | `bn` |
+| Indonésio | `id` |
+| Urdu | `ur` |
+
+Para usar outro idioma: abra a tela **Transcrever**, selecione o idioma no menu ou deixe em **Detectar automaticamente**.
+
+## Telas
+
+| Tela | O que faz |
+|---|---|
+| Início | Atalhos para as outras telas e área de arrastar arquivos. |
+| Transcrever | Transcreve áudio ou vídeo para texto em qualquer idioma suportado. |
+| Texto para voz | Lê qualquer texto em voz alta e salva o áudio. |
+| Traduzir | Traduz texto entre idiomas. |
+| Legendas | Edita tempos e texto, grava legenda no vídeo. |
+| Converter mídia | Converte áudio ou vídeo para outro formato via FFmpeg. |
+| Documentos | Abre e salva TXT, Markdown, DOCX e PDF. |
+| Modelos e vozes | Baixa ou remove modelos Whisper e vozes Piper. |
+| Configurações | Tema, filtro de cor e tamanho da letra. |
+
+## Usar pela linha de comando
 
 ```bash
-sudo apt install espeak-ng
+cd congo-grey-parrot-desktop
+source .venv/bin/activate
+
+# Transcrever um arquivo
+python -m congo_grey_parrot transcribe audio.mp3 --output_dir ./saida --output_format txt
+
+# Ler texto em voz alta
+python -m congo_grey_parrot speak "Olá, mundo." --output saida.wav
+
+# Traduzir fala para inglês
+python -m congo_grey_parrot translate audio.mp3 --output_dir ./saida
 ```
 
-Testes: `pytest`
+## Testes
+
+```bash
+pytest
+```

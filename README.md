@@ -1,5 +1,7 @@
 # Project Congo Grey Parrot
 
+> Idioma: **Português** | [English](README.en.md) | [Español](README.es.md) | [中文](README.zh.md)
+
 Quatro programas independentes, nomeados a partir do *Psittacus erithacus*. Cada um tem pasta, ambiente e dados próprios. Nenhum depende dos outros para funcionar.
 
 **Autora:** [Thayná Batista da Silva](https://github.com/thaynabds)
