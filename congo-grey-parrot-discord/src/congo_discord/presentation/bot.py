@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import os
 import tempfile
 from datetime import datetime
@@ -16,6 +17,7 @@ from congo_discord.domain.rules import spell_text
 from congo_discord.domain.summary import Utterance, render_meeting
 from congo_discord.presentation.vtt_commands import register_vtt, relay_roll
 from congo_discord.service.envfile import load_env_file
+from congo_discord.service.foundry_relay import prepare_upload
 from congo_discord.service.meeting_audio import MeetingAudio
 from congo_discord.service.plugins import load_plugins
 from congo_discord.service.updater import update_report
@@ -277,16 +279,28 @@ def register(bot: CongoBot) -> None:
         body = "\n".join(files) if files else "A pasta de sons está vazia."
         await interaction.response.send_message(_clip(f"Pasta: {bot.sounds}\n{body}"), ephemeral=True)
 
-    @bot.tree.command(name="handout", description="Envia uma imagem no canal ou só para um jogador.")
-    async def handout(interaction: discord.Interaction, imagem: discord.Attachment, jogador: discord.Member | None = None) -> None:
+    @bot.tree.command(name="handout", description="Envia imagem, vídeo ou arquivo no canal ou só para um jogador.")
+    async def handout(interaction: discord.Interaction, arquivo: discord.Attachment, jogador: discord.Member | None = None) -> None:
         if not await gate(interaction, "handout"):
             return
-        payload = await imagem.to_file()
+        if arquivo.size > 8 * 1024 * 1024:
+            await interaction.response.send_message("O arquivo passou de 8 MB.", ephemeral=True)
+            return
+        data = await arquivo.read()
+        try:
+            filename, media_type, data = prepare_upload(arquivo.filename, arquivo.content_type or "", data)
+        except ValueError as exc:
+            await interaction.response.send_message(str(exc), ephemeral=True)
+            return
+        outbox = getattr(bot, "foundry_outbox", None)
+        if jogador is None and outbox is not None:
+            outbox.push(interaction.user.display_name, upload=(filename, media_type, data))
+        payload = discord.File(io.BytesIO(data), filename=filename)
         if jogador is None:
             await interaction.response.send_message(file=payload)
             return
         await jogador.send(file=payload)
-        await interaction.response.send_message(f"Imagem enviada no privado de {jogador.display_name}.", ephemeral=True)
+        await interaction.response.send_message(f"Arquivo enviado no privado de {jogador.display_name}.", ephemeral=True)
 
     @bot.tree.command(name="nome", description="Gera um nome, uma taverna ou um boato.")
     @app_commands.choices(tipo=[

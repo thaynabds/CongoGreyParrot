@@ -141,7 +141,7 @@ O Foundry pode estar em outra máquina, inclusive numa virtual da Oracle. Quem a
 
 O bot de Discord continua no computador de quem abre a mesa. O módulo, no navegador, só chama `http://127.0.0.1:7477` nessa máquina. A pasta Data, se alguém precisar copiar o módulo à mão, está em [Module Development](https://foundryvtt.com/article/module-development/).
 
-O módulo usa a API do Foundry (`createChatMessage`, `ChatMessage.create` e `game.users.activeGM`) e fala só com `http://127.0.0.1:7477` ou `http://localhost`. O chat público e as rolagens vão para o canal do Discord. `/dados` e `/navegador falar` voltam para o chat da mesa. Rolagem oculta do Foundry e `/dados oculto` não atravessam.
+O módulo usa a API do Foundry (`createChatMessage`, `ChatMessage.create`, `FilePicker.upload` e `game.users.activeGM`) e fala só com `http://127.0.0.1:7477` ou `http://localhost`. O chat público, as rolagens e arquivos de até 8 MB vão para o canal do Discord. `/dados`, `/navegador falar` e `/navegador arquivo` voltam para o chat da mesa. `/handout` no canal também manda o arquivo ao Foundry. Rolagem oculta do Foundry e `/dados oculto` não atravessam. Executável, HTML e SVG não entram.
 
 Se o Foundry estiver em HTTPS, o navegador pode bloquear a chamada para o endereço HTTP local. Nesse caso use o Foundry em HTTP neste computador.
 

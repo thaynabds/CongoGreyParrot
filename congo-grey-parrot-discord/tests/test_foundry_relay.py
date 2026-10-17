@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import json
 
 from congo_discord.service.foundry_relay import (
@@ -8,6 +9,7 @@ from congo_discord.service.foundry_relay import (
     dispatch,
     normalize_roll,
     parse_http,
+    prepare_upload,
 )
 
 
@@ -57,6 +59,34 @@ def test_pending_and_ack_roundtrip():
     status, _body, _kind = dispatch("POST", "/roll", b"{}", outbox)
     assert status == 400
     assert parse_http(b"POST /roll HTTP/1.1\r\nContent-Length: 20\r\n\r\n{}") is None
+
+
+def test_image_roundtrip_blocks_executable_and_limits_size():
+    outbox = FoundryOutbox()
+    note = outbox.push("Ana", text="mapa", upload=("mapa.png", "image/png", b"\x89PNG"))
+    assert note is not None and note.file_id
+    status, payload, content_type = dispatch("GET", f"/foundry/file/{note.file_id}", b"", outbox)
+    assert status == 200
+    assert payload == b"\x89PNG"
+    assert content_type.startswith("image/png")
+    assert outbox.ack(note.id)
+    assert dispatch("GET", f"/foundry/file/{note.file_id}", b"", outbox)[0] == 404
+    try:
+        prepare_upload("virus.exe", "application/octet-stream", b"MZ")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("executável deveria ser recusado")
+    encoded = base64.b64encode(b"GIF89a").decode("ascii")
+    body = json.dumps({
+        "vtt": "foundry",
+        "player": "Mestre",
+        "file": {"name": "cena.gif", "type": "image/gif", "data": encoded},
+    }).encode("utf-8")
+    status, payload, _kind = dispatch("POST", "/roll", body, outbox)
+    assert status == 200
+    assert json.loads(payload)["filename"] == "cena.gif"
+    assert outbox.pending() == []
 
 
 def test_local_socket_accepts_a_foundry_roll():

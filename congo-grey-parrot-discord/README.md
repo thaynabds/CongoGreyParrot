@@ -71,6 +71,6 @@ Com o bot online, no Discord:
 /navegador canal #rolagens
 ```
 
-O chat público da mesa aparece nesse canal. `/dados` e `/navegador falar` aparecem no chat do Foundry. O módulo só conversa com `http://127.0.0.1` ou `http://localhost`. Foundry em HTTPS pode bloquear esse endereço.
+O chat público da mesa aparece nesse canal. `/dados`, `/navegador falar` e `/navegador arquivo` aparecem no chat do Foundry. Imagem, vídeo e outros arquivos de até 8 MB também atravessam nos dois sentidos. `/handout` manda o mesmo tipo de arquivo no Discord e, se for no canal, também no Foundry. Arquivo executável, HTML e SVG não entram. O módulo só conversa com `http://127.0.0.1` ou `http://localhost`. Foundry em HTTPS pode bloquear esse endereço. Quem já instalou a versão 1.0.0 atualiza o módulo na tela Módulos do Foundry.
 
 Não envie o arquivo `.env` para o Git.
