@@ -9,12 +9,14 @@ dependencies = [
 
 [project.optional-dependencies]
 voz = ["discord-ext-voice-recv>=0.5"]
-transcribe = ["faster-whisper>=1.1.0"]
+transcribe = ["faster-whisper>=1.1.0", "av>=11,<19"]
 musica = ["yt-dlp>=2024.1"]
+mcp = ["mcp>=1.2"]
 dev = ["pytest>=8.2"]
 
 [project.scripts]
-congo-discord = "congo_discord.main:main"
+congo-discord = "congo_discord.presentation.bot:main"
+congo-discord-mcp = "congo_discord.mcp_server:main"
 
 [build-system]
 requires = ["setuptools>=68"]

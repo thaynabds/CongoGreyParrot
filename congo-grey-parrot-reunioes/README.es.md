@@ -26,3 +26,21 @@ congo-reunioes notas --formato json
 ## Idiomas
 
 El archivo VTT ya trae el texto en el idioma de la reunión. Cuando la transcripción parte de un audio, Whisper cubre más de 90 idiomas, entre ellos portugués, inglés, español, francés, italiano, ruso, chino, japonés, árabe, bengalí, indonesio y urdu.
+
+## MCP
+
+Las notas también abren un servidor MCP, con el paquete oficial `mcp`. En Cursor:
+
+```bash
+congo-grey-parrot-reunioes/.venv/bin/congo-reunioes-mcp
+```
+
+Instale antes, en esta carpeta: `pip install -e ".[mcp]"`.
+
+Para un sitio u otro servidor:
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8766 congo-grey-parrot-reunioes/.venv/bin/congo-reunioes-mcp
+```
+
+El archivo importado tiene que estar en la carpeta personal. Detalles en [mcp/README.es.md](../mcp/README.es.md).

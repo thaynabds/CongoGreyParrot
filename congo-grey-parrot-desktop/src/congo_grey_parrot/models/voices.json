@@ -99,12 +99,12 @@
     "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/zh/zh_CN/huayan/x_low/zh_CN-huayan-x_low.onnx.json"
   },
   {
-    "id": "ja_JP-kokoro-medium",
-    "name": "Kokoro",
+    "id": "ja_JP-hi_fi_captain-medium",
+    "name": "Hi-Fi Captain",
     "language": "ja_JP",
     "language_label": "日本語",
     "quality": "medium",
-    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ja/ja_JP/kokoro/medium/ja_JP-kokoro-medium.onnx",
-    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ja/ja_JP/kokoro/medium/ja_JP-kokoro-medium.onnx.json"
+    "model_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ja/ja_JP/hi_fi_captain/medium/ja_JP-hi_fi_captain-medium.onnx",
+    "config_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ja/ja_JP/hi_fi_captain/medium/ja_JP-hi_fi_captain-medium.onnx.json"
   }
 ]

@@ -78,7 +78,7 @@ Bot para servidores de Discord. Entra no canal de voz, transcreve ao vivo com o 
 
 Cada função liga e desliga individualmente com `/funcoes ativar` e `/funcoes desativar`. A transcrição ao vivo começa desligada.
 
-`./instalar.sh 3` cria o ambiente, instala as dependências e gera o arquivo `.env` se ainda não existir. Abra o `.env`, cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`, e ligue o bot com `congo-grey-parrot-discord/iniciar.sh`. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications).
+`./instalar.sh 3` instala o bot, pede o token no terminal sem mostrá-lo e cria o atalho do menu. O aplicativo ainda é criado em [Discord Developer Portal](https://discord.com/developers/applications). O servidor MCP está em [mcp/README.md](mcp/README.md).
 
 Os comandos com `/` se digitam no Discord, dentro do servidor, depois que o bot estiver online. Não são comandos do terminal.
 

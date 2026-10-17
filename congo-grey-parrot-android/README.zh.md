@@ -23,3 +23,19 @@
 | 设置 | 主题和颜色滤镜 |
 
 只有开始录音时才会请求麦克风权限。
+
+## MCP
+
+手机上的应用本身不开服务器。桥接程序在电脑上运行，使用官方 `mcp` 包：
+
+```bash
+congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.py
+```
+
+它会给出 APK 路径和安装步骤。如果安装了 `adb`，还可以在已连接的手机上安装并打开应用。HTTP：
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8768 congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.py
+```
+
+说明见 [mcp/README.zh.md](../mcp/README.zh.md)。

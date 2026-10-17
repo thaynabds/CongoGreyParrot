@@ -13,12 +13,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-transcribe = ["faster-whisper>=1.1.0"]
+transcribe = ["faster-whisper>=1.1.0", "av>=11,<19"]
 speech = ["piper-tts>=1.2.0"]
+mcp = ["mcp>=1.2"]
 dev = ["pytest>=8.2"]
 
 [project.scripts]
 congo-grey-parrot = "congo_grey_parrot.main:main"
+congo-grey-parrot-mcp = "congo_grey_parrot.mcp_server:main"
 
 [build-system]
 requires = ["setuptools>=68"]

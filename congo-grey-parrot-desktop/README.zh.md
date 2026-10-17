@@ -41,3 +41,21 @@ python -m congo_grey_parrot translate audio.mp3 --output_dir ./output
 ```
 
 测试：`pytest`
+
+## MCP
+
+这个程序也可以说 MCP，使用官方 `mcp` 包。在 Cursor 里用 stdio：
+
+```bash
+congo-grey-parrot-desktop/.venv/bin/congo-grey-parrot-mcp
+```
+
+先在 `congo-grey-parrot-desktop` 里安装额外部分：`pip install -e ".[mcp]"`。
+
+给网站或其他服务器：
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8765 congo-grey-parrot-desktop/.venv/bin/congo-grey-parrot-mcp
+```
+
+密钥在 `~/.local/share/congo-grey-parrot/mcp.token`，不会打印出来。没有 `Authorization: Bearer` 的请求会被拒绝。音频路径必须在个人文件夹里。说明见 [mcp/README.zh.md](../mcp/README.zh.md)。

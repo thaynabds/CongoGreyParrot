@@ -41,3 +41,21 @@ python -m congo_grey_parrot translate audio.mp3 --output_dir ./output
 ```
 
 Tests: `pytest`
+
+## MCP
+
+The program also speaks MCP, using the official `mcp` package. In Cursor, use stdio:
+
+```bash
+congo-grey-parrot-desktop/.venv/bin/congo-grey-parrot-mcp
+```
+
+Install the extra first, inside `congo-grey-parrot-desktop`: `pip install -e ".[mcp]"`.
+
+For a website or another server:
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8765 congo-grey-parrot-desktop/.venv/bin/congo-grey-parrot-mcp
+```
+
+The secret is stored in `~/.local/share/congo-grey-parrot/mcp.token` and is not printed. Requests without `Authorization: Bearer` are rejected. Audio paths must stay inside the home folder. Details in [mcp/README.en.md](../mcp/README.en.md).
