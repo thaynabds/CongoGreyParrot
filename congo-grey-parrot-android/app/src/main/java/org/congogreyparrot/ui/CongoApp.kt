@@ -12,6 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import org.congogreyparrot.R
@@ -92,7 +96,15 @@ fun CongoApp(
                         selected = page == item.key,
                         onClick = { page = item.key },
                         icon = { Mark(item.icon, item.hint) },
-                        label = { Text(item.label) },
+                        label = {
+                            Text(
+                                item.label,
+                                maxLines = 2,
+                                softWrap = true,
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        },
                     )
                 }
             }
@@ -155,14 +167,14 @@ private fun HomeScreen(onOpen: (String) -> Unit) {
             reader.shutdown()
         }
     }
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         Text("Congo Grey Parrot", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
         Text(
             "Grave, leia em voz alta e guarde os arquivos neste aparelho.",
-            modifier = Modifier.padding(top = 6.dp, bottom = 8.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = 6.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurface,
         )
-        Text(voiceNote, style = MaterialTheme.typography.bodyMedium)
+        Text(voiceNote, modifier = Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodyMedium)
         if (!voiceReady) {
             TextButton(onClick = { openVoiceHelp(context) }) {
                 Text("Abrir configurações de voz")
@@ -210,7 +222,7 @@ private fun ActionCard(@DrawableRes icon: Int, title: String, detail: String, on
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Mark(icon, title, 36)
-            Column {
+            Column(Modifier.weight(1f)) {
                 Text(title, style = MaterialTheme.typography.titleMedium)
                 Text(detail, style = MaterialTheme.typography.bodyMedium)
             }
@@ -259,7 +271,10 @@ private fun RecordScreen() {
         onDispose { recorder.stop() }
     }
 
-    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text("Gravação", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(24.dp))
         Button(
@@ -292,7 +307,11 @@ private fun RecordScreen() {
             modifier = Modifier.padding(top = 12.dp),
             style = MaterialTheme.typography.titleMedium,
         )
-        Text(message, modifier = Modifier.padding(top = 16.dp))
+        Text(
+            message,
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            textAlign = TextAlign.Center,
+        )
         lastFile?.let { file ->
             FilledTonalButton(
                 onClick = { saveRecording.launch(file.name) },
@@ -313,6 +332,7 @@ private fun RecordScreen() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ReadScreen() {
     val context = LocalContext.current
@@ -365,7 +385,7 @@ private fun ReadScreen() {
         }
     }
 
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         Text("Leitura", style = MaterialTheme.typography.headlineSmall)
         OutlinedTextField(
             value = text,
@@ -376,7 +396,11 @@ private fun ReadScreen() {
         )
         Text("Velocidade ${"%.1f".format(speed)}x", modifier = Modifier.padding(top = 12.dp))
         Slider(value = speed, onValueChange = { speed = it }, valueRange = 0.5f..2f)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+        FlowRow(
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             Button(onClick = {
                 if (text.isBlank()) {
                     message = "Digite um texto antes de ler."
@@ -424,7 +448,7 @@ private fun ReadScreen() {
             Mark(R.drawable.ic_save, "Salvar áudio")
             Text("  Salvar áudio")
         }
-        Text(message, modifier = Modifier.padding(top = 12.dp))
+        Text(message, modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
         if (!voiceReady) {
             TextButton(onClick = { openVoiceHelp(context) }) {
                 Text("Abrir configurações de voz")
@@ -438,6 +462,7 @@ private fun ReadScreen() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun FilesScreen() {
     val context = LocalContext.current
@@ -450,7 +475,7 @@ private fun FilesScreen() {
             Text("Nenhum arquivo salvo ainda.", modifier = Modifier.padding(top = 16.dp))
             return
         }
-        LazyColumn(Modifier.fillMaxSize().padding(top = 8.dp)) {
+        LazyColumn(Modifier.weight(1f).padding(top = 8.dp)) {
             items(files, key = { it.absolutePath }) { file ->
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
@@ -462,9 +487,18 @@ private fun FilesScreen() {
                                 if (file.extension.equals("txt", true)) R.drawable.ic_read else R.drawable.ic_mic,
                                 file.extension,
                             )
-                            Text(file.name, modifier = Modifier.padding(start = 10.dp))
+                            Text(
+                                file.name,
+                                modifier = Modifier.padding(start = 10.dp).weight(1f),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
                         }
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
                             FilledTonalButton(onClick = { shareFile(context, file) }) {
                                 Mark(R.drawable.ic_share, "Compartilhar")
                                 Text("  Compartilhar")
@@ -506,7 +540,7 @@ private fun SettingsScreen(
     filter: String,
     onFilter: (String) -> Unit,
 ) {
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         Text("Aparência", style = MaterialTheme.typography.headlineSmall)
         listOf(
             "light" to "Claro",
@@ -537,11 +571,11 @@ private fun SettingsScreen(
         }
         Text(
             "A inversão inteligente troca as cores da interface e mantém fotos e vídeo. A inversão clássica, a monocromia e os filtros de protanopia, deuteranopia e tritanopia alteram a tela toda.",
-            modifier = Modifier.padding(top = 12.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
         )
         Text(
             "Salvar abre o seletor do Android para você escolher a pasta e o nome. Uma cópia fica na lista Arquivos, na pasta privada do aplicativo. O backup automático está desligado.",
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
         )
     }
 }

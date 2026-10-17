@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "congo-desktop": {
+      "command": "congo-grey-parrot-desktop/.venv/bin/congo-grey-parrot-mcp"
+    },
+    "congo-reunioes": {
+      "command": "congo-grey-parrot-reunioes/.venv/bin/congo-reunioes-mcp"
+    },
+    "congo-discord": {
+      "command": "congo-grey-parrot-discord/.venv/bin/congo-discord-mcp"
+    },
+    "congo-android": {
+      "command": "congo-grey-parrot-desktop/.venv/bin/python",
+      "args": ["congo-grey-parrot-android/mcp_server.py"]
+    }
+  }
+}

@@ -23,3 +23,19 @@ Para gerar o APK de novo, nesta pasta: `./gradlew assembleDebug`.
 | Ajustes | Tema e filtro de cor |
 
 O microfone só é pedido quando a gravação começa.
+
+## MCP
+
+O aplicativo no celular não abre um servidor. A ponte roda no computador, com o pacote oficial `mcp`:
+
+```bash
+congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.py
+```
+
+Ela informa o caminho do APK e o passo a passo. Se o `adb` estiver instalado, também instala e abre o aplicativo no celular conectado. HTTP:
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8768 congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.py
+```
+
+Detalhes em [mcp/README.md](../mcp/README.md).

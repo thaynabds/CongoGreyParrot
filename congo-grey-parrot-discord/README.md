@@ -6,20 +6,33 @@ Bot para um servidor de Discord. Entra no canal de voz, pode transcrever ao vivo
 
 ## Instalar
 
-Na pasta deste repositório:
+Na pasta deste repositório, um comando:
 
 ```bash
 ./instalar.sh 3
 ```
 
-O script cria o ambiente, instala as dependências e gera o arquivo `.env` se ele ainda não existir.
+O script instala o programa, o áudio, a voz, a transcrição e a música. Cria o arquivo `.env` só com a sua permissão de leitura. Se o token ainda estiver vazio, explica os cliques em [discord.com/developers/applications](https://discord.com/developers/applications) e pede o token em silêncio no terminal, junto com o ID do dono. Também cria o atalho Congo Grey Parrot Discord no menu e o comando `congo-discord`. Se o token já estiver no arquivo, liga o bot no fim.
 
-1. Abra `congo-grey-parrot-discord/.env`.
-2. Cole `DISCORD_TOKEN` e `CONGO_DISCORD_OWNER_ID`.
-3. O aplicativo do bot é criado em [Discord Developer Portal](https://discord.com/developers/applications).
-4. Ligue o bot com `congo-grey-parrot-discord/iniciar.sh`.
+O site do Discord continua necessário para criar o aplicativo, copiar o token e convidar o bot. O token não entra no Git.
 
 Os comandos com `/` se digitam no Discord, dentro do servidor, depois que o bot estiver online. Não são comandos do terminal.
+
+## MCP
+
+O bot também abre um servidor MCP, com o pacote oficial `mcp`. No Cursor, o transporte é stdio:
+
+```bash
+congo-grey-parrot-discord/.venv/bin/congo-discord-mcp
+```
+
+Para um site ou outro servidor, na mesma pasta:
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8767 .venv/bin/congo-discord-mcp
+```
+
+O segredo fica em `~/.local/share/congo-grey-parrot/mcp.token`. O endereço não responde sem `Authorization: Bearer`. Detalhes em [mcp/README.md](../mcp/README.md).
 
 ## Idiomas da transcrição ao vivo
 

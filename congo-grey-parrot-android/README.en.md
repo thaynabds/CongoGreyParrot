@@ -23,3 +23,19 @@ To rebuild the APK, in this folder: `./gradlew assembleDebug`.
 | Settings | Theme and color filter |
 
 The microphone is requested only when recording starts.
+
+## MCP
+
+The phone app does not open a server. The bridge runs on the computer, with the official `mcp` package:
+
+```bash
+congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.py
+```
+
+It reports the APK path and the install steps. If `adb` is installed, it can also install and open the app on a connected phone. HTTP:
+
+```bash
+CONGO_MCP_TRANSPORT=http MCP_PORT=8768 congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.py
+```
+
+Details in [mcp/README.en.md](../mcp/README.en.md).
