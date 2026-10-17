@@ -7,7 +7,9 @@ import zipfile
 from pathlib import Path
 
 from congo_discord.service.foundry_relay import (
+    MAX_HTTP_BYTES,
     FoundryOutbox,
+    attached_file,
     discord_roll_line,
     dispatch,
     http_bytes,
@@ -213,8 +215,8 @@ def setup(bot) -> None:
 
     async def read_request(reader: asyncio.StreamReader) -> bytes:
         raw = b""
-        while len(raw) < 24000:
-            chunk = await asyncio.wait_for(reader.read(4096), timeout=5)
+        while len(raw) < MAX_HTTP_BYTES + 8192:
+            chunk = await asyncio.wait_for(reader.read(65536), timeout=30)
             if not chunk:
                 break
             raw += chunk
@@ -240,9 +242,11 @@ def setup(bot) -> None:
         await writer.drain()
         writer.close()
         if method == "POST" and path == "/roll" and status == 200:
-            await post_roll(json.loads(payload.decode("utf-8")))
+            incoming = json.loads(body.decode("utf-8"))
+            upload = attached_file(incoming)
+            await post_roll(json.loads(payload.decode("utf-8")), upload)
 
-    async def post_roll(roll: dict) -> None:
+    async def post_roll(roll: dict, upload: tuple[str, str, bytes] | None = None) -> None:
         config = _load_config(bot)
         channel_id = config.get("channel_id")
         if not channel_id:
@@ -250,7 +254,10 @@ def setup(bot) -> None:
         channel = bot.get_channel(int(channel_id))
         if channel is None:
             return
-        await channel.send(discord_roll_line(roll))
+        discord_file = None
+        if upload is not None:
+            discord_file = discord.File(io.BytesIO(upload[2]), filename=upload[0])
+        await channel.send(discord_roll_line(roll), file=discord_file)
 
     async def bind(port: int) -> None:
         server = await asyncio.start_server(handle_client, "127.0.0.1", port)
@@ -339,6 +346,40 @@ def setup(bot) -> None:
             "Como instalar: abra o Tampermonkey, clique em 'Adicionar script' e arraste o arquivo.",
             file=discord.File(str(path), filename=_USERSCRIPT_NAME),
             ephemeral=True,
+        )
+
+    @navegador.command(name="arquivo", description="Envia imagem, vídeo ou arquivo para o Discord e para o Foundry.")
+    async def arquivo(interaction: discord.Interaction, arquivo: discord.Attachment, texto: str = "") -> None:
+        if not await gate(interaction):
+            return
+        if arquivo.size > 8 * 1024 * 1024:
+            await interaction.response.send_message("O arquivo passou de 8 MB.", ephemeral=True)
+            return
+        data = await arquivo.read()
+        try:
+            note = bot.foundry_outbox.push(
+                interaction.user.display_name,
+                text=texto,
+                upload=(arquivo.filename, arquivo.content_type or "", data),
+            )
+        except ValueError as exc:
+            await interaction.response.send_message(str(exc), ephemeral=True)
+            return
+        if note is None:
+            await interaction.response.send_message("Arquivo vazio.", ephemeral=True)
+            return
+        config = _load_config(bot)
+        channel = bot.get_channel(int(config["channel_id"])) if config.get("channel_id") else None
+        message = "Arquivo na fila do Foundry."
+        if channel is not None and channel.id != interaction.channel_id:
+            await channel.send(
+                f"[DISCORD] **{interaction.user.display_name}** {texto}".strip(),
+                file=discord.File(io.BytesIO(data), filename=note.filename),
+            )
+            message = f"Arquivo enviado em {channel.mention} e na fila do Foundry."
+        await interaction.response.send_message(
+            message + " O módulo precisa estar ativo na mesa, neste computador.",
+            file=discord.File(io.BytesIO(data), filename=note.filename),
         )
 
     @navegador.command(name="falar", description="Envia um texto deste Discord para o chat do Foundry.")

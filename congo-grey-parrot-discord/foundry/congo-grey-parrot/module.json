@@ -2,7 +2,7 @@
   "id": "congo-grey-parrot",
   "title": "Congo Grey Parrot",
   "description": "Envia o chat público e as rolagens do Foundry para o bot de Discord neste computador, e mostra no chat o que o Discord enviar.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": {
     "minimum": "11"
   },
@@ -15,5 +15,5 @@
   "esmodules": ["scripts/module.js"],
   "url": "https://github.com/thaynabds/CongoGreyParrot",
   "manifest": "https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/main/congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json",
-  "download": "https://github.com/thaynabds/CongoGreyParrot/releases/download/foundry-v1.0.0/congo-grey-parrot.zip"
+  "download": "https://github.com/thaynabds/CongoGreyParrot/releases/download/foundry-v1.1.0/congo-grey-parrot.zip"
 }

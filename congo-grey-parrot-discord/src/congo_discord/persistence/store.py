@@ -9,7 +9,7 @@ CORE_FEATURES = {
     "iniciativa": "Ordem de turno.",
     "regras": "Consulta curta na Open5e, com a fonte.",
     "ambiente": "Som de fundo e efeito no canal de voz, a partir de arquivos locais.",
-    "handout": "Envia uma imagem no canal ou no privado.",
+    "handout": "Envia imagem, vídeo ou arquivo no canal ou no privado.",
     "nomes": "Nomes, tavernas e boatos gerados pelo bot.",
     "agenda": "Marca a próxima sessão e registra presença.",
     "inventario": "Itens, ouro e XP do grupo.",
