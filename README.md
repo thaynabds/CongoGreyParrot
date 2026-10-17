@@ -100,7 +100,7 @@ Para adicionar uma função nova, coloque um arquivo `.py` na pasta `plugins`, r
 | `/vtt` | Conecta uma mesa virtual por link ou webhook. |
 | `/funcoes` | Liga, desliga, adiciona ou remove funções. |
 | `/musica` | Toca áudio no canal de voz: YouTube, Spotify, lista de reprodução salva ou arquivo enviado. |
-| `/navegador` | Relay de rolagens do navegador para o Discord. Captura dados do Roll20 e do Foundry VTT em tempo real. |
+| `/navegador` | Liga o Discord ao Roll20 e ao Foundry. Passa texto, rolagem, imagem, vídeo e arquivo de até 8 MB. |
 
 ### Música no canal de voz
 
@@ -160,6 +160,7 @@ O comando `/navegador modulo` envia o zip do módulo. `/navegador userscript` co
 | `/navegador status` | Mostra se o relay está ativo e o canal configurado. |
 | `/navegador canal #canal` | Define o canal do Discord onde as rolagens aparecem. |
 | `/navegador falar` | Envia um texto do Discord para o chat do Foundry. |
+| `/navegador arquivo` | Envia imagem, vídeo ou arquivo de até 8 MB para o Discord e para o Foundry. |
 | `/navegador modulo` | Envia o zip do módulo do Foundry. |
 | `/navegador userscript` | Envia o arquivo `.user.js` para o Roll20 e para um Foundry sem o módulo. |
 

@@ -25,7 +25,7 @@ Comandos digitados no Discord, não no terminal.
 /iniciativa adicionar, proximo, lista, limpar.
 /regra consultar.
 /som fundo, efeito, parar, lista.
-/handout envia uma imagem.
+/handout envia imagem, vídeo ou arquivo de até 8 MB no canal ou no privado. No canal, também entra no Foundry se o módulo estiver ativo.
 /nome gera pessoa, taverna ou boato.
 /sessao marcar, lista.
 /grupo item, ouro, xp, lista.
@@ -34,7 +34,8 @@ Comandos digitados no Discord, não no terminal.
 /funcoes listar, ativar, desativar, remover, adicionar.
 /vtt catalogo, conectar, atual, testar, enviar, desconectar.
 /atualizar mostra o Git.
-/eco, /musica e /navegador existem quando o arquivo da pasta plugins está no lugar.
+/navegador ligar, desligar, status, canal, falar, arquivo, modulo, userscript.
+/eco e /musica existem quando o arquivo da pasta plugins está no lugar.
 """.strip()
 
 

@@ -49,5 +49,17 @@ Whisper 支持 90 多种语言，包括葡萄牙语、英语、西班牙语、�
 | `/musica` | 播放 YouTube、Spotify、已存列表或上传的文件 |
 | `/funcoes` | 打开或关闭功能 |
 | `/arquivo` | 转写上传的音频或朗读文字 |
+| `/handout` | 向频道或某位玩家发送不超过 8 MB 的图片、视频或其他文件 |
+| `/navegador` | 在这台电脑上把 Discord 接到 Foundry VTT 和 Roll20 |
+
+## Foundry VTT
+
+在 Foundry 的初始页面打开模块，点击安装模块，粘贴：
+
+```
+https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/main/congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json
+```
+
+Foundry 会自己下载安装包。这个安装方式见 [Add-on Modules](https://foundryvtt.com/article/modules/)。然后在世界里启用 Congo Grey Parrot。1.1.0 版也会双向传递不超过 8 MB 的图片、视频和其他文件。可执行文件、HTML 和 SVG 不会进入。旧版本在同一模块页面更新。机器人留在打开浏览器的那台电脑上，模块只访问 `http://127.0.0.1:7477`。
 
 不要把 `.env` 提交到 Git。

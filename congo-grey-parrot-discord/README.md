@@ -49,6 +49,7 @@ O modelo Whisper cobre mais de 90 idiomas, entre eles português, inglês, espan
 | `/musica` | Toca YouTube, Spotify, lista salva ou arquivo enviado |
 | `/funcoes` | Liga ou desliga funções |
 | `/arquivo` | Transcreve um áudio enviado ou lê um texto |
+| `/handout` | Envia imagem, vídeo ou arquivo de até 8 MB no canal ou no privado |
 | `/navegador` | Liga o Discord ao Foundry VTT e ao Roll20 neste computador |
 
 ## Foundry VTT
