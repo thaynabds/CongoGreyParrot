@@ -49,5 +49,17 @@ Whisper covers more than 90 languages, including Portuguese, English, Spanish, F
 | `/musica` | Plays YouTube, Spotify, a saved list or an uploaded file |
 | `/funcoes` | Turns features on or off |
 | `/arquivo` | Transcribes an uploaded audio file or reads text |
+| `/handout` | Sends an image, video or file, up to 8 MB, to the channel or to one player |
+| `/navegador` | Connects Discord to Foundry VTT and Roll20 on this computer |
+
+## Foundry VTT
+
+On the Foundry setup screen, open Modules, choose Install Module, and paste:
+
+```
+https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/main/congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json
+```
+
+Foundry downloads the package. This is the installer described in [Add-on Modules](https://foundryvtt.com/article/modules/). Then enable Congo Grey Parrot inside the world. Version 1.1.0 also carries images, video and other files up to 8 MB both ways. Executables, HTML and SVG are refused. Update an older copy from the same Modules screen. The bot stays on the computer that has the browser open, and the module only calls `http://127.0.0.1:7477`.
 
 Do not commit the `.env` file.
