@@ -63,7 +63,8 @@ def application_icon() -> QIcon:
 
 def desktop_path(path: Path) -> str:
     text = str(path)
-    if any(char in text for char in ' \t"\\'):
+    reserved = set(' \t\n"\'\\><~|&;$*?#()')
+    if any(char in reserved for char in text):
         return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
     return text
 

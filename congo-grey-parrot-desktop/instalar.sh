@@ -73,19 +73,21 @@ if [[ -f "$icon_src" ]]; then
   cp "$icon_src" "$icon_dest"
 fi
 
+ln -sfn "${root}/.venv/bin/congo-grey-parrot" "${HOME}/.local/bin/congo-grey-parrot"
+
 cat > "${HOME}/.local/share/applications/congo-grey-parrot.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=Congo Grey Parrot
 Comment=Transcrição, leitura em voz alta, legendas e conversão de mídia
-Exec=${root}/.venv/bin/congo-grey-parrot
+Exec=${HOME}/.local/bin/congo-grey-parrot
 Icon=${icon_dest}
 Terminal=false
 Categories=AudioVideo;Audio;
+StartupNotify=true
 StartupWMClass=congo-grey-parrot
+Keywords=transcricao;voz;whisper;parrot;
 EOF
-
-ln -sfn "${root}/.venv/bin/congo-grey-parrot" "${HOME}/.local/bin/congo-grey-parrot"
 update-desktop-database "${HOME}/.local/share/applications" >/dev/null 2>&1 || true
 ok "Atalho criado no menu de aplicativos."
 
