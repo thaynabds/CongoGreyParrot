@@ -137,22 +137,19 @@ O Spotify não disponibiliza o áudio diretamente. O bot extrai o nome da faixa 
 
 ### Relay de rolagens do navegador
 
-O bot lê rolagens feitas no navegador (Roll20, Foundry VTT) em tempo real e posta no Discord. A arquitetura usa um servidor HTTP local que só aceita conexões de `127.0.0.1`, e um userscript Tampermonkey instalado no navegador.
+O bot e o Foundry precisam rodar no mesmo computador. O módulo do Foundry fica em `congo-grey-parrot-discord/foundry/congo-grey-parrot`. Copie essa pasta para `Data/modules` do Foundry e ative o módulo no mundo. A pasta Data está descrita em [Module Development](https://foundryvtt.com/article/module-development/). O acesso local do Foundry, na instalação padrão, é `http://127.0.0.1:30000`, conforme o [guia de instalação](https://foundryvtt.com/article/installation/).
 
-```
-Navegador (Roll20 / Foundry) -> Userscript -> POST localhost:7477/roll -> Bot -> Canal do Discord
-```
+O módulo usa a API do Foundry (`createChatMessage`, `ChatMessage.create` e `game.users.activeGM`) e fala só com `http://127.0.0.1:7477` ou `http://localhost`. O chat público e as rolagens vão para o canal do Discord. `/dados` e `/navegador falar` voltam para o chat da mesa. Rolagem oculta do Foundry e `/dados oculto` não atravessam.
 
-Para ativar:
+Se o Foundry estiver em HTTPS, o navegador pode bloquear a chamada para o endereço HTTP local. Nesse caso use o Foundry em HTTP neste computador.
 
 ```
 /funcoes ativar navegador
 /navegador ligar
 /navegador canal #rolagens
-/navegador userscript
 ```
 
-O comando `/navegador userscript` envia o arquivo `.user.js` para instalar no [Tampermonkey](https://www.tampermonkey.net/) ou [Greasemonkey](https://www.greasespot.net/). Arraste o arquivo para a página de extensões do Tampermonkey.
+O comando `/navegador modulo` envia o zip do módulo. `/navegador userscript` continua disponível para o Roll20, pelo [Tampermonkey](https://www.tampermonkey.net/).
 
 | Comando | O que faz |
 |---|---|
@@ -160,9 +157,9 @@ O comando `/navegador userscript` envia o arquivo `.user.js` para instalar no [T
 | `/navegador desligar` | Para o servidor. |
 | `/navegador status` | Mostra se o relay está ativo e o canal configurado. |
 | `/navegador canal #canal` | Define o canal do Discord onde as rolagens aparecem. |
-| `/navegador userscript` | Envia o arquivo `.user.js` para instalar no Tampermonkey. |
-
-O userscript funciona em `app.roll20.net` e no Foundry VTT rodando em `localhost:30000`. Para outros VTTs, qualquer aplicativo que consiga fazer um POST para `http://127.0.0.1:7477/roll` com JSON `{"vtt": "nome", "player": "nome", "expression": "1d20+5", "total": "15", "detail": ""}` também funciona.
+| `/navegador falar` | Envia um texto do Discord para o chat do Foundry. |
+| `/navegador modulo` | Envia o zip do módulo do Foundry. |
+| `/navegador userscript` | Envia o arquivo `.user.js` para o Roll20 e para um Foundry sem o módulo. |
 
 ### Transcrição ao vivo
 

@@ -1,0 +1,17 @@
+{
+  "id": "congo-grey-parrot",
+  "title": "Congo Grey Parrot",
+  "description": "Envia o chat público e as rolagens do Foundry para o bot de Discord neste computador, e mostra no chat o que o Discord enviar.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "11"
+  },
+  "authors": [
+    {
+      "name": "Thayná Batista da Silva",
+      "url": "https://github.com/thaynabds"
+    }
+  ],
+  "esmodules": ["scripts/module.js"],
+  "url": "https://github.com/thaynabds/CongoGreyParrot"
+}
