@@ -17,7 +17,7 @@ KNOWN_VTTS = (
     KnownVtt("roll20", "Roll20", "https://roll20.net/", "A API do Roll20 roda dentro da campanha, não como login externo. https://wiki.roll20.net/API:Introduction"),
     KnownVtt("owlbear", "Owlbear Rodeo", "https://www.owlbear.rodeo/", "Extensões rodam dentro da sala. https://docs.owlbear.rodeo/"),
     KnownVtt("alchemy", "Alchemy RPG", "https://www.alchemyrpg.com/", "Não confirmei uma API pública para um bot externo."),
-    KnownVtt("foundry", "Foundry VTT", "https://foundryvtt.com/", "Roda no computador do mestre. Um módulo pode abrir um endereço local. https://foundryvtt.com/article/module-development/"),
+    KnownVtt("foundry", "Foundry VTT", "https://foundryvtt.com/", "No mesmo computador do bot, ative o módulo Congo Grey Parrot. https://foundryvtt.com/article/module-development/"),
     KnownVtt("fantasygrounds", "Fantasy Grounds Unity", "https://www.fantasygrounds.com/", "A automação fica no programa. Não confirmei uma API pública para um bot externo."),
     KnownVtt("talespire", "TaleSpire", "https://talespire.com/", "Não confirmei uma API pública para um bot externo."),
     KnownVtt("bagofmapping", "Bag of Mapping", "", "Não confirmei o endereço nem uma API pública."),

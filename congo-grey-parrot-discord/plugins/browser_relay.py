@@ -1,13 +1,23 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import json
+import zipfile
 from pathlib import Path
+
+from congo_discord.service.foundry_relay import (
+    FoundryOutbox,
+    discord_roll_line,
+    dispatch,
+    http_bytes,
+    parse_http,
+)
 
 FEATURE = "navegador"
 DESCRIPTION = (
-    "Lê rolagens do navegador (Roll20 e outros VTTs) via userscript Tampermonkey "
-    "e retransmite no Discord. Usa um servidor HTTP local que só aceita conexões de localhost."
+    "Liga o Discord ao Roll20 e ao Foundry VTT no mesmo computador. "
+    "O Foundry usa o módulo em foundry/congo-grey-parrot. O servidor HTTP só aceita 127.0.0.1."
 )
 
 _DEFAULT_PORT = 7477
@@ -43,13 +53,17 @@ def _write_userscript(bot, port: int) -> Path:
 // ==UserScript==
 // @name         Congo Grey Parrot, Relay de Rolagens
 // @namespace    https://github.com/thaynabds/CongoGreyParrot
-// @version      1.1
-// @description  Envia rolagens do Roll20 para o bot de Discord rodando no computador.
+// @version      1.2
+// @description  Envia rolagens do Roll20 ou do Foundry para o bot de Discord no mesmo computador.
 // @author       Thayná Batista da Silva
 // @match        https://app.roll20.net/editor/*
 // @match        https://app.roll20.net/campaigns/*
-// @match        http://localhost:30000/*
-// @match        http://127.0.0.1:30000/*
+// @match        http://localhost/*
+// @match        http://127.0.0.1/*
+// @match        https://localhost/*
+// @match        https://127.0.0.1/*
+// @match        http://*:30000/*
+// @match        https://*:30000/*
 // @grant        GM_xmlhttpRequest
 // @connect      localhost
 // @connect      127.0.0.1
@@ -122,8 +136,8 @@ def _write_userscript(bot, port: int) -> Path:
         }}
     }}
 
-    function isFoundry() {{
-        return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    function moduleAlreadyRuns() {{
+        return typeof unsafeWindow !== 'undefined' && unsafeWindow.__congoFoundryModule;
     }}
 
     function observeRoll20() {{
@@ -156,11 +170,20 @@ def _write_userscript(bot, port: int) -> Path:
         console.log('[Congo Grey Parrot] Relay de rolagens ativo no Foundry VTT, porta {port}.');
     }}
 
-    if (isFoundry()) {{
-        observeFoundry();
-    }} else {{
-        observeRoll20();
+    var tries = 0;
+    function boot() {{
+        if (moduleAlreadyRuns()) return;
+        if (document.querySelector('#chat-log') && document.querySelector('#board')) {{
+            observeFoundry();
+            return;
+        }}
+        if (location.hostname.endsWith('roll20.net')) {{
+            observeRoll20();
+            return;
+        }}
+        if (tries++ < 20) setTimeout(boot, 1500);
     }}
+    boot();
 }})();
 """
     path = _userscript_path(bot)
@@ -178,6 +201,7 @@ def setup(bot) -> None:
     )
 
     _server_handle: dict = {"task": None, "server": None, "port": _DEFAULT_PORT}
+    bot.foundry_outbox = FoundryOutbox()
 
     async def gate(interaction: discord.Interaction) -> bool:
         if bot.store.enabled("navegador"):
@@ -187,55 +211,38 @@ def setup(bot) -> None:
         )
         return False
 
-    async def handle_roll(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+    async def read_request(reader: asyncio.StreamReader) -> bytes:
+        raw = b""
+        while len(raw) < 24000:
+            chunk = await asyncio.wait_for(reader.read(4096), timeout=5)
+            if not chunk:
+                break
+            raw += chunk
+            if parse_http(raw) is not None:
+                break
+        return raw
+
+    async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
         try:
-            raw = await asyncio.wait_for(reader.read(8192), timeout=5)
+            raw = await read_request(reader)
         except asyncio.TimeoutError:
             writer.close()
             return
-        text = raw.decode("utf-8", errors="replace")
-
-        # Parse method and path from first line
-        first_line = text.split("\r\n", 1)[0] if "\r\n" in text else text.split("\n", 1)[0]
-        parts = first_line.split()
-        method = parts[0] if parts else ""
-        path = parts[1] if len(parts) > 1 else ""
-
-        # Respond to CORS preflight
-        if method == "OPTIONS":
-            writer.write(
-                b"HTTP/1.1 204 No Content\r\n"
-                b"Access-Control-Allow-Origin: *\r\n"
-                b"Access-Control-Allow-Methods: POST, OPTIONS\r\n"
-                b"Access-Control-Allow-Headers: Content-Type\r\n"
-                b"\r\n"
-            )
+        parsed = parse_http(raw)
+        if parsed is None:
+            writer.write(http_bytes(400, "pedido incompleto".encode("utf-8"), "text/plain"))
             await writer.drain()
             writer.close()
             return
-
-        if method != "POST" or path != "/roll":
-            writer.write(b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found")
-            await writer.drain()
-            writer.close()
-            return
-
-        # Extract JSON body (after blank line)
-        separator = "\r\n\r\n" if "\r\n\r\n" in text else "\n\n"
-        body = text.split(separator, 1)[1] if separator in text else ""
-        try:
-            payload = json.loads(body)
-        except (json.JSONDecodeError, ValueError):
-            writer.write(b"HTTP/1.1 400 Bad Request\r\nContent-Length: 12\r\n\r\nJSON inválido")
-            await writer.drain()
-            writer.close()
-            return
-
-        writer.write(b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nAccess-Control-Allow-Origin: *\r\n\r\nOK")
+        method, path, body = parsed
+        status, payload, content_type = dispatch(method, path, body, bot.foundry_outbox)
+        writer.write(http_bytes(status, payload, content_type))
         await writer.drain()
         writer.close()
+        if method == "POST" and path == "/roll" and status == 200:
+            await post_roll(json.loads(payload.decode("utf-8")))
 
-        # Forward to Discord
+    async def post_roll(roll: dict) -> None:
         config = _load_config(bot)
         channel_id = config.get("channel_id")
         if not channel_id:
@@ -243,27 +250,13 @@ def setup(bot) -> None:
         channel = bot.get_channel(int(channel_id))
         if channel is None:
             return
+        await channel.send(discord_roll_line(roll))
 
-        vtt = payload.get("vtt", "VTT")
-        player = payload.get("player", "?")
-        expression = payload.get("expression", "")
-        total = payload.get("total", "")
-        detail = payload.get("detail", "")
-
-        parts_msg = [f"[{vtt.upper()}] **{player}**"]
-        if expression:
-            parts_msg.append(f"`{expression}`")
-        if total:
-            parts_msg.append(f"= **{total}**")
-        if detail:
-            parts_msg.append(f"({detail[:200]})")
-        await channel.send(" ".join(parts_msg))
-
-    async def start_server(port: int) -> None:
-        server = await asyncio.start_server(handle_roll, "127.0.0.1", port)
+    async def bind(port: int) -> None:
+        server = await asyncio.start_server(handle_client, "127.0.0.1", port)
         _server_handle["server"] = server
-        async with server:
-            await server.serve_forever()
+        _server_handle["port"] = port
+        _server_handle["task"] = asyncio.create_task(server.serve_forever())
 
     @navegador.command(name="ligar", description="Inicia o servidor local que recebe rolagens do navegador.")
     async def ligar(interaction: discord.Interaction, porta: int = _DEFAULT_PORT) -> None:
@@ -274,19 +267,18 @@ def setup(bot) -> None:
                 f"O relay já está rodando na porta {_server_handle['port']}.", ephemeral=True
             )
             return
-        _server_handle["port"] = porta
         try:
-            task = bot.loop.create_task(start_server(porta))
-            _server_handle["task"] = task
-            await interaction.response.send_message(
-                f"Relay iniciado na porta {porta}. "
-                "Instale o userscript no Tampermonkey com `/navegador userscript`. "
-                "Defina o canal de destino com `/navegador canal`."
-            )
+            await bind(porta)
         except OSError as exc:
             await interaction.response.send_message(
                 f"Não consegui abrir a porta {porta}: {exc}", ephemeral=True
             )
+            return
+        await interaction.response.send_message(
+            f"Relay iniciado em http://127.0.0.1:{porta}. "
+            "No Foundry, ative o módulo Congo Grey Parrot. "
+            "Defina o canal com `/navegador canal`."
+        )
 
     @navegador.command(name="desligar", description="Para o servidor local de relay.")
     async def desligar(interaction: discord.Interaction) -> None:
@@ -349,4 +341,52 @@ def setup(bot) -> None:
             ephemeral=True,
         )
 
+    @navegador.command(name="falar", description="Envia um texto deste Discord para o chat do Foundry.")
+    async def falar(interaction: discord.Interaction, texto: str) -> None:
+        if not await gate(interaction):
+            return
+        note = bot.foundry_outbox.push(interaction.user.display_name, text=texto)
+        if note is None:
+            await interaction.response.send_message("Texto vazio.", ephemeral=True)
+            return
+        await interaction.response.send_message(
+            "Texto na fila do Foundry. O módulo precisa estar ativo na mesa, neste computador."
+        )
+
+    @navegador.command(name="modulo", description="Envia o módulo do Foundry VTT para instalar na pasta modules.")
+    async def modulo(interaction: discord.Interaction) -> None:
+        if not await gate(interaction):
+            return
+        folder = Path(__file__).resolve().parents[1] / "foundry" / "congo-grey-parrot"
+        if not folder.is_dir():
+            await interaction.response.send_message(
+                "A pasta foundry/congo-grey-parrot não está junto do bot.", ephemeral=True
+            )
+            return
+        blob = io.BytesIO()
+        with zipfile.ZipFile(blob, "w", zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted(folder.rglob("*")):
+                if path.is_file():
+                    archive.write(path, Path("congo-grey-parrot") / path.relative_to(folder))
+        blob.seek(0)
+        await interaction.response.send_message(
+            "Copie a pasta congo-grey-parrot para Data/modules do Foundry, ative o módulo no mundo "
+            "e volte à mesa. A instalação do Foundry explica a pasta Data em "
+            "https://foundryvtt.com/article/module-development/.",
+            file=discord.File(blob, filename="congo-grey-parrot-foundry.zip"),
+            ephemeral=True,
+        )
+
+    async def autostart() -> None:
+        await bot.wait_until_ready()
+        if not bot.store.enabled("navegador"):
+            return
+        if _server_handle["task"] and not _server_handle["task"].done():
+            return
+        try:
+            await bind(_DEFAULT_PORT)
+        except OSError:
+            return
+
+    bot.loop.create_task(autostart())
     bot.tree.add_command(navegador)

@@ -49,5 +49,20 @@ O modelo Whisper cobre mais de 90 idiomas, entre eles português, inglês, espan
 | `/musica` | Toca YouTube, Spotify, lista salva ou arquivo enviado |
 | `/funcoes` | Liga ou desliga funções |
 | `/arquivo` | Transcreve um áudio enviado ou lê um texto |
+| `/navegador` | Liga o Discord ao Foundry VTT e ao Roll20 neste computador |
+
+## Foundry VTT
+
+O módulo está em `foundry/congo-grey-parrot`. Copie essa pasta para `Data/modules` do Foundry e ative no mundo. A pasta Data está em [Module Development](https://foundryvtt.com/article/module-development/). A instalação padrão do Foundry abre em `http://127.0.0.1:30000` ([Installation Guide](https://foundryvtt.com/article/installation/)).
+
+Com o bot online, no Discord:
+
+```
+/funcoes ativar navegador
+/navegador ligar
+/navegador canal #rolagens
+```
+
+O chat público da mesa aparece nesse canal. `/dados` e `/navegador falar` aparecem no chat do Foundry. O módulo só conversa com `http://127.0.0.1` ou `http://localhost`. Foundry em HTTPS pode bloquear esse endereço.
 
 Não envie o arquivo `.env` para o Git.

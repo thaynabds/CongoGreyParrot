@@ -110,6 +110,9 @@ def register_vtt(bot) -> None:
 
 
 async def relay_roll(bot, interaction: discord.Interaction, text: str) -> None:
+    outbox = getattr(bot, "foundry_outbox", None)
+    if outbox is not None and text.strip():
+        outbox.push(interaction.user.display_name, text=text)
     if interaction.guild_id is None or not bot.store.enabled("vtt"):
         return
     if bot.store.vtt(str(interaction.guild_id)) is None:
