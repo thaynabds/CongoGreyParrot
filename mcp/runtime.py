@@ -8,6 +8,8 @@ Pedidos HTTP sem o segredo Bearer são recusados.
 
 from __future__ import annotations
 
+import functools
+import hmac
 import os
 import secrets
 import sys
@@ -28,27 +30,33 @@ def ensure_http_token() -> str:
         saved = path.read_text(encoding="utf-8").strip()
         if saved:
             return saved
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     generated = secrets.token_urlsafe(32)
-    path.write_text(generated + "\n", encoding="utf-8")
-    path.chmod(0o600)
+    # O arquivo nasce com 0600, sem janela em que outro usuário consiga ler.
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+        handle.write(generated + "\n")
     print(f"Segredo MCP gravado em {path}", file=sys.stderr)
     return generated
 
 
 class BearerGate:
-    """Recusa HTTP sem Authorization: Bearer. Encaminha lifespan e websocket."""
+    """Recusa HTTP e websocket sem Authorization: Bearer. Só o lifespan passa direto."""
 
     def __init__(self, app, token: str):
         self.app = app
-        self._expected = f"Bearer {token}"
+        self._expected = f"Bearer {token}".encode("utf-8")
 
     async def __call__(self, scope, receive, send):
-        if scope.get("type") != "http":
+        kind = scope.get("type")
+        if kind not in {"http", "websocket"}:
             await self.app(scope, receive, send)
             return
-        header = _authorization(scope)
-        if header != self._expected:
+        header = _authorization(scope).encode("latin1", "replace")
+        if not hmac.compare_digest(header, self._expected):
+            if kind == "websocket":
+                await send({"type": "websocket.close", "code": 1008})
+                return
             body = "Pedido recusado. Falta o segredo Bearer.".encode("utf-8")
             await send(
                 {
@@ -70,6 +78,53 @@ def _authorization(scope) -> str:
         if key.lower() == b"authorization":
             return value.decode("latin1").strip()
     return ""
+
+
+def guarded_path(raw: str, suffixes: set[str]) -> Path:
+    """Caminho que um cliente MCP pode pedir: na pasta pessoal, fora de pastas ocultas, com tipo esperado.
+
+    Um modelo de IA pode receber instruções escondidas num documento. Sem esta trava,
+    uma ferramenta de leitura devolveria ~/.ssh/id_ed25519 e uma de gravação
+    sobrescreveria ~/.bashrc.
+    """
+    path = Path(raw).expanduser().resolve()
+    home = Path.home().resolve()
+    if path == home or home not in path.parents:
+        raise ValueError("O caminho precisa ficar dentro da sua pasta pessoal.")
+    if any(part.startswith(".") for part in path.relative_to(home).parts):
+        raise ValueError("Pastas e arquivos ocultos, que começam com ponto, ficam de fora.")
+    if path.suffix.lower() not in suffixes:
+        allowed = ", ".join(sorted(suffixes))
+        raise ValueError(f"Este pedido só aceita arquivos {allowed}.")
+    return path
+
+
+def _tool_error():
+    try:
+        from mcp.server.mcpserver.exceptions import ToolError
+    except ModuleNotFoundError:
+        from mcp.server.fastmcp.exceptions import ToolError
+    return ToolError
+
+
+def user_errors(*kinds: type[BaseException]):
+    """Entrega ao cliente a mensagem dos erros previstos.
+
+    O pacote mcp 2 esconde o texto de qualquer exceção comum e devolve só
+    "Error executing tool". Um ToolError chega inteiro.
+    """
+
+    def wrap(function):
+        @functools.wraps(function)
+        def inner(*args, **kwargs):
+            try:
+                return function(*args, **kwargs)
+            except kinds as exc:
+                raise _tool_error()(str(exc)) from exc
+
+        return inner
+
+    return wrap
 
 
 def make_server(name: str):

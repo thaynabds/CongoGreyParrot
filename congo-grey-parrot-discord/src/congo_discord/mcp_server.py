@@ -34,7 +34,7 @@ Comandos digitados no Discord, não no terminal.
 /funcoes listar, ativar, desativar, remover, adicionar.
 /vtt catalogo, conectar, atual, testar, enviar, desconectar.
 /atualizar mostra o Git.
-/navegador ligar, desligar, status, canal, falar, arquivo, modulo, userscript.
+/navegador ligar, desligar, status, canal, token, falar, arquivo, modulo, userscript.
 /eco e /musica existem quando o arquivo da pasta plugins está no lugar.
 """.strip()
 
@@ -77,7 +77,8 @@ def build_server():
         body = texto.strip()
         if not body:
             return "Escreva o texto da mensagem."
-        payload = json.dumps({"content": body[:1800]}).encode("utf-8")
+        # Um texto vindo de um modelo de IA não pode chamar @everyone nem cargos.
+        payload = json.dumps({"content": body[:1800], "allowed_mentions": {"parse": []}}).encode("utf-8")
         request = urllib.request.Request(
             f"https://discord.com/api/v10/channels/{channel}/messages",
             data=payload,

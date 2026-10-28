@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import base64
+import hmac
 import json
 import re
+import secrets
 from dataclasses import dataclass
 from pathlib import Path
 
 MAX_FILE_BYTES = 8 * 1024 * 1024
 MAX_HTTP_BYTES = 12 * 1024 * 1024
+TOKEN_HEADER = "x-congo-token"
 
 _BLOCKED_EXTENSIONS = {
     ".exe", ".bat", ".cmd", ".com", ".msi", ".dll", ".so", ".sh", ".ps1",
@@ -213,6 +216,36 @@ def parse_http(raw: bytes) -> tuple[str, str, bytes] | None:
     return parts[0].upper(), path, body[:length]
 
 
+def parse_headers(raw: bytes) -> dict[str, str]:
+    separator = b"\r\n\r\n" if b"\r\n\r\n" in raw else b"\n\n"
+    header = raw.split(separator, 1)[0].decode("utf-8", errors="replace")
+    found: dict[str, str] = {}
+    for line in header.splitlines()[1:]:
+        name, colon, value = line.partition(":")
+        if colon:
+            found[name.strip().lower()] = value.strip()
+    return found
+
+
+def new_token() -> str:
+    return secrets.token_urlsafe(24)
+
+
+def request_allowed(method: str, headers: dict[str, str], token: str, port: int) -> bool:
+    """Barra sites abertos no navegador.
+
+    Qualquer página consegue mandar POST para 127.0.0.1. O Host fixo barra a troca de DNS
+    (DNS rebinding), e o cabeçalho com o token só sai do módulo do Foundry e do userscript.
+    Um cabeçalho próprio também obriga o navegador a perguntar antes (preflight).
+    """
+    if headers.get("host", "").lower() not in {f"127.0.0.1:{port}", f"localhost:{port}"}:
+        return False
+    if method == "OPTIONS":
+        return True
+    sent = headers.get(TOKEN_HEADER, "").encode("utf-8")
+    return bool(token) and hmac.compare_digest(sent, token.encode("utf-8"))
+
+
 def dispatch(method: str, path: str, body: bytes, outbox: FoundryOutbox) -> tuple[int, bytes, str]:
     if method == "OPTIONS":
         return 204, b"", "text/plain"
@@ -253,7 +286,9 @@ def dispatch(method: str, path: str, body: bytes, outbox: FoundryOutbox) -> tupl
 
 
 def http_bytes(status: int, body: bytes, content_type: str) -> bytes:
-    reason = {200: "OK", 204: "No Content", 400: "Bad Request", 404: "Not Found"}.get(status, "OK")
+    reason = {
+        200: "OK", 204: "No Content", 400: "Bad Request", 401: "Unauthorized", 404: "Not Found",
+    }.get(status, "OK")
     media_type, _, name = content_type.partition("; name=")
     disposition = f'Content-Disposition: attachment; filename="{name}"\r\n' if name else ""
     header = (
@@ -263,7 +298,7 @@ def http_bytes(status: int, body: bytes, content_type: str) -> bytes:
         f"Content-Length: {len(body)}\r\n"
         "Access-Control-Allow-Origin: *\r\n"
         "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
-        "Access-Control-Allow-Headers: Content-Type\r\n"
+        "Access-Control-Allow-Headers: Content-Type, X-Congo-Token\r\n"
         "Access-Control-Allow-Private-Network: true\r\n"
         "Connection: close\r\n"
         "\r\n"

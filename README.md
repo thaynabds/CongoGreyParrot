@@ -149,6 +149,7 @@ Se o Foundry estiver em HTTPS, o navegador pode bloquear a chamada para o endere
 /funcoes ativar navegador
 /navegador ligar
 /navegador canal #rolagens
+/navegador token
 ```
 
 O comando `/navegador modulo` envia o zip do módulo. `/navegador userscript` continua disponível para o Roll20, pelo [Tampermonkey](https://www.tampermonkey.net/).
@@ -159,6 +160,7 @@ O comando `/navegador modulo` envia o zip do módulo. `/navegador userscript` co
 | `/navegador desligar` | Para o servidor. |
 | `/navegador status` | Mostra se o relay está ativo e o canal configurado. |
 | `/navegador canal #canal` | Define o canal do Discord onde as rolagens aparecem. |
+| `/navegador token` | Mostra, só para quem administra, o token que o módulo do Foundry e o userscript enviam. Sem ele o relay recusa o pedido. |
 | `/navegador falar` | Envia um texto do Discord para o chat do Foundry. |
 | `/navegador arquivo` | Envia imagem, vídeo ou arquivo de até 8 MB para o Discord e para o Foundry. |
 | `/navegador modulo` | Envia o zip do módulo do Foundry. |

@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import io
 import json
+import os
 import zipfile
 from pathlib import Path
 
@@ -13,13 +14,16 @@ from congo_discord.service.foundry_relay import (
     discord_roll_line,
     dispatch,
     http_bytes,
+    new_token,
+    parse_headers,
     parse_http,
+    request_allowed,
 )
 
 FEATURE = "navegador"
 DESCRIPTION = (
     "Liga o Discord ao Roll20 e ao Foundry VTT no mesmo computador. "
-    "O Foundry usa o módulo em foundry/congo-grey-parrot. O servidor HTTP só aceita 127.0.0.1."
+    "O Foundry usa o módulo em foundry/congo-grey-parrot. O servidor HTTP só aceita 127.0.0.1 com o token do relay."
 )
 
 _DEFAULT_PORT = 7477
@@ -41,21 +45,33 @@ def _load_config(bot) -> dict:
 
 
 def _save_config(bot, data: dict) -> None:
-    _relay_config_path(bot).write_text(
-        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    path = _relay_config_path(bot)
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+        handle.write(json.dumps(data, ensure_ascii=False, indent=2))
+    path.chmod(0o600)
+
+
+def _relay_token(bot) -> str:
+    config = _load_config(bot)
+    token = str(config.get("token") or "")
+    if not token:
+        token = new_token()
+        config["token"] = token
+        _save_config(bot, config)
+    return token
 
 
 def _userscript_path(bot) -> Path:
     return bot.sounds.parent / _USERSCRIPT_NAME
 
 
-def _write_userscript(bot, port: int) -> Path:
+def _write_userscript(bot, port: int, token: str) -> Path:
     script = f"""\
 // ==UserScript==
 // @name         Congo Grey Parrot, Relay de Rolagens
 // @namespace    https://github.com/thaynabds/CongoGreyParrot
-// @version      1.2
+// @version      1.3
 // @description  Envia rolagens do Roll20 ou do Foundry para o bot de Discord no mesmo computador.
 // @author       Thayná Batista da Silva
 // @match        https://app.roll20.net/editor/*
@@ -75,12 +91,13 @@ def _write_userscript(bot, port: int) -> Path:
     'use strict';
 
     const RELAY_URL = 'http://127.0.0.1:{port}/roll';
+    const RELAY_TOKEN = '{token}';
 
     function sendRoll(payload) {{
         GM_xmlhttpRequest({{
             method: 'POST',
             url: RELAY_URL,
-            headers: {{ 'Content-Type': 'application/json' }},
+            headers: {{ 'Content-Type': 'application/json', 'X-Congo-Token': RELAY_TOKEN }},
             data: JSON.stringify(payload),
             onerror: function () {{
                 console.warn('[Congo] Relay offline. O bot de Discord está rodando?');
@@ -213,6 +230,18 @@ def setup(bot) -> None:
         )
         return False
 
+    async def admin_gate(interaction: discord.Interaction) -> bool:
+        from congo_discord.presentation.bot import _can_manage
+
+        if not await gate(interaction):
+            return False
+        if _can_manage(interaction):
+            return True
+        await interaction.response.send_message(
+            "Só quem administra o servidor muda o relay ou vê o token.", ephemeral=True
+        )
+        return False
+
     async def read_request(reader: asyncio.StreamReader) -> bytes:
         raw = b""
         while len(raw) < MAX_HTTP_BYTES + 8192:
@@ -237,6 +266,11 @@ def setup(bot) -> None:
             writer.close()
             return
         method, path, body = parsed
+        if not request_allowed(method, parse_headers(raw), _relay_token(bot), _server_handle["port"]):
+            writer.write(http_bytes(401, "token do relay ausente ou errado".encode("utf-8"), "text/plain"))
+            await writer.drain()
+            writer.close()
+            return
         status, payload, content_type = dispatch(method, path, body, bot.foundry_outbox)
         writer.write(http_bytes(status, payload, content_type))
         await writer.drain()
@@ -257,7 +291,9 @@ def setup(bot) -> None:
         discord_file = None
         if upload is not None:
             discord_file = discord.File(io.BytesIO(upload[2]), filename=upload[0])
-        await channel.send(discord_roll_line(roll), file=discord_file)
+        await channel.send(
+            discord_roll_line(roll), file=discord_file, allowed_mentions=discord.AllowedMentions.none()
+        )
 
     async def bind(port: int) -> None:
         server = await asyncio.start_server(handle_client, "127.0.0.1", port)
@@ -267,7 +303,10 @@ def setup(bot) -> None:
 
     @navegador.command(name="ligar", description="Inicia o servidor local que recebe rolagens do navegador.")
     async def ligar(interaction: discord.Interaction, porta: int = _DEFAULT_PORT) -> None:
-        if not await gate(interaction):
+        if not await admin_gate(interaction):
+            return
+        if not 1024 <= porta <= 65535:
+            await interaction.response.send_message("Escolha uma porta entre 1024 e 65535.", ephemeral=True)
             return
         if _server_handle["task"] and not _server_handle["task"].done():
             await interaction.response.send_message(
@@ -283,13 +322,13 @@ def setup(bot) -> None:
             return
         await interaction.response.send_message(
             f"Relay iniciado em http://127.0.0.1:{porta}. "
-            "No Foundry, ative o módulo Congo Grey Parrot. "
+            "No Foundry, ative o módulo Congo Grey Parrot e cole o token de `/navegador token`. "
             "Defina o canal com `/navegador canal`."
         )
 
     @navegador.command(name="desligar", description="Para o servidor local de relay.")
     async def desligar(interaction: discord.Interaction) -> None:
-        if not await gate(interaction):
+        if not await admin_gate(interaction):
             return
         server = _server_handle.get("server")
         task = _server_handle.get("task")
@@ -322,7 +361,7 @@ def setup(bot) -> None:
         description="Define o canal do Discord onde as rolagens do navegador serão postadas.",
     )
     async def canal(interaction: discord.Interaction, destino: discord.TextChannel) -> None:
-        if not await gate(interaction):
+        if not await admin_gate(interaction):
             return
         config = _load_config(bot)
         config["channel_id"] = str(destino.id)
@@ -336,15 +375,26 @@ def setup(bot) -> None:
         description="Envia o arquivo .user.js para instalar no Tampermonkey (Roll20 e Foundry VTT).",
     )
     async def userscript(interaction: discord.Interaction) -> None:
-        if not await gate(interaction):
+        if not await admin_gate(interaction):
             return
         porta = _server_handle["port"]
-        path = _write_userscript(bot, porta)
+        path = _write_userscript(bot, porta, _relay_token(bot))
         await interaction.response.send_message(
             f"Instale este arquivo no Tampermonkey ou Greasemonkey. "
             f"Ele monitora rolagens no Roll20 e no Foundry VTT e envia para a porta {porta}.\n"
             "Como instalar: abra o Tampermonkey, clique em 'Adicionar script' e arraste o arquivo.",
             file=discord.File(str(path), filename=_USERSCRIPT_NAME),
+            ephemeral=True,
+        )
+
+    @navegador.command(name="token", description="Mostra o token que o módulo do Foundry precisa. Só para quem administra.")
+    async def token(interaction: discord.Interaction) -> None:
+        if not await admin_gate(interaction):
+            return
+        await interaction.response.send_message(
+            f"Token do relay: `{_relay_token(bot)}`\n"
+            "No Foundry, como mestre: Configurações, Configurar módulos, Congo Grey Parrot, "
+            "campo Token do relay. Não poste este token num canal.",
             ephemeral=True,
         )
 
@@ -375,6 +425,7 @@ def setup(bot) -> None:
             await channel.send(
                 f"[DISCORD] **{interaction.user.display_name}** {texto}".strip(),
                 file=discord.File(io.BytesIO(data), filename=note.filename),
+                allowed_mentions=discord.AllowedMentions.none(),
             )
             message = f"Arquivo enviado em {channel.mention} e na fila do Foundry."
         await interaction.response.send_message(

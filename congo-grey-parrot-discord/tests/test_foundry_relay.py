@@ -117,3 +117,33 @@ def test_local_socket_accepts_a_foundry_roll():
         assert outbox.pending() == []
 
     asyncio.run(scenario())
+
+
+def _request(host: str, token: str | None, method: str = "GET") -> bytes:
+    lines = [f"{method} /foundry/pending HTTP/1.1", f"Host: {host}"]
+    if token is not None:
+        lines.append(f"X-Congo-Token: {token}")
+    return ("\r\n".join(lines) + "\r\n\r\n").encode("ascii")
+
+
+def test_relay_token_is_required_for_every_route():
+    from congo_discord.service.foundry_relay import parse_headers, request_allowed
+
+    token = "segredo-do-relay"
+    good = parse_headers(_request("127.0.0.1:7477", token))
+    assert request_allowed("GET", good, token, 7477)
+    assert request_allowed("POST", parse_headers(_request("localhost:7477", token)), token, 7477)
+    assert not request_allowed("GET", parse_headers(_request("127.0.0.1:7477", None)), token, 7477)
+    assert not request_allowed("GET", parse_headers(_request("127.0.0.1:7477", "errado")), token, 7477)
+    assert not request_allowed("GET", good, "", 7477)
+
+
+def test_relay_host_blocks_dns_rebinding():
+    from congo_discord.service.foundry_relay import parse_headers, request_allowed
+
+    token = "segredo-do-relay"
+    assert not request_allowed("GET", parse_headers(_request("evil.example:7477", token)), token, 7477)
+    assert not request_allowed("GET", parse_headers(_request("127.0.0.1:9999", token)), token, 7477)
+    assert not request_allowed("OPTIONS", parse_headers(_request("evil.example:7477", None, "OPTIONS")), token, 7477)
+    assert request_allowed("OPTIONS", parse_headers(_request("127.0.0.1:7477", None, "OPTIONS")), token, 7477)
+    assert b"X-Congo-Token" in http_bytes(204, b"", "text/plain")
