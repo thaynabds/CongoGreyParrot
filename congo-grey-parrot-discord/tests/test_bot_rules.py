@@ -122,3 +122,28 @@ def test_env_file_fills_only_missing_keys(tmp_path, monkeypatch):
     load_env_file(path)
     assert os.environ["DISCORD_TOKEN"] == "abc"
     assert os.environ["CONGO_DISCORD_OWNER_ID"] == "ja-definido"
+
+
+def test_env_file_is_closed_to_other_accounts(tmp_path, monkeypatch):
+    import os
+    import stat
+
+    from congo_discord.service.envfile import load_env_file
+
+    env = tmp_path / ".env"
+    env.write_text("CONGO_TESTE_ENV=ok\n", encoding="utf-8")
+    env.chmod(0o664)
+    monkeypatch.delenv("CONGO_TESTE_ENV", raising=False)
+    load_env_file(env)
+    assert os.environ["CONGO_TESTE_ENV"] == "ok"
+    assert stat.S_IMODE(env.stat().st_mode) == 0o600
+
+
+def test_bot_never_pings_everyone_or_roles():
+    from pathlib import Path
+
+    from congo_discord.presentation.bot import CongoBot
+
+    bot = CongoBot(None, Path("."), Path("."), Path("."))
+    assert bot.allowed_mentions.everyone is False
+    assert bot.allowed_mentions.roles is False
