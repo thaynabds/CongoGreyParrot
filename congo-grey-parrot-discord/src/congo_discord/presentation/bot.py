@@ -55,7 +55,12 @@ class CongoBot(commands.Bot):
     def __init__(self, store, repo: Path, sounds: Path, plugins: Path):
         intents = discord.Intents.default()
         intents.voice_states = True
-        super().__init__(command_prefix="!", intents=intents)
+        # Texto digitado por jogadores volta no canal. Ninguém chama @everyone ou um cargo pelo bot.
+        super().__init__(
+            command_prefix="!",
+            intents=intents,
+            allowed_mentions=discord.AllowedMentions(everyone=False, roles=False, users=True, replied_user=True),
+        )
         self.store = store
         self.repo = repo
         self.sounds = sounds
