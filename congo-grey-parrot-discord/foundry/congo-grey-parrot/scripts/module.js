@@ -18,6 +18,11 @@ function relayBase() {
     return url.origin;
 }
 
+function relayHeaders(extra = {}) {
+    const token = game.settings.get(MODULE_ID, "relayToken") || "";
+    return { ...extra, "X-Congo-Token": token };
+}
+
 function isRelayClient() {
     const active = game.users.activeGM;
     return Boolean(active && active.id === game.user.id);
@@ -129,6 +134,14 @@ Hooks.once("init", () => {
         default: DEFAULT_RELAY,
         restricted: true,
     });
+    game.settings.register(MODULE_ID, "relayToken", {
+        name: "Token do relay",
+        hint: "Use /navegador token no Discord. Sem ele o bot recusa os pedidos.",
+        scope: "client",
+        config: true,
+        type: String,
+        default: "",
+    });
 });
 
 Hooks.once("ready", () => {
@@ -149,7 +162,7 @@ Hooks.once("ready", () => {
         }
         const send = (body) => fetch(`${base}/roll`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: relayHeaders({ "Content-Type": "application/json" }),
             body: JSON.stringify(body),
         });
         const deliveries = [Promise.all(sources.map(fileFromSource)).then(async (files) => {
@@ -184,7 +197,7 @@ Hooks.once("ready", () => {
         }
         let response;
         try {
-            response = await fetch(`${base}/foundry/pending`);
+            response = await fetch(`${base}/foundry/pending`, { headers: relayHeaders() });
         } catch (error) {
             if (!warned) {
                 warned = true;
@@ -192,6 +205,15 @@ Hooks.once("ready", () => {
                     "Congo Grey Parrot não alcançou o bot em " +
                         base +
                         ". Se o Foundry estiver em HTTPS, o navegador bloqueia este endereço HTTP."
+                );
+            }
+            return;
+        }
+        if (response.status === 401) {
+            if (!warned) {
+                warned = true;
+                ui.notifications.warn(
+                    "Congo Grey Parrot: o bot recusou o token. Cole o resultado de /navegador token nas configurações do módulo."
                 );
             }
             return;
@@ -212,7 +234,9 @@ Hooks.once("ready", () => {
                 lines.push(`<p>${escapeHtml(item.text)}</p>`);
             }
             if (item.file_id) {
-                const fileResponse = await fetch(`${base}/foundry/file/${item.file_id}`);
+                const fileResponse = await fetch(`${base}/foundry/file/${encodeURIComponent(item.file_id)}`, {
+                    headers: relayHeaders(),
+                });
                 if (fileResponse.ok) {
                     const blob = await fileResponse.blob();
                     const path = await uploadToFoundry(blob, item.filename || "arquivo", item.media_type);
@@ -226,7 +250,7 @@ Hooks.once("ready", () => {
             });
             await fetch(`${base}/foundry/ack`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: relayHeaders({ "Content-Type": "application/json" }),
                 body: JSON.stringify({ id: item.id }),
             });
         }

@@ -60,6 +60,6 @@ On the Foundry setup screen, open Modules, choose Install Module, and paste:
 https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/main/congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json
 ```
 
-Foundry downloads the package. This is the installer described in [Add-on Modules](https://foundryvtt.com/article/modules/). Then enable Congo Grey Parrot inside the world. Version 1.1.1 also carries images, video and other files up to 8 MB both ways. Executables, HTML and SVG are refused. Update an older copy from the same Modules screen. The bot stays on the computer that has the browser open, and the module only calls `http://127.0.0.1:7477`.
+Foundry downloads the package. This is the installer described in [Add-on Modules](https://foundryvtt.com/article/modules/). Then enable Congo Grey Parrot inside the world. Version 1.2.0 requires the relay token: run `/navegador token` (server managers only) and paste it in the module setting Token do relay. It also carries images, video and other files up to 8 MB both ways. Executables, HTML and SVG are refused. Update an older copy from the same Modules screen. The bot stays on the computer that has the browser open, and the module only calls `http://127.0.0.1:7477`.
 
 Do not commit the `.env` file.

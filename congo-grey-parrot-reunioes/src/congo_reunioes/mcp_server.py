@@ -12,15 +12,10 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO / "mcp") not in sys.path:
     sys.path.insert(0, str(_REPO / "mcp"))
 
-from runtime import make_server, serve  # noqa: E402
+from runtime import guarded_path, make_server, serve, user_errors  # noqa: E402
 
-
-def local_path(raw: str) -> Path:
-    path = Path(raw).expanduser().resolve()
-    home = Path.home().resolve()
-    if path != home and home not in path.parents:
-        raise ValueError("O caminho precisa ficar dentro da sua pasta pessoal.")
-    return path
+TRANSCRIPT_SUFFIXES = {".vtt", ".txt", ".srt"}
+MAX_TRANSCRIPT_BYTES = 20 * 1024 * 1024
 
 
 def build_server():
@@ -35,11 +30,14 @@ def build_server():
         return "\n".join(lines)
 
     @server.tool()
+    @user_errors(ValueError, OSError)
     def importar_transcricao(caminho: str, plataforma: str = "outra") -> str:
-        """Importa um VTT ou um texto com falas. O arquivo precisa estar na pasta pessoal."""
-        path = local_path(caminho)
+        """Importa um VTT, SRT ou TXT com falas, da pasta pessoal e fora de pastas ocultas."""
+        path = guarded_path(caminho, TRANSCRIPT_SUFFIXES)
         if not path.is_file():
             return f"Não achei o arquivo: {path}"
+        if path.stat().st_size > MAX_TRANSCRIPT_BYTES:
+            return "O arquivo passou de 20 MB."
         raw = path.read_text(encoding="utf-8")
         lines = parse_transcript(raw)
         label = platform_label(plataforma)

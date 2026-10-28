@@ -70,8 +70,9 @@ Com o bot online, no Discord:
 /funcoes ativar navegador
 /navegador ligar
 /navegador canal #rolagens
+/navegador token
 ```
 
-O chat público da mesa aparece nesse canal. `/dados`, `/navegador falar` e `/navegador arquivo` aparecem no chat do Foundry. Imagem, vídeo e outros arquivos de até 8 MB também atravessam nos dois sentidos. `/handout` manda o mesmo tipo de arquivo no Discord e, se for no canal, também no Foundry. Arquivo executável, HTML e SVG não entram. O módulo só conversa com `http://127.0.0.1` ou `http://localhost`. Foundry em HTTPS pode bloquear esse endereço. Quem já instalou uma versão anterior atualiza o módulo na tela Módulos do Foundry. A versão publicada é a 1.1.1.
+O chat público da mesa aparece nesse canal. `/dados`, `/navegador falar` e `/navegador arquivo` aparecem no chat do Foundry. Imagem, vídeo e outros arquivos de até 8 MB também atravessam nos dois sentidos. `/handout` manda o mesmo tipo de arquivo no Discord e, se for no canal, também no Foundry. Arquivo executável, HTML e SVG não entram. O módulo só conversa com `http://127.0.0.1` ou `http://localhost`. Foundry em HTTPS pode bloquear esse endereço. Quem já instalou uma versão anterior atualiza o módulo na tela Módulos do Foundry. A versão publicada é a 1.2.0. Desde a 1.2.0 o bot só aceita pedidos com o token do relay: rode `/navegador token` (só quem administra o servidor vê) e cole o valor em Configurações, Configurar módulos, Congo Grey Parrot, Token do relay. Sem o token, qualquer site aberto no navegador poderia postar no seu canal ou ler a fila do Foundry.
 
 Não envie o arquivo `.env` para o Git.
