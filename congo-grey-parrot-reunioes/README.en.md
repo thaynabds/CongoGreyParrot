@@ -20,12 +20,23 @@ Listing platforms, importing and viewing notes needs no extra library. Transcrib
 congo-reunioes plataformas
 congo-reunioes importar exemplo-teams.vtt --plataforma teams
 congo-reunioes notas
+congo-reunioes importar-pasta
 congo-reunioes notas --formato json
 ```
 
 ## Languages
 
 The VTT file already contains the meeting text in whatever language it was written. When transcription starts from audio, Whisper covers more than 90 languages, including Portuguese, English, Spanish, French, Italian, Russian, Chinese, Japanese, Arabic, Bengali, Indonesian and Urdu.
+
+## Google Meet
+
+Meet does not let an outside program join a call. The official route is the transcript Meet records itself (Google Workspace with transcripts on, [Google help](https://support.google.com/meet/answer/12849897)). It becomes a document in the Meet Recordings folder in Google Drive.
+
+1. In Google Docs, open the transcript and use File, Download, Microsoft Word (.docx) or Plain text (.txt).
+2. Run `./congo-reunioes importar-pasta`. It looks in Downloads for files with Transcript or Transcrição in the name, imports the new ones and skips those already imported. Another folder: `./congo-reunioes importar-pasta ~/Documents/Meetings`.
+3. `./congo-reunioes notas --plataforma meet` shows the summary (lines per person, start and end) and who said what.
+
+The original file is not changed. Nothing leaves the computer. The summary only counts lines; it does not use AI. For a written summary, ask Claude through the MCP tool `listar_notas`.
 
 ## MCP
 

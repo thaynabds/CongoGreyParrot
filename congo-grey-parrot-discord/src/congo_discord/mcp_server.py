@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import shutil
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -9,14 +12,18 @@ from pathlib import Path
 
 from congo_discord.persistence.store import CORE_FEATURES
 from congo_discord.service.envfile import load_env_file
+from congo_discord.service.invite import PERMISSIONS, invite_url
 
 _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO / "mcp") not in sys.path:
     sys.path.insert(0, str(_REPO / "mcp"))
 
-from runtime import make_server, serve  # noqa: E402
+from runtime import make_server, serve, user_errors  # noqa: E402
 
 _ENV = Path(__file__).resolve().parents[2] / ".env"
+_UNIT = "congo-discord.service"
+# Token de bot do Discord: três partes em base64 separadas por ponto.
+_SECRET = re.compile(r"[\w-]{23,28}\.[\w-]{6,7}\.[\w-]{27,40}|(?i:bot)\s+[\w.-]{40,}")
 
 SLASH_HELP = """
 Comandos digitados no Discord, não no terminal.
@@ -44,10 +51,44 @@ def build_server():
 
     @server.tool()
     def status_bot() -> str:
-        """Diz se o processo do bot está ligado e se o arquivo .env existe, sem ler segredos."""
+        """Diz se o bot está ligado, se o .env existe e se o token está preenchido, sem mostrar o token."""
         running = "ligado" if _bot_running() else "desligado"
-        env = "existe" if _ENV.is_file() else "não existe"
-        return f"Bot {running}. Arquivo .env {env}."
+        if not _ENV.is_file():
+            return f"Bot {running}. Arquivo .env não existe. Rode ./instalar.sh na pasta do bot."
+        token = "preenchido" if _bot_token() else "vazio: cole o token do Developer Portal no .env"
+        service = _service_state()
+        return f"Bot {running}. Arquivo .env existe. DISCORD_TOKEN {token}. Serviço systemd: {service}."
+
+    @server.tool()
+    @user_errors(ValueError, TypeError)
+    def ver_log(linhas: int = 50) -> str:
+        """Últimas linhas do log do serviço do bot (systemd do usuário), com tokens apagados. De 1 a 200 linhas."""
+        count = max(1, min(int(linhas), 200))
+        journal = shutil.which("journalctl")
+        if not journal:
+            return "Este computador não tem journalctl. O log aparece no terminal onde o bot foi aberto."
+        try:
+            result = subprocess.run(
+                [journal, "--user", "-u", _UNIT, "-n", str(count), "--no-pager", "-o", "cat"],
+                capture_output=True,
+                text=True,
+                timeout=15,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return "Não consegui ler o log agora."
+        text = redact(result.stdout.strip())
+        if not text:
+            return "Sem log do serviço. Ou o bot roda pelo terminal, ou ./servico.sh instalar ainda não foi usado."
+        return text
+
+    @server.tool()
+    @user_errors(ValueError)
+    def link_convite(id_aplicacao: str, id_servidor: str = "") -> str:
+        """Monta o convite OAuth2 do bot com as permissões mínimas. Quem administra o servidor abre o link e autoriza."""
+        url = invite_url(id_aplicacao, id_servidor)
+        names = ", ".join(PERMISSIONS)
+        return f"{url}\nPermissões pedidas: {names}. Sem Administrador."
 
     @server.tool()
     def listar_funcoes() -> str:
@@ -119,6 +160,29 @@ def _bot_running() -> bool:
         if "congo-discord" in command or "congo_discord" in command:
             return True
     return False
+
+
+def redact(text: str) -> str:
+    return _SECRET.sub("[segredo apagado]", text)
+
+
+def _service_state() -> str:
+    systemctl = shutil.which("systemctl")
+    if not systemctl:
+        return "indisponível"
+    try:
+        result = subprocess.run(
+            [systemctl, "--user", "is-active", _UNIT], capture_output=True, text=True, timeout=10, check=False
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return "indisponível"
+    state = result.stdout.strip() or "desconhecido"
+    return "não instalado" if state in {"inactive", "unknown"} and not _unit_file().is_file() else state
+
+
+def _unit_file() -> Path:
+    base = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    return base / "systemd" / "user" / _UNIT
 
 
 def _bot_token() -> str | None:

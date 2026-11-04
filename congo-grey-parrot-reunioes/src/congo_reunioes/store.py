@@ -24,6 +24,20 @@ class NoteStore:
             )
             """
         )
+        self._conn.execute(
+            "create table if not exists imported_files (sha256 text primary key, name text not null, imported_at text not null)"
+        )
+        self._conn.commit()
+
+    def already_imported(self, digest: str) -> bool:
+        row = self._conn.execute("select 1 from imported_files where sha256 = ?", (digest,)).fetchone()
+        return row is not None
+
+    def mark_imported(self, digest: str, name: str) -> None:
+        self._conn.execute(
+            "insert or ignore into imported_files (sha256, name, imported_at) values (?, ?, ?)",
+            (digest, name, datetime.now().isoformat(timespec="seconds")),
+        )
         self._conn.commit()
 
     def add(self, platform: str, lines: list[SpokenLine]) -> int:
@@ -51,6 +65,7 @@ class NoteStore:
             self._conn.execute("delete from lines where platform = ?", (platform,))
         else:
             self._conn.execute("delete from lines")
+            self._conn.execute("delete from imported_files")
         self._conn.commit()
 
     def close(self) -> None:

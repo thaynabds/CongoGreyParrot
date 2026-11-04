@@ -18,6 +18,20 @@ O site do Discord continua necessário para criar o aplicativo, copiar o token e
 
 Os comandos com `/` se digitam no Discord, dentro do servidor, depois que o bot estiver online. Não são comandos do terminal.
 
+## Adicionar o bot aos seus servidores
+
+O bot é uma aplicação do Discord. Adicionado uma vez a um servidor, ele aparece igual no Discord do navegador e no aplicativo do computador, porque os dois usam a mesma conta. Cada servidor precisa do próprio convite.
+
+1. Em [Discord Developer Portal](https://discord.com/developers/applications), abra a aplicação (ou crie uma) e copie o Application ID em General Information. Em Bot, gere o token e cole no arquivo `.env` desta pasta, na linha `DISCORD_TOKEN=`. Nunca cole o token num chat nem no Git.
+2. Gere o convite: `.venv/bin/congo-discord-convite ID_DA_APLICACAO`. Para um servidor só: `.venv/bin/congo-discord-convite ID_DA_APLICACAO ID_DO_SERVIDOR`.
+3. Abra o link logada na conta que administra o servidor e autorize. Repita para cada servidor seu.
+
+O convite pede só Ver canais, Enviar mensagens, Anexar arquivos, Conectar e Falar. O bot não lê o texto das mensagens, não modera e não pede Administrador.
+
+## Deixar ligado
+
+`./servico.sh instalar` cria um serviço systemd do seu usuário (sem sudo). Ele liga o bot ao entrar na sessão e religa depois de uma falha. `./servico.sh status` mostra o estado, `./servico.sh log` mostra o log e `./servico.sh remover` desfaz. O próprio discord.py reconecta quando a internet cai. Para parar sem remover: `systemctl --user stop congo-discord`.
+
 ## MCP
 
 O bot também abre um servidor MCP, com o pacote oficial `mcp`. No Cursor, o transporte é stdio:

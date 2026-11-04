@@ -27,6 +27,16 @@ congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.
 
 Puertos HTTP, si cambia el transporte: computadora 8765, reuniones 8766, Discord 8767, puente del teléfono 8768.
 
+## Conectar Claude
+
+Claude Desktop y Claude Code corren en su computadora y hablan con estos servidores por stdio, sin abrir puertos.
+
+* **Claude Desktop:** `python3 mcp/registrar_claude.py` escribe los cuatro servidores en `~/.config/Claude/claude_desktop_config.json` con ruta absoluta, mantiene sus otros servidores y guarda una copia `.bak`. Cierre y abra Claude Desktop. Para deshacer: `python3 mcp/registrar_claude.py --remover`.
+* **Claude Code:** abra Claude Code en esta carpeta. Lee `.mcp.json` y pregunta si puede usar los servidores.
+* **Claude en el navegador (claude.ai):** no ve programas de su computadora. Solo llegaría a un servidor publicado en internet, y este proyecto no publica ninguno.
+
+Herramientas nuevas: `status_bot` (dice si el token está cargado, sin mostrarlo), `ver_log` (registro del servicio con tokens borrados), `link_convite` (invitación con permisos mínimos) e `importar_pasta` (transcripciones de Meet de la carpeta Descargas).
+
 ## Conectar un sitio u otro servidor
 
 ```bash

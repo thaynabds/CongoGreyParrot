@@ -30,7 +30,7 @@ flatpak install flathub io.github.thaynabds.CongoGreyParrot
 * **电脑。** 用 Whisper 转写语音（90 多种语言，包括葡萄牙语、英语、西班牙语、法语、意大利语、俄语、中文、日语、阿拉伯语、孟加拉语、印尼语和乌尔都语），朗读文字，编辑字幕，转换媒体。详见 [电脑版说明](congo-grey-parrot-desktop/README.zh.md)。
 * **手机。** 录音并用离线语音朗读。详见 [手机版说明](congo-grey-parrot-android/README.zh.md)。
 * **Discord。** 加入语音频道，可以实时转写、播放音频并使用桌游命令。详见 [Discord 说明](congo-grey-parrot-discord/README.zh.md)。
-* **会议。** 读取会议软件已经导出的转写文件。详见 [会议说明](congo-grey-parrot-reunioes/README.zh.md)。
+* **会议。** 读取会议软件已经导出的转写文件，包括从 Google Docs 下载的 Google Meet 转写（`congo-reunioes importar-pasta`）。详见 [会议说明](congo-grey-parrot-reunioes/README.zh.md)。
 
 完整的葡萄牙语技术说明在 [README.md](README.md)。
 

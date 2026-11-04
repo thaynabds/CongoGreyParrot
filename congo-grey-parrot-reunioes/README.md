@@ -20,6 +20,7 @@ Listar plataformas, importar e ver notas não precisa de biblioteca extra. A tra
 congo-reunioes plataformas
 congo-reunioes importar exemplo-teams.vtt --plataforma teams
 congo-reunioes notas
+congo-reunioes importar-pasta
 congo-reunioes notas --formato json
 ```
 
@@ -28,6 +29,16 @@ congo-reunioes notas --formato json
 O arquivo VTT já traz o texto no idioma da reunião. Quando a transcrição parte de um áudio, o Whisper cobre mais de 90 idiomas, entre eles português, inglês, espanhol, francês, italiano, russo, chinês, japonês, árabe, bengali, indonésio e urdu.
 
 Ajuda para exportar a transcrição: [Teams](https://support.microsoft.com/office) e [Google Meet](https://support.google.com/meet).
+
+## Google Meet
+
+O Meet não deixa um programa de fora entrar na reunião. O caminho oficial é a transcrição que o próprio Meet grava (Google Workspace com transcrição ativada, [ajuda do Google](https://support.google.com/meet/answer/12849897)). Ela vira um documento na pasta Meet Recordings do Google Drive.
+
+1. No Google Docs, abra a transcrição e use Arquivo, Fazer download, Microsoft Word (.docx) ou Texto simples (.txt).
+2. Rode `./congo-reunioes importar-pasta`. Ele procura em Downloads os arquivos com Transcript ou Transcrição no nome, importa os novos e pula os que já entraram. Outra pasta: `./congo-reunioes importar-pasta ~/Documentos/Reunioes`.
+3. `./congo-reunioes notas --plataforma meet` mostra o resumo (falas por pessoa, começo e fim) e quem disse o quê.
+
+O arquivo original não é alterado. Nada sai do computador. O resumo só conta as falas, não usa IA. Para um resumo escrito, peça ao Claude pela ferramenta MCP `listar_notas`.
 
 ## MCP
 

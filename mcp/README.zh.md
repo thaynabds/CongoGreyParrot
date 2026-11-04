@@ -27,6 +27,16 @@ congo-grey-parrot-desktop/.venv/bin/python congo-grey-parrot-android/mcp_server.
 
 如果改成 HTTP，端口是：电脑 8765，会议 8766，Discord 8767，手机桥 8768。
 
+## 连接 Claude
+
+Claude Desktop 和 Claude Code 在你的电脑上运行，通过 stdio 与这些服务器通信，不开放端口。
+
+* **Claude Desktop：** `python3 mcp/registrar_claude.py` 会把四个服务器以绝对路径写入 `~/.config/Claude/claude_desktop_config.json`，保留其他服务器，并保存 `.bak` 备份。关闭并重新打开 Claude Desktop。撤销：`python3 mcp/registrar_claude.py --remover`。
+* **Claude Code：** 在本文件夹打开 Claude Code，它会读取 `.mcp.json` 并询问是否使用这些服务器。
+* **浏览器中的 Claude（claude.ai）：** 看不到你电脑上的程序，只能访问发布到互联网的服务器，而本项目不发布任何服务器。
+
+新工具：`status_bot`（显示令牌是否已填写，不显示内容）、`ver_log`（服务日志，令牌已删除）、`link_convite`（最小权限邀请）和 `importar_pasta`（从“下载”文件夹导入 Meet 转写）。
+
 ## 连接网站或其他服务器
 
 ```bash

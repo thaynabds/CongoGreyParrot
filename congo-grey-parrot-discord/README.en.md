@@ -18,6 +18,20 @@ The Discord website is still required to create the application, copy the token 
 
 Slash commands are typed in Discord, inside the server, after the bot is online. They are not terminal commands.
 
+## Add the bot to your servers
+
+The bot is a Discord application. Once added to a server, it shows up the same in Discord in the browser and in the desktop app, because both use the same account. Each server needs its own invite.
+
+1. In the [Discord Developer Portal](https://discord.com/developers/applications), open the application (or create one) and copy the Application ID from General Information. Under Bot, generate the token and paste it in this folder's `.env` file, on the `DISCORD_TOKEN=` line. Never paste the token in a chat or in Git.
+2. Build the invite: `.venv/bin/congo-discord-convite APPLICATION_ID`. For one server only: `.venv/bin/congo-discord-convite APPLICATION_ID SERVER_ID`.
+3. Open the link signed in to the account that manages the server and authorize it. Repeat for each of your servers.
+
+The invite asks only for View Channels, Send Messages, Attach Files, Connect and Speak. The bot does not read message text, does not moderate and does not ask for Administrator.
+
+## Keep it running
+
+`./servico.sh instalar` creates a systemd service for your user (no sudo). It starts the bot when you log in and restarts it after a failure. `./servico.sh status` shows the state, `./servico.sh log` shows the log and `./servico.sh remover` undoes it. discord.py itself reconnects when the internet drops. To stop without removing: `systemctl --user stop congo-discord`.
+
 ## MCP
 
 The bot also starts an MCP server, using the official `mcp` package. In Cursor, the transport is stdio:

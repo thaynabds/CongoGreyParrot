@@ -28,6 +28,7 @@ def test_tool_lists_import_without_network():
         "congo_reunioes.mcp_server": {
             "listar_plataformas",
             "importar_transcricao",
+            "importar_pasta",
             "listar_notas",
         },
         "congo_discord.mcp_server": {
@@ -35,6 +36,8 @@ def test_tool_lists_import_without_network():
             "listar_funcoes",
             "ajuda_comandos",
             "enviar_comando",
+            "ver_log",
+            "link_convite",
         },
         "mcp_server": {
             "instrucoes_apk",
@@ -89,3 +92,87 @@ def test_path_guard_used_by_file_tools(tmp_path, monkeypatch):
         if asyncio.iscoroutine(result):
             asyncio.run(result)
     assert "PRIVATE KEY" not in str(caught.value)
+
+
+def _call(server, name, args):
+    import asyncio
+
+    result = server.call_tool(name, args)
+    if asyncio.iscoroutine(result):
+        result = asyncio.run(result)
+    return str(result)
+
+
+def test_path_guard_for_folders(tmp_path, monkeypatch):
+    import pytest
+    from runtime import guarded_dir
+
+    monkeypatch.setenv("HOME", str(tmp_path))
+    (tmp_path / "Downloads").mkdir()
+    assert guarded_dir(str(tmp_path / "Downloads")).name == "Downloads"
+    for raw in [str(tmp_path), str(tmp_path / ".ssh"), "/etc", str(tmp_path / "Downloads" / ".." / "..")]:
+        with pytest.raises(ValueError):
+            guarded_dir(raw)
+
+
+def test_importar_pasta_tool_imports_meet_and_refuses_hidden_folder(tmp_path, monkeypatch):
+    import pytest
+
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("CONGO_REUNIOES_DATA", str(tmp_path / "dados"))
+    folder = tmp_path / "Downloads"
+    folder.mkdir()
+    (folder / "Daily - Transcript.txt").write_text("00:00:00\nAna: bom dia\n", encoding="utf-8")
+    hidden = tmp_path / ".config"
+    hidden.mkdir()
+    (hidden / "x - Transcript.txt").write_text("Segredo: abc\n", encoding="utf-8")
+    server = importlib.import_module("congo_reunioes.mcp_server").build_server()
+    assert "importado, 1 falas" in _call(server, "importar_pasta", {"pasta": str(folder)})
+    assert "já importado" in _call(server, "importar_pasta", {"pasta": str(folder)})
+    with pytest.raises(Exception) as caught:
+        _call(server, "importar_pasta", {"pasta": str(hidden)})
+    assert "abc" not in str(caught.value)
+
+
+def test_discord_log_hides_tokens_and_invite_is_minimal(monkeypatch):
+    import pytest
+
+    module = importlib.import_module("congo_discord.mcp_server")
+    # Falso e montado em partes, para o push protection do GitHub não confundir com um token real.
+    leaked = ".".join(["M" + "x" * 25, "Gx" + "y" * 4, "z" * 38])
+    assert leaked not in module.redact(f"login falhou com {leaked}")
+    server = module.build_server()
+    text = _call(server, "link_convite", {"id_aplicacao": "123456789012345678"})
+    assert "permissions=3181568" in text and "Sem Administrador" in text
+    with pytest.raises(Exception):
+        _call(server, "link_convite", {"id_aplicacao": "123&scope=admin"})
+    monkeypatch.setattr(module.shutil, "which", lambda name: None)
+    assert "journalctl" in _call(server, "ver_log", {"linhas": 9999})
+
+
+def test_registrar_keeps_other_servers_and_is_idempotent(tmp_path):
+    import json
+
+    from registrar_claude import congo_servers, register
+
+    config = tmp_path / "Claude" / "claude_desktop_config.json"
+    config.parent.mkdir()
+    config.write_text(json.dumps({"mcpServers": {"railway": {"command": "railway"}}, "outro": 1}), encoding="utf-8")
+    fake = tmp_path / "repo"
+    (fake / "bin").mkdir(parents=True)
+    (fake / "bin" / "servidor").write_text("", encoding="utf-8")
+    (fake / "mcp.json").write_text(json.dumps({"mcpServers": {
+        "congo-um": {"command": "bin/servidor"},
+        "congo-falta": {"command": "bin/nao-instalado"},
+    }}), encoding="utf-8")
+    servers = congo_servers(fake)
+    assert servers == {"congo-um": {"command": str(fake / "bin" / "servidor")}}
+    assert register(config, servers) == sorted(servers)
+    data = json.loads(config.read_text(encoding="utf-8"))
+    assert data["outro"] == 1 and "railway" in data["mcpServers"]
+    assert set(servers) <= set(data["mcpServers"])
+    assert (tmp_path / "Claude" / "claude_desktop_config.json.bak").is_file()
+    assert oct(config.stat().st_mode & 0o777) == "0o600"
+    assert register(config, servers) == []
+    register(config, servers, remove=True)
+    assert set(json.loads(config.read_text(encoding="utf-8"))["mcpServers"]) == {"railway"}

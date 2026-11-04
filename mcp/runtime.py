@@ -99,6 +99,17 @@ def guarded_path(raw: str, suffixes: set[str]) -> Path:
     return path
 
 
+def guarded_dir(raw: str) -> Path:
+    """Pasta que um cliente MCP pode pedir: dentro da pasta pessoal e fora de pastas ocultas."""
+    path = Path(raw).expanduser().resolve()
+    home = Path.home().resolve()
+    if path == home or home not in path.parents:
+        raise ValueError("A pasta precisa ficar dentro da sua pasta pessoal, não ser a própria pasta pessoal.")
+    if any(part.startswith(".") for part in path.relative_to(home).parts):
+        raise ValueError("Pastas e arquivos ocultos, que começam com ponto, ficam de fora.")
+    return path
+
+
 def _tool_error():
     try:
         from mcp.server.mcpserver.exceptions import ToolError

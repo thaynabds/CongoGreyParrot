@@ -3,8 +3,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from congo_reunioes.importer import download_dir, import_file, import_folder, results_text
 from congo_reunioes.main import _data_file
-from congo_reunioes.parse import parse_transcript, render_notes
+from congo_reunioes.parse import TRANSCRIPT_SUFFIXES, render_notes
 from congo_reunioes.platforms import PLATFORMS, platform_label
 from congo_reunioes.store import NoteStore
 
@@ -12,10 +13,7 @@ _REPO = Path(__file__).resolve().parents[3]
 if str(_REPO / "mcp") not in sys.path:
     sys.path.insert(0, str(_REPO / "mcp"))
 
-from runtime import guarded_path, make_server, serve, user_errors  # noqa: E402
-
-TRANSCRIPT_SUFFIXES = {".vtt", ".txt", ".srt"}
-MAX_TRANSCRIPT_BYTES = 20 * 1024 * 1024
+from runtime import guarded_dir, guarded_path, make_server, serve, user_errors  # noqa: E402
 
 
 def build_server():
@@ -32,21 +30,32 @@ def build_server():
     @server.tool()
     @user_errors(ValueError, OSError)
     def importar_transcricao(caminho: str, plataforma: str = "outra") -> str:
-        """Importa um VTT, SRT ou TXT com falas, da pasta pessoal e fora de pastas ocultas."""
+        """Importa um VTT, SRT, TXT ou DOCX (transcrição do Meet baixada do Google Docs), da pasta pessoal e fora de pastas ocultas."""
         path = guarded_path(caminho, TRANSCRIPT_SUFFIXES)
         if not path.is_file():
             return f"Não achei o arquivo: {path}"
-        if path.stat().st_size > MAX_TRANSCRIPT_BYTES:
-            return "O arquivo passou de 20 MB."
-        raw = path.read_text(encoding="utf-8")
-        lines = parse_transcript(raw)
         label = platform_label(plataforma)
         store = NoteStore(_data_file())
         try:
-            count = store.add(label, lines)
+            result = import_file(store, path, label)
+            if result.status != "importado":
+                return f"{path.name}: {result.status}"
+            lines = store.lines(label)[-result.count :]
         finally:
             store.close()
-        return f"{count} falas guardadas.\n{render_notes(lines, label)}"
+        return f"{result.count} falas guardadas.\n{render_notes(lines, label)}"
+
+    @server.tool()
+    @user_errors(ValueError, OSError)
+    def importar_pasta(pasta: str = "", plataforma: str = "meet") -> str:
+        """Importa as transcrições novas de uma pasta (padrão: Downloads), sem subpastas, sem repetir arquivo."""
+        folder = guarded_dir(pasta) if pasta.strip() else download_dir()
+        label = platform_label(plataforma)
+        store = NoteStore(_data_file())
+        try:
+            return results_text(import_folder(store, folder, label))
+        finally:
+            store.close()
 
     @server.tool()
     def listar_notas(plataforma: str = "") -> str:

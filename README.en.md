@@ -30,7 +30,7 @@ Inside Flatpak the app only sees the Music, Videos, Documents and Downloads fold
 * **Computer.** Transcribes speech with Whisper (more than 90 languages, including Portuguese, English, Spanish, French, Italian, Russian, Chinese, Japanese, Arabic, Bengali, Indonesian and Urdu), reads text aloud, edits subtitles and converts media. Details: [desktop README](congo-grey-parrot-desktop/README.en.md).
 * **Phone.** Records audio and reads text offline. Details: [Android README](congo-grey-parrot-android/README.en.md).
 * **Discord.** Joins a voice channel, can transcribe live, play audio and run tabletop commands. Details: [Discord README](congo-grey-parrot-discord/README.en.md).
-* **Meetings.** Reads a transcript file the meeting app already exported. Details: [meetings README](congo-grey-parrot-reunioes/README.en.md).
+* **Meetings.** Reads a transcript file the meeting app already exported, including the Google Meet transcript downloaded from Google Docs (`congo-reunioes importar-pasta`). Details: [meetings README](congo-grey-parrot-reunioes/README.en.md).
 
 The full technical description in Portuguese is in [README.md](README.md).
 

@@ -18,6 +18,20 @@
 
 斜杠命令要在 Discord 服务器里输入，而且机器人必须已经在线。它们不是终端命令。
 
+## 把机器人加入你的服务器
+
+机器人是一个 Discord 应用。加入某个服务器后，浏览器版 Discord 和电脑应用里都会显示，因为两者用的是同一个账号。每个服务器都需要单独的邀请。
+
+1. 在 [Discord Developer Portal](https://discord.com/developers/applications) 打开（或新建）应用，在 General Information 复制 Application ID。在 Bot 页面生成令牌，粘贴到本文件夹 `.env` 文件的 `DISCORD_TOKEN=` 一行。不要把令牌发到聊天或 Git 里。
+2. 生成邀请：`.venv/bin/congo-discord-convite 应用ID`。只针对一个服务器：`.venv/bin/congo-discord-convite 应用ID 服务器ID`。
+3. 用管理该服务器的账号打开链接并授权。每个服务器重复一次。
+
+邀请只请求 查看频道、发送消息、附加文件、连接 和 说话 权限。机器人不读取消息文字，不做管理，也不请求管理员权限。
+
+## 保持运行
+
+`./servico.sh instalar` 为当前用户创建 systemd 服务（无需 sudo），登录时启动机器人，出错后自动重启。`./servico.sh status` 查看状态，`./servico.sh log` 查看日志，`./servico.sh remover` 撤销。网络断开时 discord.py 会自动重连。只停止不删除：`systemctl --user stop congo-discord`。
+
 ## MCP
 
 机器人也可以启动 MCP 服务，使用官方 `mcp` 包。在 Cursor 里用 stdio：

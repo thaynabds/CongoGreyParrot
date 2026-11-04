@@ -202,8 +202,11 @@ Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-g
 ```bash
 ./congo-reunioes plataformas
 ./congo-reunioes importar exemplo-teams.vtt --plataforma teams
+./congo-reunioes importar-pasta
 ./congo-reunioes notas
 ```
+
+`importar-pasta` lê a transcrição do Google Meet baixada do Google Docs (.docx ou .txt) direto da pasta Downloads e não repete arquivo já importado. O passo a passo está no [README de reuniões](congo-grey-parrot-reunioes/README.md#google-meet).
 
 `./instalar.sh 4` também coloca `congo-reunioes` em `~/.local/bin`. A transcrição de áudio é que exige o ambiente virtual, como explica a documentação do [venv](https://docs.python.org/3/library/venv.html).
 
@@ -247,8 +250,11 @@ python -m congo_grey_parrot translate audio.mp3 --output_dir ./saida
 # Listar plataformas suportadas
 ./congo-reunioes plataformas
 
-# Importar transcrição
+# Importar transcrição (VTT, SRT, TXT ou DOCX)
 ./congo-reunioes importar reuniao.vtt --plataforma teams
+
+# Importar as transcrições novas do Meet que estão em Downloads
+./congo-reunioes importar-pasta
 
 # Ver notas salvas
 ./congo-reunioes notas
@@ -259,7 +265,7 @@ python -m congo_grey_parrot translate audio.mp3 --output_dir ./saida
 
 ### Bot de Discord, via API REST
 
-O bot expõe os resultados no Discord, que tem API REST pública. Um agente de IA pode usar a API do Discord para enviar comandos de barra ao bot e ler as respostas, autenticando com um token de usuário ou de bot.
+O Claude fala com o bot pelo servidor MCP `congo-discord` (status, log sem segredos, convite e envio de mensagem como o bot). Fora do MCP, a API REST do Discord aceita só o token do bot. Token de conta pessoal (self-bot) é proibido pelos termos do Discord.
 
 Referência: [Discord REST API](https://discord.com/developers/docs/reference).
 
@@ -270,7 +276,7 @@ Referência: [Discord REST API](https://discord.com/developers/docs/reference).
 adb install congo-grey-parrot-android/CongoGreyParrot-debug.apk
 
 # Iniciar o aplicativo
-adb shell am start -n io.github.thaynabds.congogreyparrot/.MainActivity
+adb shell am start -n org.congogreyparrot/.MainActivity
 
 # Enviar arquivo de texto para o aplicativo
 adb push texto.txt /sdcard/Download/texto.txt
