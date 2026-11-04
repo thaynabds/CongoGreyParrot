@@ -96,7 +96,12 @@ def main() -> None:
 
 
 def _data_file() -> Path:
-    root = Path(os.environ.get("CONGO_REUNIOES_DATA", Path.home() / ".local" / "share" / "congo-grey-parrot-reunioes"))
+    explicit = os.environ.get("CONGO_REUNIOES_DATA", "").strip()
+    if explicit:
+        return Path(explicit) / "notas.sqlite3"
+    # Segue o padrão do Linux: XDG_DATA_HOME, se definido, senão ~/.local/share.
+    base = os.environ.get("XDG_DATA_HOME", "").strip() or str(Path.home() / ".local" / "share")
+    root = Path(base) / "congo-grey-parrot-reunioes"
     return root / "notas.sqlite3"
 
 

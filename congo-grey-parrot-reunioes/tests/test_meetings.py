@@ -150,3 +150,13 @@ def test_notas_formato_json_is_valid(tmp_path: Path, monkeypatch, capsys):
     cli.main()
     data = json.loads(capsys.readouterr().out)
     assert data == {"reuniao": "Google Meet", "falas": [{"pessoa": "Ana", "fala": "oi", "quando": "00:01:00"}]}
+
+
+def test_data_follows_xdg_data_home(tmp_path: Path, monkeypatch):
+    from congo_reunioes.main import _data_file
+
+    monkeypatch.delenv("CONGO_REUNIOES_DATA", raising=False)
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+    assert _data_file() == tmp_path / "congo-grey-parrot-reunioes" / "notas.sqlite3"
+    monkeypatch.setenv("CONGO_REUNIOES_DATA", str(tmp_path / "outra"))
+    assert _data_file() == tmp_path / "outra" / "notas.sqlite3"
