@@ -7,7 +7,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <developer id="io.github.thaynabds">
-    <name>Thayná Batista da Silva</name>
+    <name>thaynabds</name>
   </developer>
   <description>
     <p>Congo Grey Parrot turns speech into text with Whisper and reads text aloud with Piper, on your own computer. Audio and documents never leave the machine.</p>
@@ -21,6 +21,8 @@
       <li xml:lang="pt-BR">Lê texto em voz alta e salva como arquivo WAV</li>
       <li>Edit subtitles and export SRT and VTT</li>
       <li xml:lang="pt-BR">Edita legendas e exporta SRT e VTT</li>
+      <li>Summarize text, documents and transcripts: main sentences, decisions, tasks and questions, without AI</li>
+      <li xml:lang="pt-BR">Resume texto, documentos e transcrições: frases principais, decisões, tarefas e perguntas, sem IA</li>
       <li>Convert media and work with TXT, Markdown, DOCX and PDF documents</li>
       <li xml:lang="pt-BR">Converte mídia e trabalha com documentos TXT, Markdown, DOCX e PDF</li>
     </ul>
@@ -34,19 +36,23 @@
   <screenshots>
     <screenshot type="default">
       <caption>Transcribe audio and video</caption>
-      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/transcribe.png</image>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.2.0/congo-grey-parrot-desktop/flatpak/screenshots/transcribe.png</image>
     </screenshot>
     <screenshot>
       <caption>Read text aloud</caption>
-      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/speech.png</image>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.2.0/congo-grey-parrot-desktop/flatpak/screenshots/speech.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Summarize text without AI</caption>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.2.0/congo-grey-parrot-desktop/flatpak/screenshots/summary.png</image>
     </screenshot>
     <screenshot>
       <caption>Edit subtitles</caption>
-      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/subtitles.png</image>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.2.0/congo-grey-parrot-desktop/flatpak/screenshots/subtitles.png</image>
     </screenshot>
     <screenshot>
       <caption>Start page</caption>
-      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/home.png</image>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.2.0/congo-grey-parrot-desktop/flatpak/screenshots/home.png</image>
     </screenshot>
   </screenshots>
   <branding>
@@ -72,6 +78,11 @@
     <keyword>text to speech</keyword>
   </keywords>
   <releases>
+    <release version="0.2.0" date="2026-11-04">
+      <description>
+        <p>New Summarize screen: picks the main sentences of a text, document or transcript and lists decisions, tasks and questions. Works offline and does not use AI.</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-10-28">
       <description>
         <p>First release on Flathub.</p>

@@ -23,6 +23,7 @@
 机器人是一个 Discord 应用。加入某个服务器后，浏览器版 Discord 和电脑应用里都会显示，因为两者用的是同一个账号。每个服务器都需要单独的邀请。
 
 1. 在 [Discord Developer Portal](https://discord.com/developers/applications) 打开（或新建）应用，在 General Information 复制 Application ID。在 Bot 页面生成令牌，粘贴到本文件夹 `.env` 文件的 `DISCORD_TOKEN=` 一行。不要把令牌发到聊天或 Git 里。
+   为了不让令牌显示在屏幕上，请在 Portal 中复制令牌，然后运行 `./colar-token.sh`：它会在不显示粘贴内容的情况下读取令牌，检查格式，只写入 `.env` 中的 `DISCORD_TOKEN` 一行，并且只有你能读取该文件。
 2. 生成邀请：`.venv/bin/congo-discord-convite 应用ID`。只针对一个服务器：`.venv/bin/congo-discord-convite 应用ID 服务器ID`。
 3. 用管理该服务器的账号打开链接并授权。每个服务器重复一次。
 

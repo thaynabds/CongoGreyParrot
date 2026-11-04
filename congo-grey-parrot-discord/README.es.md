@@ -23,6 +23,7 @@ Los comandos con `/` se escriben en Discord, dentro del servidor, cuando el bot 
 El bot es una aplicación de Discord. Una vez agregado a un servidor, aparece igual en Discord del navegador y en la aplicación de escritorio, porque los dos usan la misma cuenta. Cada servidor necesita su propia invitación.
 
 1. En [Discord Developer Portal](https://discord.com/developers/applications), abra la aplicación (o cree una) y copie el Application ID en General Information. En Bot, genere el token y péguelo en el archivo `.env` de esta carpeta, en la línea `DISCORD_TOKEN=`. Nunca pegue el token en un chat ni en Git.
+   Para que el token no aparezca en pantalla, cópielo en el Portal y ejecute `./colar-token.sh`: pide el token sin mostrar lo que pega, revisa el formato y graba solo la línea `DISCORD_TOKEN` del `.env`, con permiso solo para usted.
 2. Genere la invitación: `.venv/bin/congo-discord-convite ID_DE_LA_APLICACION`. Para un solo servidor: `.venv/bin/congo-discord-convite ID_DE_LA_APLICACION ID_DEL_SERVIDOR`.
 3. Abra el enlace con la cuenta que administra el servidor y autorice. Repita para cada servidor suyo.
 

@@ -23,6 +23,7 @@ Slash commands are typed in Discord, inside the server, after the bot is online.
 The bot is a Discord application. Once added to a server, it shows up the same in Discord in the browser and in the desktop app, because both use the same account. Each server needs its own invite.
 
 1. In the [Discord Developer Portal](https://discord.com/developers/applications), open the application (or create one) and copy the Application ID from General Information. Under Bot, generate the token and paste it in this folder's `.env` file, on the `DISCORD_TOKEN=` line. Never paste the token in a chat or in Git.
+   To keep the token off the screen, copy it in the Portal and run `./colar-token.sh`: it asks for the token without showing what you paste, checks the format and writes only the `DISCORD_TOKEN` line of `.env`, readable only by you.
 2. Build the invite: `.venv/bin/congo-discord-convite APPLICATION_ID`. For one server only: `.venv/bin/congo-discord-convite APPLICATION_ID SERVER_ID`.
 3. Open the link signed in to the account that manages the server and authorize it. Repeat for each of your servers.
 
