@@ -1,3 +1,5 @@
+import { escapeHtml, mediaHtml, mediaSources } from "./helpers.js";
+
 const MODULE_ID = "congo-grey-parrot";
 const DEFAULT_RELAY = "http://127.0.0.1:7477";
 
@@ -26,27 +28,6 @@ function relayHeaders(extra = {}) {
 function isRelayClient() {
     const active = game.users.activeGM;
     return Boolean(active && active.id === game.user.id);
-}
-
-function escapeHtml(value) {
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-}
-
-function mediaSources(html) {
-    const found = [];
-    const pattern = /<(?:img|video|audio|source|a)\b[^>]*\b(?:src|href)=["']([^"']+)["']/gi;
-    let match = pattern.exec(html);
-    while (match) {
-        const source = match[1];
-        if (source && !source.startsWith("javascript:") && !found.includes(source)) {
-            found.push(source);
-        }
-        match = pattern.exec(html);
-    }
-    return found;
 }
 
 function blobToBase64(blob) {
@@ -80,21 +61,6 @@ async function uploadToFoundry(blob, filename, mediaType) {
     }
     const uploaded = await FilePicker.upload("data", "congo-grey-parrot", file, {}, { notify: false });
     return typeof uploaded === "string" ? uploaded : uploaded.path;
-}
-
-function mediaHtml(path, mediaType, filename) {
-    const src = encodeURI(path);
-    const name = escapeHtml(filename);
-    if (mediaType.startsWith("image/")) {
-        return `<img src="${src}" alt="${name}">`;
-    }
-    if (mediaType.startsWith("video/")) {
-        return `<video src="${src}" controls></video>`;
-    }
-    if (mediaType.startsWith("audio/")) {
-        return `<audio src="${src}" controls></audio>`;
-    }
-    return `<p><a href="${src}">${name}</a></p>`;
 }
 
 function describe(message) {
@@ -156,7 +122,7 @@ Hooks.once("ready", () => {
             return;
         }
         const roll = describe(message);
-        const sources = mediaSources(message.content || "");
+        const sources = mediaSources(message.content || "", window.location.origin);
         if (!roll.expression && !roll.total && !roll.detail && sources.length === 0) {
             return;
         }

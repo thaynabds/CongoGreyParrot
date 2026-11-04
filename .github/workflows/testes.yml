@@ -52,4 +52,5 @@ jobs:
         with:
           node-version: "20"
       - run: node --check congo-grey-parrot-discord/foundry/congo-grey-parrot/scripts/module.js
+      - run: node --test congo-grey-parrot-discord/tests/
       - run: python3 -c "import json; json.load(open('congo-grey-parrot-discord/foundry/congo-grey-parrot/module.json'))"
