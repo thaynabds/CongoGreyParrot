@@ -124,6 +124,9 @@ class DocumentsPage(QWidget):
         row.addWidget(open_button)
         row.addWidget(save_button)
         row.addWidget(read_button)
+        summary_button = QPushButton("Resumir")
+        summary_button.clicked.connect(self._summary)
+        row.addWidget(summary_button)
         layout.addWidget(self.editor, 1)
         layout.addLayout(row)
 
@@ -155,6 +158,13 @@ class DocumentsPage(QWidget):
             warn(self, "Não há texto para ler.")
             return
         self.session.bus.open_speech_text.emit(text)
+
+    def _summary(self) -> None:
+        text = self.editor.toPlainText().strip()
+        if not text:
+            warn(self, "Não há texto para resumir.")
+            return
+        self.session.bus.open_summary_text.emit(text)
 
 
 class LibraryPage(QWidget):

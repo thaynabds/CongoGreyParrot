@@ -59,12 +59,14 @@ Whisper cubre más de 90 idiomas, entre ellos portugués, inglés, español, fra
 | `/dados` | Tiradas de dados |
 | `/ficha` | Atributos del personaje |
 | `/iniciativa` | Orden de turno |
-| `/reuniao` | Entra en la llamada y transcribe en vivo |
+| `/reuniao` | Entra en la llamada y transcribe en vivo. `resumo` muestra frases principales, decisiones, tareas y preguntas; `transcricao` muestra todo |
 | `/musica` | Reproduce YouTube, Spotify, una lista o un archivo |
 | `/funcoes` | Enciende o apaga funciones |
-| `/arquivo` | Transcribe un audio enviado o lee un texto |
+| `/arquivo` | Transcribe un audio enviado, resume un TXT, MD, VTT o SRT (`resumir`) o lee un texto |
 | `/handout` | Envía imagen, vídeo o archivo de hasta 8 MB al canal o a un jugador |
 | `/navegador` | Conecta Discord con Foundry VTT y Roll20 en esta computadora |
+
+El resumen se hace en esta computadora con frases de la propia conversación, sin IA. La primera vez que se enciende, el bot se pone el ícono del loro del programa de computadora si todavía no tiene avatar.
 
 ## Foundry VTT
 

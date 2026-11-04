@@ -37,6 +37,8 @@ O Claude Desktop e o Claude Code rodam no seu computador e falam com estes servi
 
 Ferramentas novas: `status_bot` (diz se o token está preenchido, sem mostrar), `ver_log` (log do serviço com tokens apagados), `link_convite` (convite com permissões mínimas) e `importar_pasta` (transcrições do Meet da pasta Downloads).
 
+Resumo: `resumir_texto` e `resumir_arquivo` (computador, arquivo da pasta pessoal) e `resumir_reuniao` e `resumir_texto` (reuniões). Escolhem frases do próprio texto, sem IA e sem internet, e separam decisões, tarefas e perguntas. `frases` vai de 0 (automático) a 30.
+
 ## Ligar um site ou outro servidor
 
 ```bash

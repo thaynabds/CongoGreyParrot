@@ -59,12 +59,14 @@ Whisper 支持 90 多种语言，包括葡萄牙语、英语、西班牙语、�
 | `/dados` | 掷骰 |
 | `/ficha` | 角色属性 |
 | `/iniciativa` | 回合顺序 |
-| `/reuniao` | 加入通话并实时转写 |
+| `/reuniao` | 加入通话并实时转写。`resumo` 显示主要句子、决定、任务和问题；`transcricao` 显示全部内容 |
 | `/musica` | 播放 YouTube、Spotify、已存列表或上传的文件 |
 | `/funcoes` | 打开或关闭功能 |
-| `/arquivo` | 转写上传的音频或朗读文字 |
+| `/arquivo` | 转写上传的音频，为 TXT、MD、VTT 或 SRT 做摘要（`resumir`），或朗读文字 |
 | `/handout` | 向频道或某位玩家发送不超过 8 MB 的图片、视频或其他文件 |
 | `/navegador` | 在这台电脑上把 Discord 接到 Foundry VTT 和 Roll20 |
+
+摘要在本机完成，只使用对话中的原句，不使用 AI。机器人第一次启动时，如果还没有头像，会自动使用电脑版的鹦鹉图标。
 
 ## Foundry VTT
 

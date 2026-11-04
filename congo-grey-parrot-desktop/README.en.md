@@ -36,6 +36,7 @@ One multilingual model covers more than 90 languages, including Portuguese, Engl
 | Text to speech | Reads text and saves audio |
 | Translate | Translates written text |
 | Subtitles | Edits timing and burns captions into video |
+| Summarize | Summarizes pasted text, a document or a transcript: main sentences from the text itself, decisions, tasks and questions. Offline, no AI. The Summarize buttons on Transcribe and Documents send the text here. |
 | Convert media | Changes the file format with FFmpeg |
 | Documents | Opens and saves TXT, Markdown, DOCX and PDF |
 | Models and voices | Downloads Whisper models and Piper voices |

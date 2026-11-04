@@ -18,7 +18,7 @@ Para generar el APK de nuevo, en esta carpeta: `./gradlew assembleDebug`.
 |---|---|
 | Inicio | Atajos para grabar, leer y ver archivos |
 | Grabar | Graba con el micrófono y pide carpeta y nombre |
-| Leer | Lee texto con voz sin red y ajusta la velocidad |
+| Leer | Lee texto con voz sin red, ajusta la velocidad y resume el texto (frases principales, decisiones, tareas y preguntas), sin internet y sin IA |
 | Archivos | Lista, comparte o borra copias del app |
 | Ajustes | Tema y filtro de color |
 

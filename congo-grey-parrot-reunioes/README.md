@@ -22,6 +22,7 @@ congo-reunioes importar exemplo-teams.vtt --plataforma teams
 congo-reunioes notas
 congo-reunioes importar-pasta
 congo-reunioes notas --formato json
+congo-reunioes resumo
 ```
 
 ## Idiomas
@@ -36,9 +37,9 @@ O Meet não deixa um programa de fora entrar na reunião. O caminho oficial é a
 
 1. No Google Docs, abra a transcrição e use Arquivo, Fazer download, Microsoft Word (.docx) ou Texto simples (.txt).
 2. Rode `./congo-reunioes importar-pasta`. Ele procura em Downloads os arquivos com Transcript ou Transcrição no nome, importa os novos e pula os que já entraram. Outra pasta: `./congo-reunioes importar-pasta ~/Documentos/Reunioes`.
-3. `./congo-reunioes notas --plataforma meet` mostra o resumo (falas por pessoa, começo e fim) e quem disse o quê.
+3. `./congo-reunioes resumo --plataforma meet` mostra o resumo: frases principais da própria reunião, decisões, tarefas e perguntas. `./congo-reunioes notas --plataforma meet` mostra quem disse o quê.
 
-O arquivo original não é alterado. Nada sai do computador. O resumo só conta as falas, não usa IA. Para um resumo escrito, peça ao Claude pela ferramenta MCP `listar_notas`.
+O arquivo original não é alterado. Nada sai do computador. O resumo não usa IA: ele escolhe frases que já estão na transcrição, então não inventa nada. `--frases 5` escolhe o tamanho e `--formato json` serve para outro programa. Pelo Claude, use as ferramentas MCP `resumir_reuniao` e `resumir_texto`.
 
 ## MCP
 

@@ -8,6 +8,7 @@ from pathlib import Path
 from congo_grey_parrot.core.errors import AppError
 from congo_grey_parrot.core.paths import app_data_dir
 from congo_grey_parrot.models.catalog import installed_whisper_names, scan_installed_voices
+from congo_grey_parrot.resumo import resumir, resumo_texto
 from congo_grey_parrot.speech.service import SpeechService
 from congo_grey_parrot.transcription.languages import LANGUAGES
 from congo_grey_parrot.transcription.options import TranscribeOptions
@@ -20,6 +21,8 @@ if str(_REPO / "mcp") not in sys.path:
 
 from runtime import guarded_path, make_server, serve, user_errors  # noqa: E402
 
+TEXT_SUFFIXES = {".txt", ".md", ".docx", ".pdf", ".srt", ".vtt"}
+MAX_TEXT_FILE_BYTES = 20 * 1024 * 1024
 MEDIA_SUFFIXES = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".mp4", ".mkv", ".mov", ".webm", ".avi"}
 
 
@@ -99,7 +102,32 @@ def build_server():
         """Traduz texto com o motor instalado. Códigos curtos, por exemplo pt e en."""
         return TranslationService().translate(texto, origem.strip(), destino.strip())
 
+    @server.tool()
+    def resumir_texto(texto: str, frases: int = 0) -> str:
+        """Resume um texto: frases principais tiradas do próprio texto, decisões, tarefas e perguntas. Sem IA e sem internet."""
+        return resumo_texto(resumir(texto, _sentences(frases)))
+
+    @server.tool()
+    @user_errors(AppError, ValueError)
+    def resumir_arquivo(caminho: str, frases: int = 0) -> str:
+        """Resume um TXT, MD, DOCX, PDF com texto, SRT ou VTT da pasta pessoal, fora de pastas ocultas."""
+        from congo_grey_parrot.documents.service import read_document
+
+        path = local_path(caminho, TEXT_SUFFIXES)
+        if not path.is_file():
+            raise AppError(f"Não achei o arquivo: {path}")
+        if path.stat().st_size > MAX_TEXT_FILE_BYTES:
+            raise AppError("O arquivo passa de 20 MB.")
+        return resumo_texto(resumir(read_document(path), _sentences(frases)), f"Resumo de {path.name}")
+
     return server
+
+
+def _sentences(value) -> int:
+    try:
+        return max(0, min(30, int(value)))
+    except (TypeError, ValueError):
+        return 0
 
 
 def main() -> None:

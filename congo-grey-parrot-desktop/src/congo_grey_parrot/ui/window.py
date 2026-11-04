@@ -28,7 +28,14 @@ from congo_grey_parrot.ui.extra_pages import (
 )
 from congo_grey_parrot.ui.marks import icon_color, nav_icon
 from congo_grey_parrot.ui.widgets import TaskPanel
-from congo_grey_parrot.ui.work_pages import HomePage, SpeechPage, SubtitlePage, TranscribePage, TranslatePage
+from congo_grey_parrot.ui.work_pages import (
+    HomePage,
+    SpeechPage,
+    SubtitlePage,
+    SummaryPage,
+    TranscribePage,
+    TranslatePage,
+)
 
 _NAV_HIDE_THRESHOLD = 620
 _TASKS_HIDE_THRESHOLD = 860
@@ -59,12 +66,14 @@ class MainWindow(QMainWindow):
         self.speech = SpeechPage(session)
         self.translate = TranslatePage(session)
         self.subtitles = SubtitlePage(session)
+        self.summary = SummaryPage(session)
         self.pages = {
             "home": self.home,
             "transcribe": self.transcribe,
             "speech": self.speech,
             "translate": self.translate,
             "subtitles": self.subtitles,
+            "summary": self.summary,
             "convert": ConvertPage(session),
             "documents": DocumentsPage(session),
             "library": LibraryPage(session),
@@ -78,6 +87,7 @@ class MainWindow(QMainWindow):
             ("speech", "Texto para voz"),
             ("translate", "Traduzir"),
             ("subtitles", "Legendas"),
+            ("summary", "Resumir"),
             ("convert", "Converter mídia"),
             ("documents", "Documentos"),
             ("library", "Biblioteca"),
@@ -164,6 +174,7 @@ class MainWindow(QMainWindow):
         session.bus.import_files.connect(self._import)
         session.bus.open_speech_text.connect(self._speech_text)
         session.bus.open_subtitles.connect(self._subtitles)
+        session.bus.open_summary_text.connect(self._summary_text)
         session.bus.history_changed.connect(self.home.refresh)
 
     def minimumSizeHint(self) -> QSize:  # noqa: N802
@@ -292,6 +303,10 @@ class MainWindow(QMainWindow):
     def _speech_text(self, text: str) -> None:
         self.speech.set_text(text)
         self.show_page("speech")
+
+    def _summary_text(self, text: str) -> None:
+        self.summary.set_text(text)
+        self.show_page("summary")
 
     def _subtitles(self, transcript) -> None:
         self.subtitles.load_transcript(transcript)

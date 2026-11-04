@@ -74,6 +74,11 @@ def _draw(painter: QPainter, key: str) -> None:
         painter.drawLine(11, 11, 19, 11)
         painter.drawLine(11, 16, 19, 16)
         painter.drawLine(11, 21, 16, 21)
+    elif key == "summary":
+        painter.drawLine(6, 9, 26, 9)
+        painter.drawLine(6, 16, 20, 16)
+        painter.drawLine(6, 23, 14, 23)
+        painter.drawPolygon(QPolygonF([QPointF(20, 20), QPointF(28, 20), QPointF(24, 26)]))
     elif key == "library":
         painter.drawRect(QRectF(5, 8, 6, 18))
         painter.drawRect(QRectF(13, 6, 6, 20))

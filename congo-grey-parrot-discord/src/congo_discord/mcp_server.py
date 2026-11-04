@@ -36,8 +36,8 @@ Comandos digitados no Discord, não no terminal.
 /nome gera pessoa, taverna ou boato.
 /sessao marcar, lista.
 /grupo item, ouro, xp, lista.
-/reuniao entrar, sair, resumo, limpar.
-/arquivo transcrever, ler.
+/reuniao entrar, sair, transcricao, resumo, limpar.
+/arquivo transcrever, resumir, ler.
 /funcoes listar, ativar, desativar, remover, adicionar.
 /vtt catalogo, conectar, atual, testar, enviar, desconectar.
 /atualizar mostra o Git.

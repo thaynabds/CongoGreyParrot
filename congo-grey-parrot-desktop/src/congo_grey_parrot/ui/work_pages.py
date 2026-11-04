@@ -179,6 +179,7 @@ class TranscribePage(QWidget):
             ("Salvar segmentos", self._save_segments),
             ("Abrir no editor de legendas", self._to_subs),
             ("Ler este texto", self._to_speech),
+            ("Resumir", self._to_summary),
         ], cols=2)
         self.player = PlayerBar()
         layout.addWidget(self.file_list)
@@ -303,6 +304,13 @@ class TranscribePage(QWidget):
             warn(self, "Não há transcrição para enviar.")
             return
         self.session.bus.open_subtitles.emit(self.transcript)
+
+    def _to_summary(self) -> None:
+        text = self.result.toPlainText().strip()
+        if not text:
+            warn(self, "Não há texto para resumir.")
+            return
+        self.session.bus.open_summary_text.emit(text)
 
     def _to_speech(self) -> None:
         text = self.result.toPlainText().strip()
@@ -529,6 +537,88 @@ class TranslatePage(QWidget):
         text = self.result.toPlainText().strip()
         if not text:
             warn(self, "Não há tradução para ler.")
+            return
+        self.session.bus.open_speech_text.emit(text)
+
+
+class SummaryPage(QWidget):
+    """Resumo local: escolhe frases do próprio texto, sem IA e sem internet."""
+
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+        self.source_name = "texto"
+        layout = QVBoxLayout(self)
+        _header(
+            layout,
+            "Resumir",
+            "O resumo escolhe as frases mais importantes do próprio texto e separa decisões, tarefas e perguntas. "
+            "Funciona sem internet e não inventa nada.",
+        )
+        columns = QHBoxLayout()
+        self.source = QPlainTextEdit()
+        self.source.setPlaceholderText("Cole o texto, abra um documento ou envie uma transcrição para cá.")
+        self.result = QPlainTextEdit()
+        self.result.setPlaceholderText("Resumo")
+        columns.addWidget(self.source, 1)
+        columns.addWidget(self.result, 1)
+        form = QFormLayout()
+        self.size = QComboBox()
+        self.size.addItem("Automático", 0)
+        for count in (3, 5, 8, 12):
+            self.size.addItem(f"{count} frases", count)
+        form.addRow("Tamanho", self.size)
+        actions = _grid_buttons([
+            ("Abrir arquivo", self._open),
+            ("Resumir", self._run),
+            ("Salvar resumo", self._save),
+            ("Ler resumo", self._speech),
+        ], cols=4)
+        layout.addLayout(columns, 1)
+        layout.addLayout(form)
+        layout.addWidget(actions)
+
+    def set_text(self, text: str) -> None:
+        self.source.setPlainText(text)
+        self._run()
+
+    def _open(self) -> None:
+        from congo_grey_parrot.documents.service import read_document
+
+        path = ask_open(self, "Texto (*.txt *.md *.docx *.pdf *.srt *.vtt)")
+        if path is None:
+            return
+        try:
+            self.source.setPlainText(read_document(path))
+        except AppError as exc:
+            warn(self, str(exc))
+            return
+        self.source_name = path.name
+
+    def _run(self) -> None:
+        from congo_grey_parrot.resumo import resumir, resumo_texto
+
+        text = self.source.toPlainText()
+        if not text.strip():
+            warn(self, "Não há texto para resumir.")
+            return
+        self.result.setPlainText(resumo_texto(resumir(text, int(self.size.currentData() or 0))))
+
+    def _save(self) -> None:
+        path = ask_save(self, str(self.session.output_dir() / suggest_name(self.source_name, ".txt")), PLAIN_FILTER)
+        if path is None:
+            return
+        try:
+            saved = self.session.exporter.export_text(path, self.result.toPlainText(), "Resumo")
+        except AppError as exc:
+            warn(self, str(exc))
+            return
+        self.session.remember("resumo", self.source_name, saved)
+
+    def _speech(self) -> None:
+        text = self.result.toPlainText().strip()
+        if not text:
+            warn(self, "Não há resumo para ler.")
             return
         self.session.bus.open_speech_text.emit(text)
 

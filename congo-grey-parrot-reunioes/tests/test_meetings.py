@@ -160,3 +160,69 @@ def test_data_follows_xdg_data_home(tmp_path: Path, monkeypatch):
     assert _data_file() == tmp_path / "congo-grey-parrot-reunioes" / "notas.sqlite3"
     monkeypatch.setenv("CONGO_REUNIOES_DATA", str(tmp_path / "outra"))
     assert _data_file() == tmp_path / "outra" / "notas.sqlite3"
+
+
+ATA = """Ana: Bom dia a todos. Hoje vamos revisar o cronograma do projeto do aplicativo.
+Bruno: O cronograma do aplicativo atrasou duas semanas por causa da integração com o servidor.
+Ana: Ficou decidido que a integração com o servidor terá prioridade nesta semana.
+Carla: Eu vou preparar o relatório de testes do aplicativo até sexta.
+Bruno: Quem vai falar com o cliente sobre o novo prazo?
+Ana: Combinamos de apresentar o cronograma novo ao cliente na segunda.
+"""
+
+
+def test_resumo_only_uses_sentences_from_the_text():
+    from congo_reunioes.resumo import resumir, resumo_texto
+
+    result = resumir(ATA)
+    assert result.frases
+    for frase in result.frases:
+        assert frase in ATA
+    assert any(item.startswith("Ana: Ficou decidido") for item in result.decisoes)
+    assert any(item.startswith("Carla: Eu vou preparar") for item in result.tarefas)
+    assert any(item.startswith("Bruno: Quem vai falar") for item in result.perguntas)
+    assert not any(item.endswith("?") for item in result.tarefas)
+    assert "cronograma" in result.palavras
+    assert "Decisões:" in resumo_texto(result)
+    assert len(resumir(ATA, frases=2).frases) == 2
+
+
+def test_resumo_handles_empty_huge_and_hostile_text():
+    import time
+
+    from congo_reunioes.resumo import MAX_CHARS, resumir, resumo_texto
+
+    assert resumo_texto(resumir("")) == "Não há texto para resumir."
+    assert resumir(None).frases == []
+    start = time.monotonic()
+    huge = resumir("palavra repetida aqui. " * 40_000)
+    hostile = resumir((":" * 5000 + "\n") * 50 + "a" * 300_000)
+    assert time.monotonic() - start < 10
+    assert huge.cortado and len(huge.frases) <= 30
+    assert all(len(frase) <= 601 for frase in hostile.frases)
+    assert len(resumir("x " * (MAX_CHARS // 2)).frases) <= 30
+
+
+def test_resumo_command_summarizes_saved_meeting(tmp_path: Path, monkeypatch, capsys):
+    import json
+    import sys
+
+    from congo_reunioes import main as cli
+
+    monkeypatch.setenv("CONGO_REUNIOES_DATA", str(tmp_path))
+    monkeypatch.setattr(sys, "argv", ["congo-reunioes", "resumo"])
+    cli.main()
+    assert "Ainda não há falas" in capsys.readouterr().out
+    source = tmp_path / "Daily - Transcript.txt"
+    source.write_text(ATA, encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["congo-reunioes", "importar", str(source), "--plataforma", "meet"])
+    cli.main()
+    capsys.readouterr()
+    monkeypatch.setattr(sys, "argv", ["congo-reunioes", "resumo", "--plataforma", "meet"])
+    cli.main()
+    out = capsys.readouterr().out
+    assert "Resumo da reunião (Google Meet)" in out and "Tarefas:" in out
+    monkeypatch.setattr(sys, "argv", ["congo-reunioes", "resumo", "--formato", "json", "--frases", "2"])
+    cli.main()
+    data = json.loads(capsys.readouterr().out)
+    assert data["reuniao"] == "todas" and len(data["frases"]) == 2 and data["decisoes"]

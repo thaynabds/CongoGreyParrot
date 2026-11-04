@@ -22,6 +22,7 @@ congo-reunioes importar exemplo-teams.vtt --plataforma teams
 congo-reunioes notas
 congo-reunioes importar-pasta
 congo-reunioes notas --formato json
+congo-reunioes resumo
 ```
 
 ## Languages
@@ -34,9 +35,9 @@ Meet does not let an outside program join a call. The official route is the tran
 
 1. In Google Docs, open the transcript and use File, Download, Microsoft Word (.docx) or Plain text (.txt).
 2. Run `./congo-reunioes importar-pasta`. It looks in Downloads for files with Transcript or Transcrição in the name, imports the new ones and skips those already imported. Another folder: `./congo-reunioes importar-pasta ~/Documents/Meetings`.
-3. `./congo-reunioes notas --plataforma meet` shows the summary (lines per person, start and end) and who said what.
+3. `./congo-reunioes resumo --plataforma meet` shows the summary: main sentences from the meeting itself, decisions, tasks and questions. `./congo-reunioes notas --plataforma meet` shows who said what.
 
-The original file is not changed. Nothing leaves the computer. The summary only counts lines; it does not use AI. For a written summary, ask Claude through the MCP tool `listar_notas`.
+The original file is not changed. Nothing leaves the computer. The summary does not use AI: it picks sentences already in the transcript, so it invents nothing. `--frases 5` sets the length and `--formato json` is for other programs. From Claude, use the MCP tools `resumir_reuniao` and `resumir_texto`.
 
 ## MCP
 

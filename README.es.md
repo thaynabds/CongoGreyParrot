@@ -31,6 +31,7 @@ Dentro de Flatpak el programa solo ve las carpetas Música, Vídeos, Documentos 
 * **Celular.** Graba audio y lee texto sin internet. Detalle: [README de Android](congo-grey-parrot-android/README.es.md).
 * **Discord.** Entra en un canal de voz, puede transcribir en vivo, reproducir audio y usar comandos de mesa. Detalle: [README de Discord](congo-grey-parrot-discord/README.es.md).
 * **Reuniones.** Lee un archivo de transcripción que la plataforma ya exportó, incluida la transcripción de Google Meet descargada de Google Docs (`congo-reunioes importar-pasta`). Detalle: [README de reuniones](congo-grey-parrot-reunioes/README.es.md).
+* **Resúmenes.** Todos los programas resumen: la pantalla Resumir de la computadora, la pantalla Leer del celular, `/reuniao resumo` y `/arquivo resumir` en Discord, `congo-reunioes resumo` y las herramientas MCP `resumir_texto`, `resumir_arquivo` y `resumir_reuniao`. El resumen elige las frases principales del propio texto y separa decisiones, tareas y preguntas. Funciona sin internet y no usa IA, así que no inventa nada.
 
 La descripción técnica completa en portugués está en [README.md](README.md).
 

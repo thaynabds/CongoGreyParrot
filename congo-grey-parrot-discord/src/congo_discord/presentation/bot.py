@@ -14,7 +14,7 @@ from discord.ext import commands
 from congo_discord.domain.dice import roll_expression, roll_pair, roll_percent, roll_pool
 from congo_discord.domain.names import fantasy_name
 from congo_discord.domain.rules import spell_text
-from congo_discord.domain.summary import Utterance, render_meeting
+from congo_discord.domain.summary import Utterance, render_meeting, summarize_meeting, summarize_text, text_from_upload
 from congo_discord.presentation.vtt_commands import register_vtt, relay_roll
 from congo_discord.service.envfile import load_env_file
 from congo_discord.service.foundry_relay import prepare_upload
@@ -43,6 +43,20 @@ def _can_manage(interaction: discord.Interaction) -> bool:
         return True
     permissions = getattr(interaction, "permissions", None)
     return bool(permissions and permissions.manage_guild)
+
+
+ICON_PATH = Path(__file__).resolve().parents[1] / "assets" / "icon.png"
+
+
+async def apply_icon(user) -> bool:
+    """Põe o ícone do Congo Grey Parrot no bot, só se ele ainda não tiver avatar."""
+    if user is None or getattr(user, "avatar", None) is not None or not ICON_PATH.is_file():
+        return False
+    try:
+        await user.edit(avatar=ICON_PATH.read_bytes())
+    except (discord.HTTPException, ValueError):
+        return False
+    return True
 
 
 def _clip(text: str, limit: int = 1800) -> str:
@@ -80,6 +94,9 @@ class CongoBot(commands.Bot):
             await self.tree.sync(guild=target)
         else:
             await self.tree.sync()
+
+    async def on_ready(self) -> None:
+        await apply_icon(self.user)
 
 
 def session_view(store, session_id: int) -> discord.ui.View:
@@ -421,15 +438,25 @@ def register(bot: CongoBot) -> None:
             if getattr(client, "is_listening", lambda: False)():
                 client.stop_listening()
             await client.disconnect()
-        await interaction.response.send_message("Saí da chamada. O texto já gravado continua em /reuniao resumo.")
+        await interaction.response.send_message("Saí da chamada. O texto já gravado continua em /reuniao transcricao e /reuniao resumo.")
 
-    @reuniao.command(name="resumo", description="Mostra a transcrição com o nome e o horário de cada fala.")
-    async def reuniao_resumo(interaction: discord.Interaction) -> None:
+    @reuniao.command(name="transcricao", description="Mostra a transcrição com o nome e o horário de cada fala.")
+    async def reuniao_transcricao(interaction: discord.Interaction) -> None:
         if not await gate(interaction, "reuniao"):
             return
         rows = bot.store.utterances(str(interaction.guild_id))
         lines = [Utterance(row["speaker"], row["body"], row["when_text"]) for row in rows]
         await interaction.response.send_message(_clip(render_meeting(lines)))
+
+    @reuniao.command(name="resumo", description="Resume a reunião: frases principais, decisões, tarefas e perguntas.")
+    async def reuniao_resumo(interaction: discord.Interaction, frases: app_commands.Range[int, 0, 15] = 0) -> None:
+        if not await gate(interaction, "reuniao"):
+            return
+        rows = bot.store.utterances(str(interaction.guild_id))
+        lines = [Utterance(row["speaker"], row["body"], row["when_text"]) for row in rows]
+        await interaction.response.defer()
+        text = await asyncio.to_thread(summarize_meeting, lines, frases)
+        await interaction.followup.send(_clip(text), allowed_mentions=discord.AllowedMentions.none())
 
     @reuniao.command(name="limpar", description="Apaga a transcrição guardada deste servidor.")
     async def reuniao_limpar(interaction: discord.Interaction) -> None:
@@ -448,6 +475,35 @@ def register(bot: CongoBot) -> None:
         await interaction.response.defer()
         text = await asyncio.to_thread(_transcribe_bytes, bot, audio.filename, await audio.read(), traduzir)
         await interaction.followup.send(_clip(text))
+
+    @arquivo.command(name="resumir", description="Resume um TXT, MD, VTT ou SRT enviado no comando, ou um texto colado.")
+    async def arquivo_resumir(
+        interaction: discord.Interaction,
+        arquivo: discord.Attachment | None = None,
+        texto: str = "",
+        frases: app_commands.Range[int, 0, 15] = 0,
+    ) -> None:
+        if not await gate(interaction, "arquivo"):
+            return
+        if arquivo is None and not texto.strip():
+            await interaction.response.send_message("Envie um arquivo ou cole um texto no comando.", ephemeral=True)
+            return
+        await interaction.response.defer()
+        title = "Resumo"
+        if arquivo is not None:
+            if arquivo.size > 2 * 1024 * 1024:
+                await interaction.followup.send("O arquivo passa de 2 MB.")
+                return
+            try:
+                source = text_from_upload(arquivo.filename, await arquivo.read())
+            except ValueError as exc:
+                await interaction.followup.send(str(exc))
+                return
+            title = f"Resumo de {discord.utils.escape_markdown(arquivo.filename)[:80]}"
+        else:
+            source = texto
+        result = await asyncio.to_thread(summarize_text, source, frases, title)
+        await interaction.followup.send(_clip(result), allowed_mentions=discord.AllowedMentions.none())
 
     @arquivo.command(name="ler", description="Gera um áudio do texto com Piper ou espeak-ng, se estiverem instalados.")
     async def arquivo_ler(interaction: discord.Interaction, texto: str) -> None:

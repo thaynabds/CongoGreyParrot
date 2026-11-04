@@ -59,12 +59,14 @@ Whisper covers more than 90 languages, including Portuguese, English, Spanish, F
 | `/dados` | Dice rolls |
 | `/ficha` | Character attributes |
 | `/iniciativa` | Turn order |
-| `/reuniao` | Joins the call and transcribes live |
+| `/reuniao` | Joins the call and transcribes live. `resumo` shows main sentences, decisions, tasks and questions; `transcricao` shows everything |
 | `/musica` | Plays YouTube, Spotify, a saved list or an uploaded file |
 | `/funcoes` | Turns features on or off |
-| `/arquivo` | Transcribes an uploaded audio file or reads text |
+| `/arquivo` | Transcribes an uploaded audio file, summarizes a TXT, MD, VTT or SRT (`resumir`) or reads text |
 | `/handout` | Sends an image, video or file, up to 8 MB, to the channel or to one player |
 | `/navegador` | Connects Discord to Foundry VTT and Roll20 on this computer |
+
+The summary is made on this computer from sentences in the conversation itself, without AI. The first time it starts, the bot sets the parrot icon from the desktop app as its avatar if it has none.
 
 ## Foundry VTT
 

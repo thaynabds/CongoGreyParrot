@@ -36,6 +36,7 @@ Un solo modelo cubre más de 90 idiomas, entre ellos portugués, inglés, españ
 | Texto a voz | Lee el texto y guarda el audio |
 | Traducir | Traduce texto escrito |
 | Subtítulos | Edita tiempos y graba subtítulos en el video |
+| Resumir | Resume texto pegado, un documento o una transcripción: frases principales del propio texto, decisiones, tareas y preguntas. Sin internet y sin IA. Los botones Resumir de Transcribir y Documentos envían el texto aquí. |
 | Convertir medios | Cambia el formato con FFmpeg |
 | Documentos | Abre y guarda TXT, Markdown, DOCX y PDF |
 | Modelos y voces | Descarga modelos Whisper y voces Piper |

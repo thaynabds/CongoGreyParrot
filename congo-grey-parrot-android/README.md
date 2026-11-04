@@ -18,7 +18,7 @@ Para gerar o APK de novo, nesta pasta: `./gradlew assembleDebug`.
 |---|---|
 | Início | Atalhos para gravar, ler e ver arquivos |
 | Gravar | Grava pelo microfone e pede pasta e nome ao salvar |
-| Ler | Lê texto com voz offline e ajusta a velocidade |
+| Ler | Lê texto com voz offline, ajusta a velocidade e resume o texto (frases principais, decisões, tarefas e perguntas), sem internet e sem IA |
 | Arquivos | Lista, compartilha ou exclui cópias guardadas no app |
 | Ajustes | Tema e filtro de cor |
 

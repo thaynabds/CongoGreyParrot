@@ -7,6 +7,7 @@ class AppBus(QObject):
     open_page = Signal(str)
     import_files = Signal(list)
     open_speech_text = Signal(str)
+    open_summary_text = Signal(str)
     open_subtitles = Signal(object)
     history_changed = Signal()
     theme_changed = Signal(str)

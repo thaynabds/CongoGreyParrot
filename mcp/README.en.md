@@ -37,6 +37,8 @@ Claude Desktop and Claude Code run on your computer and talk to these servers ov
 
 New tools: `status_bot` (says whether the token is filled in, without showing it), `ver_log` (service log with tokens removed), `link_convite` (invite with minimal permissions) and `importar_pasta` (Meet transcripts from the Downloads folder).
 
+Summary: `resumir_texto` and `resumir_arquivo` (desktop, file from the home folder) and `resumir_reuniao` and `resumir_texto` (meetings). They pick sentences from the text itself, without AI or internet, and list decisions, tasks and questions. `frases` goes from 0 (automatic) to 30.
+
 ## Connect a website or another server
 
 ```bash

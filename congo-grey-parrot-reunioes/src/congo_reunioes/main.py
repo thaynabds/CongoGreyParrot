@@ -8,6 +8,7 @@ from pathlib import Path
 from congo_reunioes.importer import download_dir, import_file, import_folder, results_text
 from congo_reunioes.parse import SpokenLine, render_notes
 from congo_reunioes.platforms import catalog_text, platform_label
+from congo_reunioes.resumo import resumir_falas, resumo_texto
 from congo_reunioes.store import NoteStore
 
 _WHISPER = "https://github.com/SYSTRAN/faster-whisper"
@@ -32,6 +33,10 @@ def main() -> None:
     notes = commands.add_parser("notas", help="Mostra quem falou o que.")
     notes.add_argument("--plataforma", default="")
     notes.add_argument("--formato", choices=("texto", "json"), default="texto", help="json serve para outro programa ou IA ler.")
+    summary = commands.add_parser("resumo", help="Resume as falas guardadas: frases principais, decisões, tarefas e perguntas.")
+    summary.add_argument("--plataforma", default="")
+    summary.add_argument("--frases", type=int, default=0, help="Quantas frases no resumo (padrão: automático).")
+    summary.add_argument("--formato", choices=("texto", "json"), default="texto")
     clear = commands.add_parser("limpar", help="Apaga as anotações guardadas.")
     clear.add_argument("--plataforma", default="")
     audio = commands.add_parser("transcrever", help="Transcreve um áudio local, sem inventar nomes.")
@@ -75,6 +80,18 @@ def main() -> None:
                 print(json.dumps({"reuniao": label or "todas", "falas": rows}, ensure_ascii=False, indent=2))
                 return
             print(render_notes(lines, label or "todas"))
+            return
+        if args.command == "resumo":
+            label = platform_label(args.plataforma) if args.plataforma else None
+            lines = store.lines(label)
+            result = resumir_falas(((line.speaker, line.text) for line in lines), max(0, args.frases))
+            if args.formato == "json":
+                print(json.dumps({"reuniao": label or "todas", **result.to_dict()}, ensure_ascii=False, indent=2))
+                return
+            if not lines:
+                print("Ainda não há falas guardadas. Use importar ou importar-pasta antes.")
+                return
+            print(resumo_texto(result, f"Resumo da reunião ({label or 'todas'})"))
             return
         if args.command == "limpar":
             label = platform_label(args.plataforma) if args.plataforma else None

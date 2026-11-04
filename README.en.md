@@ -31,6 +31,7 @@ Inside Flatpak the app only sees the Music, Videos, Documents and Downloads fold
 * **Phone.** Records audio and reads text offline. Details: [Android README](congo-grey-parrot-android/README.en.md).
 * **Discord.** Joins a voice channel, can transcribe live, play audio and run tabletop commands. Details: [Discord README](congo-grey-parrot-discord/README.en.md).
 * **Meetings.** Reads a transcript file the meeting app already exported, including the Google Meet transcript downloaded from Google Docs (`congo-reunioes importar-pasta`). Details: [meetings README](congo-grey-parrot-reunioes/README.en.md).
+* **Summaries.** Every program summarizes: the desktop Summarize screen, the phone Read screen, `/reuniao resumo` and `/arquivo resumir` on Discord, `congo-reunioes resumo`, and the MCP tools `resumir_texto`, `resumir_arquivo` and `resumir_reuniao`. The summary picks the main sentences from the text itself and lists decisions, tasks and questions. It runs offline and does not use AI, so it never invents anything.
 
 The full technical description in Portuguese is in [README.md](README.md).
 

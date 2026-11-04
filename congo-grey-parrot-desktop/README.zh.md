@@ -36,6 +36,7 @@ flatpak install flathub io.github.thaynabds.CongoGreyParrot
 | 文字转语音 | 朗读文字并保存音频 |
 | 翻译 | 翻译书面文字 |
 | 字幕 | 编辑时间并烧录到视频 |
+| 摘要 | 为粘贴的文字、文档或转写做摘要：从原文挑选主要句子，列出决定、任务和问题。离线运行，不使用 AI。“转写”和“文档”页面的“摘要”按钮会把文字送到这里。 |
 | 转换媒体 | 用 FFmpeg 更换格式 |
 | 文档 | 打开并保存 TXT、Markdown、DOCX、PDF |
 | 模型和声音 | 下载 Whisper 模型和 Piper 声音 |

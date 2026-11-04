@@ -63,6 +63,7 @@ import org.congogreyparrot.files.copyToUri
 import org.congogreyparrot.files.shareFile
 import org.congogreyparrot.files.writeBytes
 import org.congogreyparrot.speech.LocalReader
+import org.congogreyparrot.text.Resumo
 import java.io.File
 
 private data class Destination(
@@ -339,6 +340,7 @@ private fun ReadScreen() {
     val cabinet = remember { Cabinet(context) }
     val reader = remember { LocalReader(context) }
     var text by remember { mutableStateOf("") }
+    var summary by remember { mutableStateOf("") }
     var speed by remember { mutableFloatStateOf(1f) }
     var message by remember { mutableStateOf("A voz escolhida não usa a rede. Ao salvar, você escolhe a pasta.") }
     var voiceReady by remember { mutableStateOf(false) }
@@ -447,6 +449,35 @@ private fun ReadScreen() {
         ) {
             Mark(R.drawable.ic_save, "Salvar áudio")
             Text("  Salvar áudio")
+        }
+        FilledTonalButton(
+            onClick = {
+                if (text.isBlank()) {
+                    message = "Digite ou cole um texto para resumir."
+                    return@FilledTonalButton
+                }
+                summary = Resumo.texto(Resumo.resumir(text))
+                message = "Resumo feito neste aparelho, com frases do próprio texto."
+            },
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        ) {
+            Mark(R.drawable.ic_read, "Resumir")
+            Text("  Resumir")
+        }
+        if (summary.isNotBlank()) {
+            OutlinedTextField(
+                value = summary,
+                onValueChange = { summary = it },
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                label = { Text("Resumo") },
+                minLines = 4,
+            )
+            OutlinedButton(
+                onClick = { text = summary },
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            ) {
+                Text("Usar o resumo no texto para ler ou salvar")
+            }
         }
         Text(message, modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
         if (!voiceReady) {

@@ -24,12 +24,16 @@ def test_tool_lists_import_without_network():
             "transcrever_arquivo",
             "falar_texto",
             "traduzir_texto",
+            "resumir_texto",
+            "resumir_arquivo",
         },
         "congo_reunioes.mcp_server": {
             "listar_plataformas",
             "importar_transcricao",
             "importar_pasta",
             "listar_notas",
+            "resumir_reuniao",
+            "resumir_texto",
         },
         "congo_discord.mcp_server": {
             "status_bot",
@@ -176,3 +180,45 @@ def test_registrar_keeps_other_servers_and_is_idempotent(tmp_path):
     assert register(config, servers) == []
     register(config, servers, remove=True)
     assert set(json.loads(config.read_text(encoding="utf-8"))["mcpServers"]) == {"railway"}
+
+
+def test_resumo_copies_are_identical():
+    """O resumo.py é o mesmo no computador, no bot e nas reuniões."""
+    copies = [
+        ROOT / "congo-grey-parrot-desktop" / "src" / "congo_grey_parrot" / "resumo.py",
+        ROOT / "congo-grey-parrot-discord" / "src" / "congo_discord" / "resumo.py",
+        ROOT / "congo-grey-parrot-reunioes" / "src" / "congo_reunioes" / "resumo.py",
+    ]
+    texts = {path.read_text(encoding="utf-8") for path in copies}
+    assert len(texts) == 1
+
+
+def test_resumir_arquivo_reads_home_text_and_refuses_secrets(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    (tmp_path / ".ssh").mkdir()
+    (tmp_path / ".ssh" / "notas.txt").write_text("segredo guardado aqui. outra frase secreta.", encoding="utf-8")
+    docs = tmp_path / "Documentos"
+    docs.mkdir()
+    (docs / "ata.txt").write_text(
+        "O projeto do aplicativo atrasou. Ficou decidido revisar o projeto do aplicativo. "
+        "Vou mandar o relatório do projeto até sexta. Quem fala com o cliente?",
+        encoding="utf-8",
+    )
+    module = importlib.import_module("congo_grey_parrot.mcp_server")
+    server = module.build_server()
+
+    def call(name, **kwargs):
+        try:
+            return _call(server, name, kwargs)
+        except Exception as exc:  # o erro do guarda também não pode mostrar o conteúdo
+            return str(exc)
+
+    ok = call("resumir_arquivo", caminho=str(docs / "ata.txt"))
+    assert "Resumo de ata.txt" in ok and "Ficou decidido" in ok
+    for bad in (str(tmp_path / ".ssh" / "notas.txt"), "/etc/passwd", str(docs / "ata.exe")):
+        assert "segredo" not in call("resumir_arquivo", caminho=bad)
+    assert "Não há texto" in call("resumir_texto", texto="   ")
+    many = "\n".join(f"Frase número {n} fala do projeto e do prazo novo." for n in range(80))
+    assert "Resumo (30 de 80" in call("resumir_texto", texto=many, frases=999)
+    assert "Resumo (" in call("resumir_texto", texto=many, frases=-5)
+    assert "validation error" in call("resumir_texto", texto=many, frases="x")

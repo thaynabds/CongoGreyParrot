@@ -37,6 +37,8 @@ Claude Desktop 和 Claude Code 在你的电脑上运行，通过 stdio 与这些
 
 新工具：`status_bot`（显示令牌是否已填写，不显示内容）、`ver_log`（服务日志，令牌已删除）、`link_convite`（最小权限邀请）和 `importar_pasta`（从“下载”文件夹导入 Meet 转写）。
 
+摘要：`resumir_texto` 和 `resumir_arquivo`（电脑版，读取个人文件夹中的文件），以及 `resumir_reuniao` 和 `resumir_texto`（会议）。它们只挑选原文中的句子，不使用 AI，也不联网，并列出决定、任务和问题。`frases` 取值 0（自动）到 30。
+
 ## 连接网站或其他服务器
 
 ```bash

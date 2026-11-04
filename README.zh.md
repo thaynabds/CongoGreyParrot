@@ -31,6 +31,7 @@ flatpak install flathub io.github.thaynabds.CongoGreyParrot
 * **手机。** 录音并用离线语音朗读。详见 [手机版说明](congo-grey-parrot-android/README.zh.md)。
 * **Discord。** 加入语音频道，可以实时转写、播放音频并使用桌游命令。详见 [Discord 说明](congo-grey-parrot-discord/README.zh.md)。
 * **会议。** 读取会议软件已经导出的转写文件，包括从 Google Docs 下载的 Google Meet 转写（`congo-reunioes importar-pasta`）。详见 [会议说明](congo-grey-parrot-reunioes/README.zh.md)。
+* **摘要。** 每个程序都能做摘要：电脑版的“摘要”页面、手机版的“朗读”页面、Discord 的 `/reuniao resumo` 和 `/arquivo resumir`、`congo-reunioes resumo`，以及 MCP 工具 `resumir_texto`、`resumir_arquivo` 和 `resumir_reuniao`。摘要从原文中挑选主要句子，并列出决定、任务和问题。它离线运行，不使用 AI，因此不会编造内容。
 
 完整的葡萄牙语技术说明在 [README.md](README.md)。
 

@@ -49,6 +49,7 @@ Programa de desktop para Linux. Transcreve fala para texto com faster-whisper, l
 | Texto para voz | Abre texto, lê em voz alta, pausa, ajusta velocidade e salva WAV. MP3 e outros formatos exigem FFmpeg. |
 | Traduzir | Traduz fala para inglês com modelo multilíngue. O modelo turbo não aparece nessa tarefa. |
 | Legendas | Edita tempos e texto, incorpora faixa de legenda no vídeo ou grava a legenda na imagem. |
+| Resumir | Resume texto, documento ou transcrição: escolhe as frases principais do próprio texto e separa decisões, tarefas e perguntas. Funciona sem internet e não usa IA. |
 | Converter mídia | Converte o arquivo para o formato escolhido via FFmpeg. |
 | Documentos | Abre TXT, Markdown, DOCX ou PDF com texto selecionável e salva de novo. |
 | Biblioteca | Lista a pasta de saída e permite copiar arquivos para outro lugar. |
@@ -105,8 +106,8 @@ Para adicionar uma função nova, coloque um arquivo `.py` na pasta `plugins`, r
 | `/som` | Toca arquivos de áudio locais no canal de voz: fundo em repetição ou efeito sobre o fundo. |
 | `/sessao` | Agenda sessões com botões de presença: confirmado, atrasado ou ausente. |
 | `/grupo` | Inventário compartilhado: itens, ouro e XP. |
-| `/reuniao` | Entra na chamada, transcreve ao vivo com o nome de cada pessoa e gera resumo. |
-| `/arquivo` | Transcreve um áudio enviado ou lê um texto com espeak-ng. |
+| `/reuniao` | Entra na chamada e transcreve ao vivo com o nome de cada pessoa. `/reuniao resumo` mostra as frases principais, decisões, tarefas e perguntas; `/reuniao transcricao` mostra tudo. |
+| `/arquivo` | Transcreve um áudio enviado, resume um TXT, MD, VTT ou SRT (`/arquivo resumir`) ou lê um texto com espeak-ng. |
 | `/vtt` | Conecta uma mesa virtual por link ou webhook. |
 | `/funcoes` | Liga, desliga, adiciona ou remove funções. |
 | `/musica` | Toca áudio no canal de voz: YouTube, Spotify, lista de reprodução salva ou arquivo enviado. |
@@ -204,6 +205,7 @@ Listar, importar e ver notas não precisa de ambiente virtual. Na pasta `congo-g
 ./congo-reunioes importar exemplo-teams.vtt --plataforma teams
 ./congo-reunioes importar-pasta
 ./congo-reunioes notas
+./congo-reunioes resumo
 ```
 
 `importar-pasta` lê a transcrição do Google Meet baixada do Google Docs (.docx ou .txt) direto da pasta Downloads e não repete arquivo já importado. O passo a passo está no [README de reuniões](congo-grey-parrot-reunioes/README.md#google-meet).

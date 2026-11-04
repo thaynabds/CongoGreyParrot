@@ -53,6 +53,7 @@ Para usar outro idioma: abra a tela **Transcrever**, selecione o idioma no menu 
 | Texto para voz | Lê qualquer texto em voz alta e salva o áudio. |
 | Traduzir | Traduz texto entre idiomas. |
 | Legendas | Edita tempos e texto, grava legenda no vídeo. |
+| Resumir | Resume o texto colado, um documento ou a transcrição: frases principais do próprio texto, decisões, tarefas e perguntas. Sem internet e sem IA. Os botões Resumir de Transcrever e Documentos mandam o texto para cá. |
 | Converter mídia | Converte áudio ou vídeo para outro formato via FFmpeg. |
 | Documentos | Abre e salva TXT, Markdown, DOCX e PDF. |
 | Modelos e vozes | Baixa ou remove modelos Whisper e vozes Piper. |

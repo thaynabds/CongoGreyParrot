@@ -18,7 +18,7 @@ To rebuild the APK, in this folder: `./gradlew assembleDebug`.
 |---|---|
 | Home | Shortcuts to record, read and files |
 | Record | Records from the microphone and asks for folder and name |
-| Read | Reads text with an offline voice and speed control |
+| Read | Reads text with an offline voice, controls speed and summarizes the text (main sentences, decisions, tasks and questions), offline and without AI |
 | Files | Lists, shares or deletes copies kept by the app |
 | Settings | Theme and color filter |
 
