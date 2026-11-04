@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.thaynabds.CongoGreyParrot</id>
+  <name>Congo Grey Parrot</name>
+  <summary>Transcribe speech and read text aloud, offline</summary>
+  <summary xml:lang="pt-BR">Transcreva fala e leia texto em voz alta, sem internet</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <developer id="io.github.thaynabds">
+    <name>Thayná Batista da Silva</name>
+  </developer>
+  <description>
+    <p>Congo Grey Parrot turns speech into text with Whisper and reads text aloud with Piper, on your own computer. Audio and documents never leave the machine.</p>
+    <p xml:lang="pt-BR">O Congo Grey Parrot transforma fala em texto com o Whisper e lê texto em voz alta com o Piper, no seu computador. Áudio e documentos não saem da máquina.</p>
+    <p>Features:</p>
+    <p xml:lang="pt-BR">Recursos:</p>
+    <ul>
+      <li>Transcribe audio and video in more than 90 languages, or translate speech to English</li>
+      <li xml:lang="pt-BR">Transcreve áudio e vídeo em mais de 90 idiomas, ou traduz a fala para inglês</li>
+      <li>Read text aloud and save it as a WAV file</li>
+      <li xml:lang="pt-BR">Lê texto em voz alta e salva como arquivo WAV</li>
+      <li>Edit subtitles and export SRT and VTT</li>
+      <li xml:lang="pt-BR">Edita legendas e exporta SRT e VTT</li>
+      <li>Convert media and work with TXT, Markdown, DOCX and PDF documents</li>
+      <li xml:lang="pt-BR">Converte mídia e trabalha com documentos TXT, Markdown, DOCX e PDF</li>
+    </ul>
+    <p>Whisper models and Piper voices are downloaded from inside the app, only when you ask.</p>
+    <p xml:lang="pt-BR">Os modelos Whisper e as vozes Piper são baixados dentro do programa, só quando você pede.</p>
+  </description>
+  <launchable type="desktop-id">io.github.thaynabds.CongoGreyParrot.desktop</launchable>
+  <url type="homepage">https://github.com/thaynabds/CongoGreyParrot</url>
+  <url type="bugtracker">https://github.com/thaynabds/CongoGreyParrot/issues</url>
+  <url type="vcs-browser">https://github.com/thaynabds/CongoGreyParrot</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Transcribe audio and video</caption>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/transcribe.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Read text aloud</caption>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/speech.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Edit subtitles</caption>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/subtitles.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Start page</caption>
+      <image>https://raw.githubusercontent.com/thaynabds/CongoGreyParrot/desktop-v0.1.0/congo-grey-parrot-desktop/flatpak/screenshots/home.png</image>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#a8d5ba</color>
+    <color type="primary" scheme_preference="dark">#1b5e3f</color>
+  </branding>
+  <content_rating type="oars-1.1"/>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+  </categories>
+  <keywords>
+    <keyword>transcription</keyword>
+    <keyword>whisper</keyword>
+    <keyword>subtitles</keyword>
+    <keyword>text to speech</keyword>
+  </keywords>
+  <releases>
+    <release version="0.1.0" date="2026-10-28">
+      <description>
+        <p>First release on Flathub.</p>
+      </description>
+    </release>
+  </releases>
+</component>

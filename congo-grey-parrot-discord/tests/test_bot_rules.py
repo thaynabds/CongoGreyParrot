@@ -147,3 +147,14 @@ def test_bot_never_pings_everyone_or_roles():
     bot = CongoBot(None, Path("."), Path("."), Path("."))
     assert bot.allowed_mentions.everyone is False
     assert bot.allowed_mentions.roles is False
+
+
+def test_package_runs_with_python_dash_m(monkeypatch):
+    import runpy
+    import pytest
+
+    monkeypatch.delenv("DISCORD_TOKEN", raising=False)
+    # Um .env real com token não pode fazer o teste conectar no Discord.
+    monkeypatch.setattr("congo_discord.presentation.bot.load_env_file", lambda *a, **k: None)
+    with pytest.raises(SystemExit):
+        runpy.run_module("congo_discord", run_name="__main__")

@@ -15,6 +15,16 @@ Cuatro programas separados, nombrados a partir de *Psittacus erithacus*. Cada un
 
 En Linux, abra una terminal en esta carpeta y ejecute `./instalar.sh`. El menú pregunta qué programa instalar. No hace falta saber programar.
 
+### Desde Flathub
+
+El programa de computadora también se está publicando en [Flathub](https://flathub.org/apps/io.github.thaynabds.CongoGreyParrot), la tienda de aplicaciones de Linux. Cuando Flathub lo apruebe, aparece en GNOME Software y KDE Discover, o se instala con:
+
+```bash
+flatpak install flathub io.github.thaynabds.CongoGreyParrot
+```
+
+Dentro de Flatpak el programa solo ve las carpetas Música, Vídeos, Documentos y Descargas. Los archivos del manifiesto están en [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak).
+
 ## Qué hace cada uno
 
 * **Computadora.** Transcribe voz con Whisper (más de 90 idiomas, entre ellos portugués, inglés, español, francés, italiano, ruso, chino, japonés, árabe, bengalí, indonesio y urdu), lee texto, edita subtítulos y convierte medios. Detalle: [README de escritorio](congo-grey-parrot-desktop/README.es.md).
@@ -23,3 +33,7 @@ En Linux, abra una terminal en esta carpeta y ejecute `./instalar.sh`. El menú 
 * **Reuniones.** Lee un archivo de transcripción que la plataforma ya exportó. Detalle: [README de reuniones](congo-grey-parrot-reunioes/README.es.md).
 
 La descripción técnica completa en portugués está en [README.md](README.md).
+
+## Licencia
+
+Este proyecto está bajo la licencia GPL-3.0 o posterior. Vea [LICENSE](LICENSE).

@@ -13,6 +13,16 @@ cd congo-grey-parrot-desktop
 
 El script revisa Python, instala paquetes del sistema, crea un entorno aislado, instala el programa y ofrece descargar el modelo Whisper `base`.
 
+### Desde Flathub
+
+Este programa también se está publicando en [Flathub](https://flathub.org/apps/io.github.thaynabds.CongoGreyParrot), la tienda de aplicaciones de Linux. Cuando Flathub lo apruebe, aparece en GNOME Software y KDE Discover, o se instala con:
+
+```bash
+flatpak install flathub io.github.thaynabds.CongoGreyParrot
+```
+
+Dentro de Flatpak el programa solo ve las carpetas Música, Vídeos, Documentos y Descargas. Los archivos del manifiesto están en [flatpak](flatpak).
+
 ## Idiomas de transcripción
 
 Un solo modelo cubre más de 90 idiomas, entre ellos portugués, inglés, español, francés, italiano, ruso, chino, japonés, árabe, bengalí, indonesio y urdu. En la pantalla Transcribir, elija el idioma o deje la detección automática.

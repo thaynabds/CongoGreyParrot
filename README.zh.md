@@ -15,6 +15,16 @@
 
 在 Linux 上，进入本文件夹打开终端，运行 `./instalar.sh`。菜单会询问要安装哪一个。不需要会编程。
 
+### 通过 Flathub
+
+电脑程序也正在发布到 Linux 应用商店 [Flathub](https://flathub.org/apps/io.github.thaynabds.CongoGreyParrot)。Flathub 审核通过后，可在 GNOME Software 和 KDE Discover 中找到，或运行：
+
+```bash
+flatpak install flathub io.github.thaynabds.CongoGreyParrot
+```
+
+在 Flatpak 中，程序只能访问音乐、视频、文档和下载文件夹。清单文件在 [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak)。
+
 ## 各自做什么
 
 * **电脑。** 用 Whisper 转写语音（90 多种语言，包括葡萄牙语、英语、西班牙语、法语、意大利语、俄语、中文、日语、阿拉伯语、孟加拉语、印尼语和乌尔都语），朗读文字，编辑字幕，转换媒体。详见 [电脑版说明](congo-grey-parrot-desktop/README.zh.md)。
@@ -23,3 +33,7 @@
 * **会议。** 读取会议软件已经导出的转写文件。详见 [会议说明](congo-grey-parrot-reunioes/README.zh.md)。
 
 完整的葡萄牙语技术说明在 [README.md](README.md)。
+
+## 许可证
+
+本项目采用 GPL-3.0 或更高版本许可证。见 [LICENSE](LICENSE)。

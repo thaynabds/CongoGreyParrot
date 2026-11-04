@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Transcrição, leitura em voz alta, legendas, tradução e conversão de mídia, com salvamento local dos arquivos."
 readme = "README.md"
 requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
 dependencies = [
     "PySide6>=6.7",
     "numpy>=1.26",
@@ -23,7 +24,7 @@ congo-grey-parrot = "congo_grey_parrot.main:main"
 congo-grey-parrot-mcp = "congo_grey_parrot.mcp_server:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]

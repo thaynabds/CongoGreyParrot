@@ -3,6 +3,7 @@ name = "congo-grey-parrot-discord"
 version = "0.1.0"
 description = "Bot de Discord do Project Congo Grey Parrot. Faz parte do projeto, mas é um programa separado."
 requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
 dependencies = [
     "discord.py>=2.4",
 ]
@@ -19,7 +20,7 @@ congo-discord = "congo_discord.presentation.bot:main"
 congo-discord-mcp = "congo_discord.mcp_server:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]

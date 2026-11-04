@@ -13,6 +13,16 @@ cd congo-grey-parrot-desktop
 
 脚本会检查 Python，安装系统软件包，创建独立环境，安装程序，并询问是否下载 Whisper 的 `base` 模型。
 
+### 通过 Flathub
+
+本程序也正在发布到 Linux 应用商店 [Flathub](https://flathub.org/apps/io.github.thaynabds.CongoGreyParrot)。Flathub 审核通过后，可在 GNOME Software 和 KDE Discover 中找到，或运行：
+
+```bash
+flatpak install flathub io.github.thaynabds.CongoGreyParrot
+```
+
+在 Flatpak 中，程序只能访问音乐、视频、文档和下载文件夹。清单文件在 [flatpak](flatpak)。
+
 ## 转写语言
 
 一个多语言模型支持 90 多种语言，包括葡萄牙语、英语、西班牙语、法语、意大利语、俄语、中文、日语、阿拉伯语、孟加拉语、印尼语和乌尔都语。在“转写”页面选择语言，或使用自动检测。

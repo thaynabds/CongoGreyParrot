@@ -26,6 +26,16 @@ Na pasta deste repositório, no Linux:
 
 O script pergunta qual programa instalar. Também dá para escolher direto: `./instalar.sh 1` para o computador, `2` para o celular, `3` para o Discord e `4` para as reuniões.
 
+### Pelo Flathub
+
+O programa de computador também está sendo publicado no [Flathub](https://flathub.org/apps/io.github.thaynabds.CongoGreyParrot), a loja de aplicativos do Linux. Depois que o Flathub aprovar, ele aparece no GNOME Software e no KDE Discover, ou instala com:
+
+```bash
+flatpak install flathub io.github.thaynabds.CongoGreyParrot
+```
+
+No Flatpak o programa enxerga só as pastas Música, Vídeos, Documentos e Downloads. Os arquivos de manifesto ficam em [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak).
+
 ## Computador
 
 Programa de desktop para Linux. Transcreve fala para texto com faster-whisper, lê texto em voz alta com Piper ou espeak-ng, traduz fala para inglês, edita legendas, converte mídia com FFmpeg e lida com documentos TXT, Markdown, DOCX e PDF. O áudio e o texto ficam no computador. A rede só é usada quando a pessoa confirma o download de um modelo ou de uma voz.
@@ -277,7 +287,7 @@ adb push texto.txt /sdcard/Download/texto.txt
 
 ## Licenças e fontes
 
-O código deste projeto ainda não tem uma licença de distribuição escolhida.
+O código deste projeto está sob a licença GPL-3.0 ou posterior. O texto completo está em [LICENSE](LICENSE).
 
 - Whisper, licença MIT: [github.com/openai/whisper](https://github.com/openai/whisper)
 - faster-whisper: [github.com/SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper)

@@ -3,6 +3,7 @@ name = "congo-grey-parrot-reunioes"
 version = "0.1.0"
 description = "Braço separado do Project Congo Grey Parrot para transcrição e anotação de reuniões."
 requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
 dependencies = []
 
 [project.optional-dependencies]
@@ -15,7 +16,7 @@ congo-reunioes = "congo_reunioes.main:main"
 congo-reunioes-mcp = "congo_reunioes.mcp_server:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]

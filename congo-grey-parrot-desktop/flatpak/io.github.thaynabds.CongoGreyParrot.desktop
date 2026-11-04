@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Congo Grey Parrot
+GenericName=Transcription and Text to Speech
+GenericName[pt_BR]=Transcrição e leitura em voz alta
+Comment=Transcribe speech, read text aloud and edit subtitles on your computer
+Comment[pt_BR]=Transcreve fala, lê texto em voz alta e edita legendas no seu computador
+Exec=congo-grey-parrot
+Icon=io.github.thaynabds.CongoGreyParrot
+Terminal=false
+Categories=AudioVideo;Audio;
+Keywords=transcription;speech;whisper;subtitles;tts;transcricao;voz;legendas;
+StartupNotify=true

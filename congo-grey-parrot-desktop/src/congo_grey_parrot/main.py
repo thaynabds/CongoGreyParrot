@@ -69,8 +69,13 @@ def desktop_path(path: Path) -> str:
     return text
 
 
+def flatpak_id() -> str:
+    """Id do app quando roda dentro do Flatpak. Lá o atalho e o ícone vêm do pacote."""
+    return os.environ.get("FLATPAK_ID", "").strip()
+
+
 def publish_launcher(icon: Path, root: Path | None = None) -> Path | None:
-    if not icon.is_file():
+    if not icon.is_file() or flatpak_id():
         return None
     base = root or Path.home()
     icons = base / ".local" / "share" / "icons"
@@ -114,7 +119,7 @@ def main() -> int:
     )
     app = QApplication(sys.argv)
     app.setApplicationName("Congo Grey Parrot")
-    app.setDesktopFileName("congo-grey-parrot")
+    app.setDesktopFileName(flatpak_id() or "congo-grey-parrot")
     icon = application_icon()
     app.setWindowIcon(icon)
     publish_launcher(icon_path())

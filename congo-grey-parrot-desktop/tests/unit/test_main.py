@@ -54,6 +54,12 @@ def test_launcher_uses_the_parrot_icon(tmp_path):
     assert "StartupWMClass=congo-grey-parrot" in text
 
 
+def test_flatpak_leaves_the_launcher_to_the_package(tmp_path, monkeypatch):
+    monkeypatch.setenv("FLATPAK_ID", "io.github.thaynabds.CongoGreyParrot")
+    assert publish_launcher(icon_path(), tmp_path) is None
+    assert not (tmp_path / ".local").exists()
+
+
 def test_window_keeps_standard_controls_and_can_shrink(tmp_path, monkeypatch):
     monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
     app = QApplication.instance() or QApplication([])
