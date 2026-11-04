@@ -5,6 +5,9 @@ import json
 import tempfile
 from pathlib import Path
 
+import discord  # as anotações dos comandos são lidas no escopo do módulo
+from discord import app_commands  # noqa: F401
+
 FEATURE = "musica"
 DESCRIPTION = (
     "Toca áudio no canal de voz: link do YouTube, link do Spotify, "

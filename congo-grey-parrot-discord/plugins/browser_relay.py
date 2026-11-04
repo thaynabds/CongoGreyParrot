@@ -20,6 +20,9 @@ from congo_discord.service.foundry_relay import (
     request_allowed,
 )
 
+import discord  # as anotações dos comandos são lidas no escopo do módulo
+from discord import app_commands  # noqa: F401
+
 FEATURE = "navegador"
 DESCRIPTION = (
     "Liga o Discord ao Roll20 e ao Foundry VTT no mesmo computador. "
