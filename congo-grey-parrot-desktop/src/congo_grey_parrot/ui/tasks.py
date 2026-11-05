@@ -59,10 +59,16 @@ class TaskManager(QObject):
         signals.progress.connect(lambda value, message, current=item: self._on_progress(current, value, message))
         signals.finished.connect(lambda result, current=item: self._on_ok(current, result, on_ok))
         signals.failed.connect(lambda message, current=item: self._on_err(current, message, on_err))
+        worker = Worker(fn, signals, item.cancel_event)
+        # O pool não segura o lado Python. Sem estas referências, o Python podia coletar os sinais
+        # e o worker no meio da tarefa: o resultado sumia ou o programa caía.
+        worker.setAutoDelete(False)
+        item.signals = signals
+        item.worker = worker
         self.items.insert(0, item)
         self.items = self.items[:40]
         self.updated.emit()
-        self._pool.start(Worker(fn, signals, item.cancel_event))
+        self._pool.start(worker)
         return item
 
     def cancel(self, task_id: str) -> None:

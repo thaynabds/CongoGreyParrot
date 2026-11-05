@@ -78,6 +78,11 @@
     <keyword>text to speech</keyword>
   </keywords>
   <releases>
+    <release version="0.2.1" date="2026-11-04">
+      <description>
+        <p>Fixes Transcribe and Text to speech sometimes finishing without a result, or closing the app.</p>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-11-04">
       <description>
         <p>New Summarize screen: picks the main sentences of a text, document or transcript and lists decisions, tasks and questions. Works offline and does not use AI.</p>
