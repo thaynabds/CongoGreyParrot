@@ -26,13 +26,15 @@ Na pasta deste repositório, no Linux:
 
 O script pergunta qual programa instalar. Também dá para escolher direto: `./instalar.sh 1` para o computador, `2` para o celular, `3` para o Discord e `4` para as reuniões.
 
-### Pelo Flathub
+### Pelo Flatpak
 
-O programa de computador também está sendo publicado no [Flathub](https://flathub.org/apps/io.github.thaynabds.CongoGreyParrot), a loja de aplicativos do Linux. Depois que o Flathub aprovar, ele aparece no GNOME Software e no KDE Discover, ou instala com:
+O programa de computador também vem como pacote Flatpak, na página da [versão 0.2.1](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.2.1). Baixe o arquivo `CongoGreyParrot-0.2.1-x86_64.flatpak` e instale com:
 
 ```bash
-flatpak install flathub io.github.thaynabds.CongoGreyParrot
+flatpak install --user CongoGreyParrot-0.2.1-x86_64.flatpak
 ```
+
+O Flatpak baixa sozinho do Flathub o runtime KDE de que o programa precisa. O Flathub ainda não aceitou o programa na loja porque o projeto é novo; ele volta a ser enviado mais adiante.
 
 No Flatpak o programa enxerga só as pastas Música, Vídeos, Documentos e Downloads. Os arquivos de manifesto ficam em [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak).
 
