@@ -154,6 +154,26 @@ def test_discord_log_hides_tokens_and_invite_is_minimal(monkeypatch):
     assert "journalctl" in _call(server, "ver_log", {"linhas": 9999})
 
 
+def test_discord_service_state_finds_user_bus_without_session_env(monkeypatch):
+    module = importlib.import_module("congo_discord.mcp_server")
+    monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    seen = {}
+
+    class Done:
+        stdout = "active\n"
+
+    def fake_run(args, **kwargs):
+        seen["env"] = kwargs.get("env") or {}
+        return Done()
+
+    monkeypatch.setattr(module.shutil, "which", lambda name: "/usr/bin/systemctl")
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    assert module._service_state() == "active"
+    runtime = Path(f"/run/user/{module.os.getuid()}")
+    if runtime.is_dir():
+        assert seen["env"].get("XDG_RUNTIME_DIR") == str(runtime)
+
+
 def test_registrar_keeps_other_servers_and_is_idempotent(tmp_path):
     import json
 

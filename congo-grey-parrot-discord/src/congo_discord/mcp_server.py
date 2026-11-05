@@ -172,12 +172,27 @@ def _service_state() -> str:
         return "indisponível"
     try:
         result = subprocess.run(
-            [systemctl, "--user", "is-active", _UNIT], capture_output=True, text=True, timeout=10, check=False
+            [systemctl, "--user", "is-active", _UNIT],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+            env=_user_bus_env(),
         )
     except (OSError, subprocess.TimeoutExpired):
         return "indisponível"
     state = result.stdout.strip() or "desconhecido"
     return "não instalado" if state in {"inactive", "unknown"} and not _unit_file().is_file() else state
+
+
+def _user_bus_env() -> dict[str, str]:
+    """O cliente MCP abre o servidor com ambiente mínimo, sem XDG_RUNTIME_DIR, e o systemctl --user não acha o barramento."""
+    env = dict(os.environ)
+    if not env.get("XDG_RUNTIME_DIR") and hasattr(os, "getuid"):
+        runtime = Path(f"/run/user/{os.getuid()}")
+        if runtime.is_dir():
+            env["XDG_RUNTIME_DIR"] = str(runtime)
+    return env
 
 
 def _unit_file() -> Path:
