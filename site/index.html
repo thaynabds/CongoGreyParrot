@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Congo Grey Parrot: transcrição de áudio e leitura em voz alta locais (Linux e Android)</title>
+  <meta name="description" content="Programas gratuitos e de código aberto para transcrever áudio e vídeo com faster-whisper (Whisper), ler texto em voz alta com Piper, editar legendas e anotar reuniões, sem enviar nada para a nuvem. Linux (Flatpak), Android e bot de Discord.">
+  <meta name="keywords" content="transcrição de áudio, speech to text, Whisper, faster-whisper, Piper, texto para voz, TTS offline, legendas SRT, transcrição local, Linux, Flatpak, Android, bot de Discord, transcrição de reuniões">
+  <meta name="author" content="Thayná Batista da Silva">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#1f5e3a">
+  <link rel="canonical" href="https://thaynabds.github.io/CongoGreyParrot/">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="sitemap" type="application/xml" href="https://thaynabds.github.io/CongoGreyParrot/sitemap.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Congo Grey Parrot">
+  <meta property="og:title" content="Congo Grey Parrot: transcrição e leitura em voz alta locais">
+  <meta property="og:description" content="Transcreva áudio com Whisper, leia texto com Piper, edite legendas e anote reuniões no seu computador, sem nuvem. Linux, Android e Discord.">
+  <meta property="og:url" content="https://thaynabds.github.io/CongoGreyParrot/">
+  <meta property="og:image" content="https://thaynabds.github.io/CongoGreyParrot/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Congo Grey Parrot: papagaio-cinzento e o texto transcrição e leitura em voz alta locais, no Linux e no Android">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Congo Grey Parrot: transcrição e leitura em voz alta locais">
+  <meta name="twitter:description" content="Whisper, Piper, legendas e anotações de reunião no seu computador, sem nuvem. Linux, Android e Discord.">
+  <meta name="twitter:image" content="https://thaynabds.github.io/CongoGreyParrot/og-image.png">
+  <meta name="twitter:image:alt" content="Congo Grey Parrot: transcrição e leitura em voz alta locais">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://thaynabds.github.io/CongoGreyParrot/#app",
+        "name": "Congo Grey Parrot",
+        "alternateName": "Project Congo Grey Parrot (Psittacus erithacus)",
+        "description": "Programas gratuitos para transcrever áudio e vídeo com faster-whisper, ler texto em voz alta com Piper, editar legendas e anotar reuniões localmente, no Linux, no Android e no Discord.",
+        "url": "https://thaynabds.github.io/CongoGreyParrot/",
+        "image": "https://thaynabds.github.io/CongoGreyParrot/og-image.png",
+        "screenshot": "https://thaynabds.github.io/CongoGreyParrot/tela-inicio.png",
+        "applicationCategory": "MultimediaApplication",
+        "applicationSubCategory": "Transcrição de fala e texto para voz",
+        "operatingSystem": "Linux, Android 8+",
+        "inLanguage": "pt-BR",
+        "isAccessibleForFree": true,
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+        "downloadUrl": "https://github.com/thaynabds/CongoGreyParrot/releases/latest",
+        "featureList": "Transcrição de áudio e vídeo com faster-whisper, texto para voz com Piper e espeak-ng, tradução de fala para inglês, editor de legendas SRT e VTT, resumo sem IA, conversão de mídia com FFmpeg, anotações de reuniões do Teams, Meet e Zoom, bot de Discord com transcrição ao vivo, temas de alto contraste e filtros de daltonismo",
+        "author": { "@type": "Person", "name": "Thayná Batista da Silva", "url": "https://github.com/thaynabds" }
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "name": "Congo Grey Parrot",
+        "codeRepository": "https://github.com/thaynabds/CongoGreyParrot",
+        "programmingLanguage": ["Python", "Kotlin"],
+        "runtimePlatform": "Linux, Android",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "targetProduct": { "@id": "https://thaynabds.github.io/CongoGreyParrot/#app" },
+        "author": { "@type": "Person", "name": "Thayná Batista da Silva", "url": "https://github.com/thaynabds" }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root { --verde: #1f5e3a; --verde-escuro: #123d26; --texto: #1c2620; --suave: #48564d; --fundo: #f4f7f5; --cartao: #fff; --borda: #d5e0d9; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: var(--texto); background: var(--fundo); line-height: 1.6; }
+    a { color: var(--verde); }
+    .pular { position: absolute; left: -9999px; top: 0; background: #fff; padding: 8px 12px; z-index: 10; }
+    .pular:focus { left: 8px; }
+    header { background: linear-gradient(135deg, var(--verde), var(--verde-escuro)); color: #fff; padding: 48px 20px 40px; text-align: center; }
+    header img { width: 112px; height: 112px; border-radius: 24px; background: #fff; padding: 6px; }
+    header h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); margin: 16px 0 8px; }
+    header p { margin: 0 auto; max-width: 680px; font-size: 1.1rem; color: #e6f2ea; }
+    .acoes { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .botao { display: inline-block; padding: 12px 22px; border-radius: 10px; background: #fff; color: var(--verde-escuro); font-weight: 700; text-decoration: none; }
+    .botao.sec { background: transparent; color: #fff; border: 2px solid #fff; }
+    .botao:focus-visible { outline: 3px solid #ffd54a; outline-offset: 3px; }
+    main { max-width: 920px; margin: 0 auto; padding: 40px 20px; }
+    section { margin-bottom: 44px; }
+    h2 { font-size: 1.45rem; color: var(--verde-escuro); border-left: 5px solid var(--verde); padding-left: 12px; }
+    .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: 12px; padding: 18px 20px; }
+    .cartao h3 { margin: 0 0 6px; font-size: 1.1rem; }
+    .cartao p, .cartao ul { margin: 0; color: var(--suave); }
+    .cartao ul { padding-left: 20px; }
+    pre { background: #10231a; color: #e6f2ea; padding: 16px; border-radius: 10px; overflow-x: auto; }
+    figure { margin: 0; }
+    figure img { width: 100%; height: auto; border: 1px solid var(--borda); border-radius: 10px; }
+    figcaption { font-size: .9rem; color: var(--suave); margin-top: 6px; }
+    footer { text-align: center; padding: 28px 20px; color: var(--suave); border-top: 1px solid var(--borda); background: #fff; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <header>
+    <img src="icone.png" alt="Ícone do Congo Grey Parrot: um papagaio-cinzento" width="112" height="112">
+    <h1>Congo Grey Parrot</h1>
+    <p>Transcrição de áudio e leitura em voz alta no seu próprio computador. Quatro programas gratuitos e independentes, nomeados a partir do papagaio-cinzento (<i>Psittacus erithacus</i>).</p>
+    <div class="acoes">
+      <a class="botao" href="https://github.com/thaynabds/CongoGreyParrot/releases/latest">Baixar a versão mais recente</a>
+      <a class="botao sec" href="https://github.com/thaynabds/CongoGreyParrot">Código no GitHub</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section aria-labelledby="programas">
+      <h2 id="programas">Os quatro programas</h2>
+      <div class="grade">
+        <article class="cartao">
+          <h3>Computador (Linux)</h3>
+          <p>Transcreve áudio e vídeo com faster-whisper, lê texto em voz alta com Piper ou espeak-ng, traduz fala para inglês, edita legendas, resume textos sem IA e converte mídia com FFmpeg. Também em Flatpak.</p>
+        </article>
+        <article class="cartao">
+          <h3>Celular (Android 8 ou mais novo)</h3>
+          <p>Grava pelo microfone, lê textos com uma voz instalada que não usa a rede e guarda os arquivos onde você escolher.</p>
+        </article>
+        <article class="cartao">
+          <h3>Bot de Discord</h3>
+          <p>Transcreve chamadas ao vivo com o nome de cada pessoa, resume reuniões, toca música e sons e ajuda em mesas de RPG com dados, fichas, iniciativa e regras.</p>
+        </article>
+        <article class="cartao">
+          <h3>Anotações de reunião</h3>
+          <p>Lê as transcrições exportadas do Teams, Google Meet, Zoom, Webex ou Jitsi e anota quem falou o quê, com decisões, tarefas e perguntas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="privacidade">
+      <h2 id="privacidade">Seus arquivos ficam com você</h2>
+      <p>No programa de computador, o áudio e o texto ficam no seu computador. A rede só é usada quando você confirma o download de um modelo de transcrição ou de uma voz. No celular, a leitura usa uma voz instalada que não usa a rede. Cada programa tem pasta, ambiente e dados próprios.</p>
+      <figure>
+        <img src="tela-inicio.png" alt="Tela inicial do programa de computador, com o menu lateral (Transcrever, Texto para voz, Traduzir, Legendas, Resumir, Converter mídia, Documentos) e a área para arrastar arquivos" width="1280" height="800" loading="lazy">
+        <figcaption>Tela inicial do Congo Grey Parrot no Linux.</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="instalar">
+      <h2 id="instalar">Instalar</h2>
+      <p>No Linux, dentro da pasta do repositório, um comando pergunta qual programa instalar:</p>
+      <pre><code>git clone https://github.com/thaynabds/CongoGreyParrot.git
+cd CongoGreyParrot
+./instalar.sh</code></pre>
+      <p>O programa de computador também vem como pacote Flatpak na <a href="https://github.com/thaynabds/CongoGreyParrot/releases/latest">página de versões</a>. O passo a passo completo está no <a href="https://github.com/thaynabds/CongoGreyParrot#readme">README do projeto</a>.</p>
+    </section>
+
+    <section aria-labelledby="acessibilidade">
+      <h2 id="acessibilidade">Acessibilidade</h2>
+      <div class="grade">
+        <div class="cartao">
+          <h3>Temas e contraste</h3>
+          <p>Temas claro e escuro, com perfis de alto contraste, Kuro, PinkVoid, RedVoid, YellowVoid, GreenVoid e BlueVoid.</p>
+        </div>
+        <div class="cartao">
+          <h3>Cores e leitura</h3>
+          <p>Filtros para protanopia, deuteranopia, tritanopia e monocromia, tamanho da letra ajustável e leitura em voz alta.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Feito por <a href="https://github.com/thaynabds">Thayná Batista da Silva</a> ·
+    <a href="https://github.com/thaynabds/CongoGreyParrot">GitHub</a> ·
+    Licença GPL-3.0 ou posterior ·
+    Usa <a href="https://github.com/SYSTRAN/faster-whisper">faster-whisper</a> e <a href="https://github.com/OHF-Voice/piper1-gpl">Piper</a>
+  </footer>
+</body>
+</html>
