@@ -70,6 +70,88 @@ private val YellowVoidColors = darkColorScheme(
     onSurface = Color(0xFFFBF6E8),
 )
 
+private val GreenVoidColors = darkColorScheme(
+    primary = Color(0xFF5FD08A),
+    onPrimary = Color(0xFF04210F),
+    background = Color(0xFF0C140E),
+    surface = Color(0xFF142A1A),
+    onBackground = Color(0xFFEEFBF1),
+    onSurface = Color(0xFFEEFBF1),
+)
+
+private val BlueVoidColors = darkColorScheme(
+    primary = Color(0xFF6AA8E5),
+    onPrimary = Color(0xFF0C1B2A),
+    background = Color(0xFF0C1016),
+    surface = Color(0xFF14202F),
+    onBackground = Color(0xFFEEF4FB),
+    onSurface = Color(0xFFEEF4FB),
+)
+
+private val KuroLightColors = lightColorScheme(
+    primary = Color(0xFF5534A8),
+    onPrimary = Color.White,
+    background = Color(0xFFF5F1FD),
+    surface = Color.White,
+    onBackground = Color(0xFF1F1833),
+    onSurface = Color(0xFF1F1833),
+)
+
+private val PinkVoidLightColors = lightColorScheme(
+    primary = Color(0xFF9A2864),
+    onPrimary = Color.White,
+    background = Color(0xFFFDF1F6),
+    surface = Color.White,
+    onBackground = Color(0xFF2F1420),
+    onSurface = Color(0xFF2F1420),
+)
+
+private val RedVoidLightColors = lightColorScheme(
+    primary = Color(0xFF8E2424),
+    onPrimary = Color.White,
+    background = Color(0xFFFDF1F1),
+    surface = Color.White,
+    onBackground = Color(0xFF2F1414),
+    onSurface = Color(0xFF2F1414),
+)
+
+private val YellowVoidLightColors = lightColorScheme(
+    primary = Color(0xFF6B5600),
+    onPrimary = Color.White,
+    background = Color(0xFFFDF8E6),
+    surface = Color.White,
+    onBackground = Color(0xFF2B2408),
+    onSurface = Color(0xFF2B2408),
+)
+
+private val GreenVoidLightColors = lightColorScheme(
+    primary = Color(0xFF1A6B35),
+    onPrimary = Color.White,
+    background = Color(0xFFEFFAF1),
+    surface = Color.White,
+    onBackground = Color(0xFF12291A),
+    onSurface = Color(0xFF12291A),
+)
+
+private val BlueVoidLightColors = lightColorScheme(
+    primary = Color(0xFF1F55A8),
+    onPrimary = Color.White,
+    background = Color(0xFFEFF5FD),
+    surface = Color.White,
+    onBackground = Color(0xFF12203A),
+    onSurface = Color(0xFF12203A),
+)
+
+private val ContrastLightColors = lightColorScheme(
+    primary = Color.Blue,
+    onPrimary = Color.White,
+    background = Color.White,
+    surface = Color.White,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+    outline = Color.Blue,
+)
+
 private val ContrastColors = darkColorScheme(
     primary = Color.Yellow,
     onPrimary = Color.Black,
@@ -89,6 +171,15 @@ fun CongoTheme(mode: String, filter: String = "none", content: @Composable () ->
         "pink_void" -> PinkVoidColors
         "red_void" -> RedVoidColors
         "yellow_void" -> YellowVoidColors
+        "green_void" -> GreenVoidColors
+        "blue_void" -> BlueVoidColors
+        "high_contrast_light" -> ContrastLightColors
+        "kuro_light" -> KuroLightColors
+        "pink_void_light" -> PinkVoidLightColors
+        "red_void_light" -> RedVoidLightColors
+        "yellow_void_light" -> YellowVoidLightColors
+        "green_void_light" -> GreenVoidLightColors
+        "blue_void_light" -> BlueVoidLightColors
         else -> LightColors
     }
     val colors = if (filter == "smart_invert") base.opposite() else base

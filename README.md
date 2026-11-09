@@ -57,7 +57,7 @@ Programa de desktop para Linux. Transcreve fala para texto com faster-whisper, l
 | Biblioteca | Lista a pasta de saída e permite copiar arquivos para outro lugar. |
 | Modelos e vozes | Baixa ou remove modelo de transcrição e voz Piper. A pasta de destino é escolhida antes do download. |
 | Histórico | Mostra as exportações feitas neste computador. Limpar o histórico não apaga os arquivos. |
-| Configurações | Tema claro, escuro, alto contraste, Kuro, PinkVoid, RedVoid ou YellowVoid. Filtro de cor, tamanho da letra e pasta padrão de saída. |
+| Configurações | Tema claro ou escuro, com perfis claro e escuro de alto contraste, Kuro, PinkVoid, RedVoid, YellowVoid, GreenVoid e BlueVoid. Filtro de cor, tamanho da letra e pasta padrão de saída. |
 
 Cada resultado abre o seletor de arquivo. O modelo de transcrição e a voz pedem a pasta antes de baixar.
 
@@ -81,7 +81,7 @@ O APK foi gerado pela linha de comando com o plugin Android Gradle 8.5.2. Para g
 | Gravar | Grava pelo microfone. Depois da gravação, escolhe pasta e nome. |
 | Ler | Lê texto com uma voz instalada que não usa a rede. Ajusta velocidade. Salvar texto e salvar áudio abrem o seletor do Android. |
 | Arquivos | Lista as cópias guardadas no aplicativo, compartilha ou exclui. |
-| Ajustes | Tema claro, escuro, alto contraste, Kuro, PinkVoid, RedVoid ou YellowVoid, e filtro de cor. |
+| Ajustes | Tema claro ou escuro, com perfis claro e escuro de alto contraste, Kuro, PinkVoid, RedVoid, YellowVoid, GreenVoid e BlueVoid, e filtro de cor. |
 
 O microfone só é pedido quando a gravação começa. O aplicativo não pede acesso amplo ao armazenamento e não tem permissão de internet. O backup automático está desligado.
 

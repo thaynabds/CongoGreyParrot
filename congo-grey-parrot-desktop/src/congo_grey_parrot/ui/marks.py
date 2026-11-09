@@ -25,6 +25,8 @@ _ICON = {
     "pink_void": "#f7c4dc",
     "red_void": "#f7c4c4",
     "yellow_void": "#f3e0a0",
+    "green_void": "#bff0d0",
+    "blue_void": "#c4dcf7",
 }
 _ICON_SMART = {
     "dark": "#1b6b45",
@@ -33,6 +35,8 @@ _ICON_SMART = {
     "pink_void": "#8a2460",
     "red_void": "#8a2424",
     "yellow_void": "#5c4808",
+    "green_void": "#1a6b35",
+    "blue_void": "#1f55a8",
     "light": "#d7f3e6",
 }
 

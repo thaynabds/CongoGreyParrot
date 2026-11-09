@@ -576,11 +576,20 @@ private fun SettingsScreen(
         listOf(
             "light" to "Claro",
             "dark" to "Escuro",
-            "high_contrast" to "Alto contraste",
-            "kuro" to "Kuro",
-            "pink_void" to "PinkVoid",
-            "red_void" to "RedVoid",
-            "yellow_void" to "YellowVoid",
+            "high_contrast" to "Alto contraste escuro",
+            "high_contrast_light" to "Alto contraste claro",
+            "kuro" to "Kuro escuro",
+            "kuro_light" to "Kuro claro",
+            "pink_void" to "PinkVoid escuro",
+            "pink_void_light" to "PinkVoid claro",
+            "red_void" to "RedVoid escuro",
+            "red_void_light" to "RedVoid claro",
+            "yellow_void" to "YellowVoid escuro",
+            "yellow_void_light" to "YellowVoid claro",
+            "green_void" to "GreenVoid escuro",
+            "green_void_light" to "GreenVoid claro",
+            "blue_void" to "BlueVoid escuro",
+            "blue_void_light" to "BlueVoid claro",
         ).forEach { (value, label) ->
             Choice(label, mode == value) { onMode(value) }
         }

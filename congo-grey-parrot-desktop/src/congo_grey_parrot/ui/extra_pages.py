@@ -425,11 +425,20 @@ class SettingsPage(QWidget):
         theme_options = (
             ("light", "Claro"),
             ("dark", "Escuro"),
-            ("high_contrast", "Alto contraste"),
-            ("kuro", "Kuro"),
-            ("pink_void", "PinkVoid"),
-            ("red_void", "RedVoid"),
-            ("yellow_void", "YellowVoid"),
+            ("high_contrast", "Alto contraste escuro"),
+            ("high_contrast_light", "Alto contraste claro"),
+            ("kuro", "Kuro escuro"),
+            ("kuro_light", "Kuro claro"),
+            ("pink_void", "PinkVoid escuro"),
+            ("pink_void_light", "PinkVoid claro"),
+            ("red_void", "RedVoid escuro"),
+            ("red_void_light", "RedVoid claro"),
+            ("yellow_void", "YellowVoid escuro"),
+            ("yellow_void_light", "YellowVoid claro"),
+            ("green_void", "GreenVoid escuro"),
+            ("green_void_light", "GreenVoid claro"),
+            ("blue_void", "BlueVoid escuro"),
+            ("blue_void_light", "BlueVoid claro"),
         )
         themes = QButtonGroup(self)
         themes.setExclusive(True)

@@ -45,6 +45,29 @@ def test_named_dark_themes():
         assert color in build_stylesheet(name)
 
 
+def test_every_theme_family_has_light_and_dark_profiles():
+    from congo_grey_parrot.ui.theme import THEMES, build_stylesheet
+
+    default_sheet = build_stylesheet("light")
+    families = ("high_contrast", "kuro", "pink_void", "red_void", "yellow_void", "green_void", "blue_void")
+    sheets = set()
+    for family in families:
+        for mode in (family, f"{family}_light"):
+            assert mode in THEMES
+            sheet = build_stylesheet(mode)
+            assert sheet != default_sheet
+            sheets.add(sheet)
+    assert len(sheets) == len(families) * 2
+
+
+def test_high_contrast_light_uses_black_on_white():
+    from congo_grey_parrot.ui.theme import build_stylesheet
+
+    sheet = build_stylesheet("high_contrast_light")
+    assert "QWidget { background: #ffffff; color: #000000; }" in sheet
+    assert "{{" not in sheet
+
+
 def test_smart_invert_flips_stylesheet_colors():
     assert invert_hex_colors("background: #000000; color: #ffffff;") == "background: #ffffff; color: #000000;"
     assert android_color_matrix("smart_invert") is None
