@@ -15,10 +15,10 @@ O script faz tudo automaticamente: verifica o Python, instala as dependências d
 
 ### Pelo Flatpak
 
-Este programa também vem como pacote Flatpak, na página da [versão 0.2.1](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.2.1). Baixe o arquivo `CongoGreyParrot-0.2.1-x86_64.flatpak` e instale com:
+Este programa também vem como pacote Flatpak, na página da [versão 0.3.0](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.3.0). Baixe o arquivo `CongoGreyParrot-0.3.0-x86_64.flatpak` e instale com:
 
 ```bash
-flatpak install --user CongoGreyParrot-0.2.1-x86_64.flatpak
+flatpak install --user CongoGreyParrot-0.3.0-x86_64.flatpak
 ```
 
 O Flatpak baixa sozinho do Flathub o runtime KDE de que o programa precisa. O Flathub ainda não aceitou o programa na loja porque o projeto é novo; ele volta a ser enviado mais adiante.
