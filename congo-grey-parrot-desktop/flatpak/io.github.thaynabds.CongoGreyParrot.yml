@@ -72,5 +72,5 @@ modules:
     sources:
       - type: git
         url: https://github.com/thaynabds/CongoGreyParrot.git
-        tag: desktop-v0.3.0
-        commit: dcd190045c891cd13731b8774239de549bcd1359
+        tag: desktop-v0.4.0
+        commit: 919e49a6618fdb235121969a98b65a0d783205c6
