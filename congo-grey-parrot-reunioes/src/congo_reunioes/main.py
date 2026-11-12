@@ -42,7 +42,12 @@ def main() -> None:
     audio = commands.add_parser("transcrever", help="Transcreve um áudio local, sem inventar nomes.")
     audio.add_argument("arquivo")
     audio.add_argument("--plataforma", default="audio-local")
+    connector = commands.add_parser("conector", help="AI Conector: liga uma IA a este programa por MCP.")
+    connector.add_argument("--conectar", action="store_true", help="Registra no Claude Desktop e no Cursor.")
+    connector.add_argument("--desconectar", action="store_true", help="Tira do Claude Desktop e do Cursor.")
     args = parser.parse_args()
+    if args.command == "conector":
+        raise SystemExit(_connector(args))
     store = NoteStore(_data_file())
     try:
         if args.command == "plataformas":
@@ -99,7 +104,10 @@ def main() -> None:
             print("Anotações apagadas." if label is None else f"Anotações de {label} apagadas.")
             return
         if args.command == "transcrever":
-            text = _transcribe(Path(args.arquivo))
+            try:
+                text = transcribe(Path(args.arquivo))
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from None
             label = platform_label(args.plataforma)
             lines = [SpokenLine("Gravação local", text, "")]
             store.add(label, lines)
@@ -122,13 +130,30 @@ def _data_file() -> Path:
     return root / "notas.sqlite3"
 
 
-def _transcribe(path: Path) -> str:
+def _connector(args) -> int:
+    import sys
+
+    repo_mcp = Path(__file__).resolve().parents[3] / "mcp"
+    if not (repo_mcp / "conector.py").is_file():
+        print("Esta instalação não traz a pasta mcp do projeto. Instale pelo repositório com ./instalar.sh.")
+        return 1
+    if str(repo_mcp) not in sys.path:
+        sys.path.insert(0, str(repo_mcp))
+    import conector
+
+    from congo_reunioes.mcp_server import build_server
+
+    flags = ["--conectar"] if args.conectar else ["--desconectar"] if args.desconectar else []
+    return conector.cli("congo-reunioes", build_server, flags)
+
+
+def transcribe(path: Path) -> str:
     if not path.is_file():
-        raise SystemExit(f"Arquivo não encontrado: {path}")
+        raise ValueError(f"Arquivo não encontrado: {path}")
     try:
         from faster_whisper import WhisperModel
     except ImportError:
-        raise SystemExit(f"Instale o motor com: pip install faster-whisper\n{_WHISPER}") from None
+        raise ValueError(f"Instale o motor com: pip install faster-whisper\n{_WHISPER}") from None
     model = WhisperModel("tiny", device="cpu", compute_type="int8")
     segments, _info = model.transcribe(str(path))
     return " ".join(segment.text.strip() for segment in segments) or "Não encontrei fala nesse arquivo."

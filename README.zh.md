@@ -25,6 +25,16 @@ flatpak install flathub io.github.thaynabds.CongoGreyParrot
 
 在 Flatpak 中，程序只能访问音乐、视频、文档和下载文件夹。清单文件在 [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak)。
 
+## AI Conector
+
+每个程序都有一个明确标出的 **AI Conector** 入口，AI（Claude Desktop、Cursor、Claude Code 或其他 MCP 客户端）可以由此连接并使用程序：电脑版侧边菜单的 **AI Conector**、手机版的 **AI Conector** 标签页、Discord 的 `/conector`，以及终端里的 `congo-reunioes conector`。
+
+```bash
+python3 mcp/registrar_claude.py
+```
+
+这会把四个程序都注册到 Claude Desktop 和 Cursor。重启 AI 应用后，让它“列出 congo-desktop 的工具”即可确认。只用 stdio，不开网络端口；只读写个人文件夹中的文件，不碰隐藏文件夹；删除、在 Discord 发帖或收听通话都需要 AI 先问你，再用 `confirmar=true`。完整工具列表：[mcp/README.md](mcp/README.md)。
+
 ## 各自做什么
 
 * **电脑。** 用 Whisper 转写语音（90 多种语言，包括葡萄牙语、英语、西班牙语、法语、意大利语、俄语、中文、日语、阿拉伯语、孟加拉语、印尼语和乌尔都语），朗读文字，编辑字幕，转换媒体。详见 [电脑版说明](congo-grey-parrot-desktop/README.zh.md)。

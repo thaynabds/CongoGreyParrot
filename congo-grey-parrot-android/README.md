@@ -26,6 +26,8 @@ O microfone só é pedido quando a gravação começa.
 
 ## MCP
 
+**AI Conector:** a aba **AI Conector**, na barra de baixo, explica como ligar uma IA ao celular e mostra o que ela fez por último (só a ação e a hora, nunca o texto). Com a depuração USB ligada, a IA no computador lê em voz alta, salva áudio, resume, salva, lê, lista e apaga arquivos do app. Só o adb do computador consegue mandar esses pedidos; outro aplicativo do celular recebe recusa. Detalhes em [mcp/README.md](../mcp/README.md#ai-conector).
+
 O aplicativo no celular não abre um servidor. A ponte roda no computador, com o pacote oficial `mcp`:
 
 ```bash

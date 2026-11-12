@@ -226,3 +226,21 @@ def test_resumo_command_summarizes_saved_meeting(tmp_path: Path, monkeypatch, ca
     cli.main()
     data = json.loads(capsys.readouterr().out)
     assert data["reuniao"] == "todas" and len(data["frases"]) == 2 and data["decisoes"]
+
+
+def test_conector_command_shows_ai_conector(tmp_path, monkeypatch, capsys):
+    import sys
+
+    import pytest
+
+    from congo_reunioes import main as cli
+
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("CONGO_REUNIOES_DATA", str(tmp_path / "dados"))
+    monkeypatch.setattr(sys, "argv", ["congo-reunioes", "conector"])
+    with pytest.raises(SystemExit) as done:
+        cli.main()
+    assert done.value.code == 0
+    out = capsys.readouterr().out
+    assert out.startswith("AI Conector")
+    assert "limpar_notas" in out and "confirmar=true" in out

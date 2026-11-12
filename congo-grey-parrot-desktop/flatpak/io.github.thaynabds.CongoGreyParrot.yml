@@ -20,6 +20,10 @@ finish-args:
   - --filesystem=xdg-videos
   - --filesystem=xdg-documents
   - --filesystem=xdg-download
+  # AI Conector: grava o servidor MCP do programa na configuração do Claude Desktop e do Cursor,
+  # só quando a pessoa aperta Conectar. Nenhuma outra pasta de configuração fica visível.
+  - --filesystem=xdg-config/Claude:create
+  - --filesystem=~/.cursor:create
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
 cleanup:
@@ -50,6 +54,9 @@ modules:
         dest: sonic
 
   - python3-deps.json
+
+  # Pacote mcp e o que ele usa: o AI Conector abre o servidor MCP de dentro do Flatpak.
+  - python3-mcp-deps.json
 
   - name: congo-grey-parrot
     buildsystem: simple

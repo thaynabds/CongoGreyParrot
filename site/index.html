@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Congo Grey Parrot: transcrição de áudio e leitura em voz alta locais (Linux e Android)</title>
-  <meta name="description" content="Programas gratuitos e de código aberto para transcrever áudio e vídeo com faster-whisper (Whisper), ler texto em voz alta com Piper, editar legendas e anotar reuniões, sem enviar nada para a nuvem. Linux (Flatpak), Android e bot de Discord.">
+  <meta name="description" content="Programas gratuitos e de código aberto para transcrever áudio e vídeo com faster-whisper (Whisper), ler texto em voz alta com Piper, editar legendas e anotar reuniões, sem enviar nada para a nuvem. AI Conector liga Claude e Cursor por MCP. Linux (Flatpak), Android e bot de Discord.">
   <meta name="keywords" content="transcrição de áudio, speech to text, Whisper, faster-whisper, Piper, texto para voz, TTS offline, legendas SRT, transcrição local, Linux, Flatpak, Android, bot de Discord, transcrição de reuniões">
   <meta name="author" content="Thayná Batista da Silva">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -129,6 +129,22 @@
           <p>Lê as transcrições exportadas do Teams, Google Meet, Zoom, Webex ou Jitsi e anota quem falou o quê, com decisões, tarefas e perguntas.</p>
         </article>
       </div>
+    </section>
+
+    <section aria-labelledby="ai-conector">
+      <h2 id="ai-conector">AI Conector: ligue uma IA aos programas</h2>
+      <p>Os quatro programas têm um lugar chamado <strong>AI Conector</strong>. Por ele, o Claude Desktop, o Cursor, o Claude Code ou outro cliente <a href="https://modelcontextprotocol.io/">MCP</a> se liga ao programa e usa as funções dele: transcrever, legendar, traduzir, ler em voz alta, resumir, converter mídia, cuidar da mesa de RPG no Discord e dos arquivos do celular.</p>
+      <div class="grade">
+        <div class="cartao">
+          <h3>Onde fica</h3>
+          <p>No computador, no menu lateral. No celular, na barra de baixo. No Discord, no comando <code>/conector</code>. Nas reuniões, em <code>congo-reunioes conector</code>.</p>
+        </div>
+        <div class="cartao">
+          <h3>Seguro por padrão</h3>
+          <p>Nenhuma porta de rede aberta. A IA só mexe em arquivos da sua pasta pessoal, nunca em pastas ocultas, e pergunta antes de apagar, publicar ou ouvir uma chamada.</p>
+        </div>
+      </div>
+      <pre><code>python3 mcp/registrar_claude.py</code></pre>
     </section>
 
     <section aria-labelledby="privacidade">

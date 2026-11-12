@@ -9,4 +9,9 @@ if [[ ! -x "$bin" ]]; then
   exit 1
 fi
 
+if [[ "${1:-}" == "conector" ]]; then
+  # AI Conector: mostra como ligar uma IA ao bot por MCP. --conectar registra no Claude Desktop e no Cursor.
+  exec "$root/.venv/bin/python" -m congo_discord "$@"
+fi
+
 exec "$bin"

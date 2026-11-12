@@ -28,15 +28,36 @@ O script pergunta qual programa instalar. Também dá para escolher direto: `./i
 
 ### Pelo Flatpak
 
-O programa de computador também vem como pacote Flatpak, na página da [versão 0.3.0](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.3.0). Baixe o arquivo `CongoGreyParrot-0.3.0-x86_64.flatpak` e instale com:
+O programa de computador também vem como pacote Flatpak, na página da [versão 0.4.0](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.4.0). Baixe o arquivo `CongoGreyParrot-0.4.0-x86_64.flatpak` e instale com:
 
 ```bash
-flatpak install --user CongoGreyParrot-0.3.0-x86_64.flatpak
+flatpak install --user CongoGreyParrot-0.4.0-x86_64.flatpak
 ```
 
 O Flatpak baixa sozinho do Flathub o runtime KDE de que o programa precisa. O Flathub ainda não aceitou o programa na loja porque o projeto é novo; ele volta a ser enviado mais adiante.
 
-No Flatpak o programa enxerga só as pastas Música, Vídeos, Documentos e Downloads. Os arquivos de manifesto ficam em [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak).
+No Flatpak o programa enxerga só as pastas Música, Vídeos, Documentos e Downloads, e, para o AI Conector, as pastas de configuração do Claude Desktop e do Cursor. Os arquivos de manifesto ficam em [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak).
+
+## AI Conector
+
+Todos os quatro programas têm um lugar chamado **AI Conector**. Por ele, uma IA (Claude Desktop, Cursor, Claude Code ou outro cliente MCP) se liga ao programa e consegue usar as funções dele.
+
+| Programa | Onde fica o AI Conector | O que a IA consegue fazer |
+|---|---|---|
+| Computador | Menu lateral, item **AI Conector** (botão Conectar) | Transcrever, gerar e ajustar legendas, traduzir, ler em voz alta, resumir, ler e salvar documentos, converter mídia, gravar legenda no vídeo, baixar e remover modelos e vozes, ver o histórico e mudar as configurações |
+| Celular | Barra de baixo, aba **AI Conector** | Pelo cabo USB: ler em voz alta, salvar áudio, resumir, salvar, ler, listar e apagar arquivos, instalar e abrir o app |
+| Bot de Discord | Comando `/conector` no Discord e `./iniciar.sh conector` no terminal | Dados, fichas, iniciativa, inventário, agenda, regras, nomes, transcrição e resumo de reunião, tocar e parar sons, ligar e desligar funções, mandar mensagem |
+| Anotações de reunião | `congo-reunioes conector` no terminal | Importar transcrições, transcrever áudio, ler as falas, resumir e apagar anotações |
+
+Para ligar tudo de uma vez no Claude Desktop e no Cursor:
+
+```bash
+python3 mcp/registrar_claude.py
+```
+
+Feche e abra o aplicativo da IA. Para confirmar, peça à IA: "liste as ferramentas do congo-desktop".
+
+Segurança: só stdio, nenhuma porta de rede aberta. Arquivos só da pasta pessoal e fora de pastas ocultas (nada de `~/.ssh` ou `.env`). Apagar, publicar no Discord ou ligar a escuta de uma chamada exige `confirmar=true`, depois que a IA pergunta a você. Detalhes e a lista completa de ferramentas em [mcp/README.md](mcp/README.md).
 
 ## Computador
 
@@ -57,6 +78,7 @@ Programa de desktop para Linux. Transcreve fala para texto com faster-whisper, l
 | Biblioteca | Lista a pasta de saída e permite copiar arquivos para outro lugar. |
 | Modelos e vozes | Baixa ou remove modelo de transcrição e voz Piper. A pasta de destino é escolhida antes do download. |
 | Histórico | Mostra as exportações feitas neste computador. Limpar o histórico não apaga os arquivos. |
+| AI Conector | Liga uma IA ao programa por MCP: conecta no Claude Desktop e no Cursor, copia o comando do Claude Code e lista o que a IA pode fazer. |
 | Configurações | Tema claro ou escuro, com perfis claro e escuro de alto contraste, Kuro, PinkVoid, RedVoid, YellowVoid, GreenVoid e BlueVoid. Filtro de cor, tamanho da letra e pasta padrão de saída. |
 
 Cada resultado abre o seletor de arquivo. O modelo de transcrição e a voz pedem a pasta antes de baixar.
@@ -269,7 +291,7 @@ python -m congo_grey_parrot translate audio.mp3 --output_dir ./saida
 
 ### Bot de Discord, via API REST
 
-O Claude fala com o bot pelo servidor MCP `congo-discord` (status, log sem segredos, convite e envio de mensagem como o bot). Fora do MCP, a API REST do Discord aceita só o token do bot. Token de conta pessoal (self-bot) é proibido pelos termos do Discord.
+O Claude fala com o bot pelo servidor MCP `congo-discord` (veja a seção AI Conector): mesa de RPG, reunião, sons, funções, log sem segredos, convite e mensagens como o bot. Fora do MCP, a API REST do Discord aceita só o token do bot. Token de conta pessoal (self-bot) é proibido pelos termos do Discord.
 
 Referência: [Discord REST API](https://discord.com/developers/docs/reference).
 

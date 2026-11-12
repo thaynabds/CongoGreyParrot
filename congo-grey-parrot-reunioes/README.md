@@ -43,6 +43,8 @@ O arquivo original não é alterado. Nada sai do computador. O resumo não usa I
 
 ## MCP
 
+**AI Conector:** `congo-reunioes conector` mostra como ligar uma IA a este programa e o que ela pode fazer. `congo-reunioes conector --conectar` registra no Claude Desktop e no Cursor. Detalhes em [mcp/README.md](../mcp/README.md#ai-conector).
+
 As anotações também abrem um servidor MCP, com o pacote oficial `mcp`. No Cursor:
 
 ```bash

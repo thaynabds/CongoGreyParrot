@@ -15,3 +15,7 @@ congo-grey-parrot-android/.kotlin/
 congo-grey-parrot-android/**/build/
 congo-grey-parrot-android/local.properties
 .unlazy/
+
+# Gravações de voz brutas da narração ficam só neste computador.
+# O vídeo final e as legendas vão como anexo da versão no GitHub.
+congo-narracao/

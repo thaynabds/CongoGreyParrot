@@ -85,6 +85,9 @@ class CongoBot(commands.Bot):
     async def setup_hook(self) -> None:
         register(self)
         load_plugins(self.plugins, self.store, self)
+        from congo_discord.presentation.control_actions import start_control
+
+        await start_control(self)
         for row in self.store.all_sessions():
             self.add_view(session_view(self.store, int(row["id"])))
         guild = os.environ.get("CONGO_DISCORD_GUILD_ID", "")
@@ -570,9 +573,50 @@ def register(bot: CongoBot) -> None:
         text = await asyncio.to_thread(update_report, bot.repo, allow)
         await interaction.followup.send(_clip(text), ephemeral=True)
 
+    @bot.tree.command(name="conector", description="AI Conector: como ligar uma IA a este bot por MCP.")
+    async def conector(interaction: discord.Interaction) -> None:
+        # Mostra caminhos deste computador: só a dona do bot vê, e só ela.
+        if interaction.user.id != _owner_id():
+            await interaction.response.send_message(
+                "AI Conector: só a conta definida em CONGO_DISCORD_OWNER_ID vê os detalhes deste computador.",
+                ephemeral=True,
+            )
+            return
+        await interaction.response.defer(ephemeral=True)
+        text = await asyncio.to_thread(public_connector_report)
+        for start in range(0, len(text), 1900):
+            await interaction.followup.send(f"```\n{text[start:start + 1900]}\n```", ephemeral=True)
+
     for group in (dados, ficha, iniciativa, regra, som, sessao, grupo, reuniao, arquivo, funcoes):
         bot.tree.add_command(group)
     register_vtt(bot)
+
+
+def connector_report() -> str:
+    """Texto da área AI Conector (o mesmo do terminal), sem token nem segredo."""
+    import sys
+
+    repo_mcp = Path(__file__).resolve().parents[4] / "mcp"
+    if not (repo_mcp / "conector.py").is_file():
+        return "AI Conector: esta instalação não traz a pasta mcp do projeto. Instale pelo repositório."
+    if str(repo_mcp) not in sys.path:
+        sys.path.insert(0, str(repo_mcp))
+    import conector
+
+    from congo_discord.mcp_server import build_server
+
+    try:
+        server = build_server()
+    except Exception:
+        server = None
+    return conector.report("congo-discord", server) + (
+        "\nNo terminal: ./iniciar.sh conector --conectar registra no Claude Desktop e no Cursor."
+    )
+
+
+def public_connector_report() -> str:
+    """Versão para o Discord: o texto passa pelos servidores dele, então a pasta pessoal (com o nome de usuário) vira ~."""
+    return connector_report().replace(str(Path.home()), "~")
 
 
 def _roll_text(expression: str) -> str:
@@ -624,27 +668,7 @@ async def _play(interaction: discord.Interaction, bot: CongoBot, name: str, loop
     if voice is None:
         voice = await channel.connect()
     try:
-        if loop:
-            if voice.is_playing():
-                voice.stop()
-            voice.play(discord.FFmpegPCMAudio(str(path), before_options="-stream_loop -1"))
-            voice._congo_sound = path
-        else:
-            effect = discord.FFmpegPCMAudio(str(path))
-            background = getattr(voice, "_congo_sound", None)
-            if voice.is_playing():
-                voice.stop()
-            if isinstance(background, Path) and background.is_file():
-                from congo_discord.presentation.mix import LayeredSource
-
-                voice.play(
-                    LayeredSource(
-                        discord.FFmpegPCMAudio(str(background), before_options="-stream_loop -1"),
-                        effect,
-                    )
-                )
-            else:
-                voice.play(effect)
+        start_audio(voice, path, loop)
     except Exception as exc:
         await interaction.response.send_message(
             f"Não consegui tocar o áudio. O FFmpeg precisa estar instalado: {_FFMPEG}\n{exc}",
@@ -653,6 +677,31 @@ async def _play(interaction: discord.Interaction, bot: CongoBot, name: str, loop
         return
     note = " O fundo fica em repetição." if loop else ""
     await interaction.response.send_message(f"Tocando {path.name}.{note}")
+
+
+def start_audio(voice, path: Path, loop: bool) -> None:
+    """Toca um arquivo: em repetição (fundo) ou uma vez por cima do fundo (efeito)."""
+    if loop:
+        if voice.is_playing():
+            voice.stop()
+        voice.play(discord.FFmpegPCMAudio(str(path), before_options="-stream_loop -1"))
+        voice._congo_sound = path
+        return
+    effect = discord.FFmpegPCMAudio(str(path))
+    background = getattr(voice, "_congo_sound", None)
+    if voice.is_playing():
+        voice.stop()
+    if isinstance(background, Path) and background.is_file():
+        from congo_discord.presentation.mix import LayeredSource
+
+        voice.play(
+            LayeredSource(
+                discord.FFmpegPCMAudio(str(background), before_options="-stream_loop -1"),
+                effect,
+            )
+        )
+    else:
+        voice.play(effect)
 
 
 class _Sink:

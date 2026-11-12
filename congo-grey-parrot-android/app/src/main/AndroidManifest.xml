@@ -28,6 +28,13 @@
             </intent-filter>
         </activity>
 
+        <!-- AI Conector: pedidos do computador pelo adb. O código confere o uid do shell. -->
+        <provider
+            android:name=".ai.AiBridgeProvider"
+            android:authorities="${applicationId}.ai"
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.files"

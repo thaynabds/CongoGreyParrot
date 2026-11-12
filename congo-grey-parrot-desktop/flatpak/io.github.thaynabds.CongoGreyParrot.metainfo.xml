@@ -78,6 +78,11 @@
     <keyword>text to speech</keyword>
   </keywords>
   <releases>
+    <release version="0.4.0" date="2026-11-12">
+      <description>
+        <p>New AI Conector page: connect Claude Desktop, Cursor, Claude Code or another MCP client to the program. The AI can transcribe, make and edit subtitles, translate, read aloud, summarize, convert media, save documents, download models and voices, and change settings. Files stay in your home folder, and deleting anything needs your confirmation.</p>
+      </description>
+    </release>
     <release version="0.3.0" date="2026-11-09">
       <description>
         <p>Every theme now has light and dark profiles, and there are two new themes: GreenVoid and BlueVoid.</p>

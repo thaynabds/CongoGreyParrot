@@ -39,6 +39,10 @@ New tools: `status_bot` (says whether the token is filled in, without showing it
 
 Summary: `resumir_texto` and `resumir_arquivo` (desktop, file from the home folder) and `resumir_reuniao` and `resumir_texto` (meetings). They pick sentences from the text itself, without AI or internet, and list decisions, tasks and questions. `frases` goes from 0 (automatic) to 30.
 
+## AI Conector
+
+The AI Conector, the full tool list and the safety rules are described in Portuguese in [README.md](README.md#ai-conector).
+
 ## Connect a website or another server
 
 ```bash

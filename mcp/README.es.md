@@ -39,6 +39,10 @@ Herramientas nuevas: `status_bot` (dice si el token está cargado, sin mostrarlo
 
 Resumen: `resumir_texto` y `resumir_arquivo` (computadora, archivo de la carpeta personal) y `resumir_reuniao` y `resumir_texto` (reuniones). Eligen frases del propio texto, sin IA y sin internet, y separan decisiones, tareas y preguntas. `frases` va de 0 (automático) a 30.
 
+## AI Conector
+
+El AI Conector, la lista completa de herramientas y las reglas de seguridad están en portugués en [README.md](README.md#ai-conector).
+
 ## Conectar un sitio u otro servidor
 
 ```bash

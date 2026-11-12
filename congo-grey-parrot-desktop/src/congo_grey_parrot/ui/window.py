@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from congo_grey_parrot.files.naming import classify
+from congo_grey_parrot.ui.ai_page import AIConnectorPage
 from congo_grey_parrot.ui.extra_pages import (
     ConvertPage,
     DocumentsPage,
@@ -80,6 +81,7 @@ class MainWindow(QMainWindow):
             "models": ModelsPage(session),
             "history": HistoryPage(session),
             "settings": SettingsPage(session),
+            "ai": AIConnectorPage(session),
         }
         labels = (
             ("home", "Início"),
@@ -94,6 +96,7 @@ class MainWindow(QMainWindow):
             ("models", "Modelos e vozes"),
             ("history", "Histórico"),
             ("settings", "Configurações"),
+            ("ai", "AI Conector"),
         )
 
         # Nav sidebar

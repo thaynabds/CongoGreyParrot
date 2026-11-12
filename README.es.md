@@ -25,6 +25,16 @@ flatpak install flathub io.github.thaynabds.CongoGreyParrot
 
 Dentro de Flatpak el programa solo ve las carpetas Música, Vídeos, Documentos y Descargas. Los archivos del manifiesto están en [congo-grey-parrot-desktop/flatpak](congo-grey-parrot-desktop/flatpak).
 
+## AI Conector
+
+Cada programa tiene un lugar bien señalado llamado **AI Conector**, donde una IA (Claude Desktop, Cursor, Claude Code u otro cliente MCP) se conecta y usa el programa: el ítem **AI Conector** del menú lateral en la computadora, la pestaña **AI Conector** en el celular, `/conector` en Discord y `congo-reunioes conector` en la terminal.
+
+```bash
+python3 mcp/registrar_claude.py
+```
+
+Eso registra los cuatro en Claude Desktop y Cursor. Reinicia la app de IA y pídele "lista las herramientas de congo-desktop" para confirmar. Solo stdio, sin puerto de red. Archivos solo de tu carpeta personal, nunca de carpetas ocultas. Borrar, publicar en Discord o escuchar una llamada exige `confirmar=true` después de que la IA te pregunte. Lista completa: [mcp/README.md](mcp/README.md).
+
 ## Qué hace cada uno
 
 * **Computadora.** Transcribe voz con Whisper (más de 90 idiomas, entre ellos portugués, inglés, español, francés, italiano, ruso, chino, japonés, árabe, bengalí, indonesio y urdu), lee texto, edita subtítulos y convierte medios. Detalle: [README de escritorio](congo-grey-parrot-desktop/README.es.md).

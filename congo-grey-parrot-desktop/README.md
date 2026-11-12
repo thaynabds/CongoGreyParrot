@@ -15,10 +15,10 @@ O script faz tudo automaticamente: verifica o Python, instala as dependências d
 
 ### Pelo Flatpak
 
-Este programa também vem como pacote Flatpak, na página da [versão 0.3.0](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.3.0). Baixe o arquivo `CongoGreyParrot-0.3.0-x86_64.flatpak` e instale com:
+Este programa também vem como pacote Flatpak, na página da [versão 0.4.0](https://github.com/thaynabds/CongoGreyParrot/releases/tag/desktop-v0.4.0). Baixe o arquivo `CongoGreyParrot-0.4.0-x86_64.flatpak` e instale com:
 
 ```bash
-flatpak install --user CongoGreyParrot-0.3.0-x86_64.flatpak
+flatpak install --user CongoGreyParrot-0.4.0-x86_64.flatpak
 ```
 
 O Flatpak baixa sozinho do Flathub o runtime KDE de que o programa precisa. O Flathub ainda não aceitou o programa na loja porque o projeto é novo; ele volta a ser enviado mais adiante.
@@ -84,6 +84,8 @@ pytest
 ```
 
 ## MCP
+
+**AI Conector:** abra o item **AI Conector** no menu lateral. O botão *Conectar ao Claude Desktop e Cursor* registra este programa na IA, *Copiar comando do Claude Code* copia o `claude mcp add` pronto e a página lista tudo o que a IA pode fazer aqui. A lista completa e as travas de segurança estão em [mcp/README.md](../mcp/README.md#ai-conector).
 
 O programa também fala MCP, com o pacote oficial `mcp`. No Cursor, transporte stdio:
 

@@ -95,6 +95,12 @@ def _draw(painter: QPainter, key: str) -> None:
         painter.drawEllipse(QRectF(5, 5, 22, 22))
         painter.drawLine(16, 16, 16, 9)
         painter.drawLine(16, 16, 22, 18)
+    elif key == "ai":
+        # Tomada: dois pinos e um cabo, o sinal de "conectar".
+        painter.drawRoundedRect(QRectF(8, 10, 16, 12), 3, 3)
+        painter.drawLine(12, 4, 12, 10)
+        painter.drawLine(20, 4, 20, 10)
+        painter.drawLine(16, 22, 16, 29)
     else:
         painter.drawEllipse(QRectF(10, 10, 12, 12))
         painter.drawEllipse(QRectF(4, 4, 24, 24))

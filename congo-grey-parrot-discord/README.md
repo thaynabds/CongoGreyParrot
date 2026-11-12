@@ -35,6 +35,8 @@ O convite pede só Ver canais, Enviar mensagens, Anexar arquivos, Conectar e Fal
 
 ## MCP
 
+**AI Conector:** no Discord, `/conector` (só para a conta em `CONGO_DISCORD_OWNER_ID`, em mensagem que só ela vê). No terminal, `./iniciar.sh conector` mostra o mesmo e `./iniciar.sh conector --conectar` registra no Claude Desktop e no Cursor. A IA rola dados, cuida de fichas, iniciativa, inventário e agenda, consulta regras, toca sons, transcreve e resume reuniões e manda mensagens. Publicar no canal, apagar e ligar a escuta de uma chamada pedem a sua confirmação. Detalhes em [mcp/README.md](../mcp/README.md#ai-conector).
+
 O bot também abre um servidor MCP, com o pacote oficial `mcp`. No Cursor, o transporte é stdio:
 
 ```bash

@@ -79,6 +79,7 @@ private val destinations = listOf(
     Destination("speech", "Ler", R.drawable.ic_read, "Texto em voz"),
     Destination("files", "Arquivos", R.drawable.ic_folder, "Pasta"),
     Destination("settings", "Ajustes", R.drawable.ic_settings, "Engrenagem"),
+    Destination("ai", "AI Conector", R.drawable.ic_ai, "Tomada"),
 )
 
 @Composable
@@ -122,6 +123,7 @@ fun CongoApp(
                 "transcribe" -> RecordScreen()
                 "speech" -> ReadScreen()
                 "files" -> FilesScreen()
+                "ai" -> AiConnectorScreen()
                 else -> SettingsScreen(mode, onMode, filter, onFilter)
             }
         }
@@ -206,6 +208,53 @@ private fun HomeScreen(onOpen: (String) -> Unit) {
             detail = "Compartilhe ou apague o que já foi gravado.",
             onClick = { onOpen("files") },
         )
+        Spacer(Modifier.height(10.dp))
+        ActionCard(
+            icon = R.drawable.ic_ai,
+            title = "AI Conector",
+            detail = "Ligue uma IA (Claude, Cursor) a este aplicativo pelo computador, via MCP.",
+            onClick = { onOpen("ai") },
+        )
+    }
+}
+
+private const val CONNECTOR_STEPS = """1. No computador, instale o projeto com ./instalar.sh e o adb (Android SDK Platform Tools).
+2. No celular, ligue a Depuração USB nas Opções do desenvolvedor e conecte o cabo.
+3. No computador, rode: python mcp/registrar_claude.py (ou use a página AI Conector do Desktop).
+4. Abra o Claude Desktop, o Cursor ou o Claude Code: o servidor congo-android aparece na lista."""
+
+@Composable
+private fun AiConnectorScreen() {
+    val context = LocalContext.current
+    var log by remember { mutableStateOf(org.congogreyparrot.ai.AiBridgeProvider.recent(context)) }
+    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+        Text("AI Conector", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
+        Text(
+            "Uma IA no computador (Claude Desktop, Cursor, Claude Code ou outro cliente MCP) pode usar este " +
+                "aplicativo: ler em voz alta, salvar áudio, resumir, salvar, ler, listar e apagar arquivos.",
+            modifier = Modifier.padding(top = 6.dp, bottom = 8.dp),
+        )
+        Card(shape = RoundedCornerShape(12.dp), modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(14.dp)) {
+                Text("Como conectar", fontWeight = FontWeight.SemiBold)
+                Text(CONNECTOR_STEPS, modifier = Modifier.padding(top = 6.dp))
+            }
+        }
+        Text(
+            "Segurança: os pedidos só chegam pelo cabo USB com a depuração ligada. Outro aplicativo do celular " +
+                "não consegue usar esta porta, nada fica aberto na rede e a IA pede sua confirmação antes de apagar.",
+            modifier = Modifier.padding(top = 10.dp),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Row(Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("O que a IA fez por último", fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+            TextButton(onClick = { log = org.congogreyparrot.ai.AiBridgeProvider.recent(context) }) { Text("Atualizar") }
+        }
+        if (log.isEmpty()) {
+            Text("Nenhum pedido ainda.")
+        } else {
+            log.forEach { Text(it, style = MaterialTheme.typography.bodySmall) }
+        }
     }
 }
 
