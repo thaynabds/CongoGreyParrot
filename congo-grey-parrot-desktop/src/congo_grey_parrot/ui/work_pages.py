@@ -385,6 +385,10 @@ class SpeechPage(QWidget):
     def set_text(self, text: str) -> None:
         self.text.setPlainText(text)
 
+    def read_text(self, text: str) -> None:
+        self.set_text(text)
+        self._read()
+
     def reload_voices(self) -> None:
         current = self.voice.currentData()
         self.voice.clear()
