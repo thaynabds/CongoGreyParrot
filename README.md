@@ -70,6 +70,7 @@ Programa de desktop para Linux. Transcreve fala para texto com faster-whisper, l
 | Início | Abre as outras telas. |
 | Transcrever | Transcreve um ou vários arquivos. Detecta o idioma ou usa o idioma definido. Salva TXT, MD, DOCX, PDF, SRT, VTT, ASS, TSV, JSON ou JSONL. |
 | Texto para voz | Abre texto, lê em voz alta, pausa, ajusta velocidade e salva WAV. MP3 e outros formatos exigem FFmpeg. |
+| Ler a tela | Botão **Ler a tela** ou Ctrl+Shift+L. Lê a seleção ou o texto visível na tela atual, na tela Texto para voz. |
 | Traduzir | Traduz fala para inglês com modelo multilíngue. O modelo turbo não aparece nessa tarefa. |
 | Legendas | Edita tempos e texto, incorpora faixa de legenda no vídeo ou grava a legenda na imagem. |
 | Resumir | Resume texto, documento ou transcrição: escolhe as frases principais do próprio texto e separa decisões, tarefas e perguntas. Funciona sem internet e não usa IA. |

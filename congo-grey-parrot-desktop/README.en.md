@@ -34,6 +34,7 @@ One multilingual model covers more than 90 languages, including Portuguese, Engl
 | Home | Shortcuts and a drop area for files |
 | Transcribe | Audio or video to text |
 | Text to speech | Reads text and saves audio |
+| Read screen | **Read screen** button or Ctrl+Shift+L. Reads the selection or the visible text on the current screen. |
 | Translate | Translates written text |
 | Subtitles | Edits timing and burns captions into video |
 | Summarize | Summarizes pasted text, a document or a transcript: main sentences from the text itself, decisions, tasks and questions. Offline, no AI. The Summarize buttons on Transcribe and Documents send the text here. |
