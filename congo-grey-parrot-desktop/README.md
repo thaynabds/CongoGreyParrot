@@ -53,6 +53,7 @@ Para usar outro idioma: abra a tela **Transcrever**, selecione o idioma no menu 
 | Início | Atalhos para as outras telas e área de arrastar arquivos. |
 | Transcrever | Transcreve áudio ou vídeo para texto em qualquer idioma suportado. |
 | Texto para voz | Lê qualquer texto em voz alta e salva o áudio. |
+| Ler a tela | Botão **Ler a tela** ou Ctrl+Shift+L. Lê a seleção ou o texto visível na tela atual. |
 | Traduzir | Traduz texto entre idiomas. |
 | Legendas | Edita tempos e texto, grava legenda no vídeo. |
 | Resumir | Resume o texto colado, um documento ou a transcrição: frases principais do próprio texto, decisões, tarefas e perguntas. Sem internet e sem IA. Os botões Resumir de Transcrever e Documentos mandam o texto para cá. |

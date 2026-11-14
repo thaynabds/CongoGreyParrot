@@ -34,6 +34,7 @@ Un solo modelo cubre más de 90 idiomas, entre ellos portugués, inglés, españ
 | Inicio | Atajos y zona para soltar archivos |
 | Transcribir | Audio o video a texto |
 | Texto a voz | Lee el texto y guarda el audio |
+| Leer pantalla | Botón **Leer pantalla** o Ctrl+Shift+L. Lee la selección o el texto visible en la pantalla actual. |
 | Traducir | Traduce texto escrito |
 | Subtítulos | Edita tiempos y graba subtítulos en el video |
 | Resumir | Resume texto pegado, un documento o una transcripción: frases principales del propio texto, decisiones, tareas y preguntas. Sin internet y sin IA. Los botones Resumir de Transcribir y Documentos envían el texto aquí. |
