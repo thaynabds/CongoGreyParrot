@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from PySide6.QtCore import QSize, Qt
+from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QButtonGroup,
     QFrame,
@@ -27,7 +28,9 @@ from congo_grey_parrot.ui.extra_pages import (
     ModelsPage,
     SettingsPage,
 )
+from congo_grey_parrot.ui.dialogs import warn
 from congo_grey_parrot.ui.marks import icon_color, nav_icon
+from congo_grey_parrot.ui.screen_text import text_to_read
 from congo_grey_parrot.ui.widgets import TaskPanel
 from congo_grey_parrot.ui.work_pages import (
     HomePage,
@@ -143,6 +146,12 @@ class MainWindow(QMainWindow):
         top_layout = QHBoxLayout(top_bar)
         top_layout.setContentsMargins(4, 4, 4, 4)
         top_layout.addWidget(self._nav_toggle)
+        self._read_screen_button = QPushButton("Ler a tela")
+        self._read_screen_button.setToolTip("Lê o texto visível na tela ou a seleção (Ctrl+Shift+L)")
+        self._read_screen_button.setAccessibleName("Ler a tela em voz alta")
+        self._read_screen_button.clicked.connect(self.read_screen)
+        top_layout.addWidget(self._read_screen_button)
+        QShortcut(QKeySequence("Ctrl+Shift+L"), self, activated=self.read_screen)
         top_layout.addStretch(1)
         top_layout.addWidget(self._tasks_toggle)
 
@@ -302,6 +311,14 @@ class MainWindow(QMainWindow):
             return
         self.subtitles.load_transcript(transcript)
         self.show_page("subtitles")
+
+    def read_screen(self) -> None:
+        text = text_to_read(self.stack.currentWidget())
+        if not text:
+            warn(self, "Não há texto visível nesta tela para ler.")
+            return
+        self.show_page("speech")
+        self.speech.read_text(text)
 
     def _speech_text(self, text: str) -> None:
         self.speech.set_text(text)
