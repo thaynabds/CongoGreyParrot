@@ -54,6 +54,16 @@ Para usar outro idioma: abra a tela **Transcrever**, selecione o idioma no menu 
 | Transcrever | Transcreve áudio ou vídeo para texto em qualquer idioma suportado. |
 | Texto para voz | Lê qualquer texto em voz alta e salva o áudio. |
 | Ler a tela | Botão **Ler a tela** ou Ctrl+Shift+L. Lê a seleção ou o texto visível na tela atual. |
+
+### Ler a janela ativa em qualquer programa
+
+O comando `congo-grey-parrot ler-janela` lê em voz alta o texto da janela que está em foco, seja navegador, editor ou outro programa. Não é preciso instalar nada em cada aplicação: a leitura usa a árvore de acessibilidade do sistema (AT-SPI, no Linux).
+
+1. Instale o pacote de ligação do AT-SPI: `sudo apt install gir1.2-atspi-2.0` (no Debian e Ubuntu).
+2. Ative a acessibilidade nas configurações do sistema. Em navegadores baseados em Chromium, o texto da página só aparece para a acessibilidade quando ela está ativa.
+3. Crie um atalho do sistema que rode `congo-grey-parrot ler-janela`. No GNOME: Configurações, Teclado, Atalhos personalizados. No KDE: Configurações do sistema, Atalhos, Atalho personalizado.
+
+Campos de senha nunca são lidos. O texto é limitado a 20 mil caracteres. Se o programa em foco não expuser texto, o comando avisa e não lê nada. Fontes: [documentação do AT-SPI](https://gitlab.gnome.org/GNOME/at-spi2-core) e [documentação de acessibilidade do Chromium](https://www.chromium.org/developers/accessibility/). Não testei a leitura de um navegador real: a verificação foi feita com a árvore simulada nos testes.
 | Traduzir | Traduz texto entre idiomas. |
 | Legendas | Edita tempos e texto, grava legenda no vídeo. |
 | Resumir | Resume o texto colado, um documento ou a transcrição: frases principais do próprio texto, decisões, tarefas e perguntas. Sem internet e sem IA. Os botões Resumir de Transcrever e Documentos mandam o texto para cá. |
