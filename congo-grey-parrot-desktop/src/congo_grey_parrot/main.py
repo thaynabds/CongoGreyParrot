@@ -110,6 +110,14 @@ def publish_launcher(icon: Path, root: Path | None = None) -> Path | None:
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] == "ler-janela":
+        from congo_grey_parrot.screen.cli import main as read_active_window
+
+        return read_active_window()
+    if len(sys.argv) > 1 and sys.argv[1] == "instalar-atalho":
+        from congo_grey_parrot.screen.cli import install_shortcut_main
+
+        return install_shortcut_main()
     notice = xcb_cursor_message()
     if notice:
         print(notice, file=sys.stderr)

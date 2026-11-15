@@ -62,6 +62,18 @@ Para usar outro idioma: abra a tela **Transcrever**, selecione o idioma no menu 
 | Modelos e vozes | Baixa ou remove modelos Whisper e vozes Piper. |
 | Configurações | Tema, filtro de cor e tamanho da letra. |
 
+### Ler a janela ativa em qualquer programa
+
+O comando `congo-grey-parrot ler-janela` lê em voz alta o texto da janela que está em foco, seja navegador, editor ou outro programa. Não é preciso instalar nada em cada aplicação: a leitura usa a árvore de acessibilidade do sistema (AT-SPI, no Linux).
+
+1. Instale o pacote de ligação do AT-SPI: `sudo apt install gir1.2-atspi-2.0` (no Debian, Ubuntu e Linux Mint).
+2. Rode uma vez `congo-grey-parrot instalar-atalho`. No Cinnamon e no GNOME, ele registra **Ctrl+Alt+R** como atalho de `ler-janela`, sem apagar os atalhos que já existem, e ativa a acessibilidade do sistema. Sem ela, navegadores e apps Electron não mostram o texto.
+3. Feche e abra de novo os navegadores que estavam abertos.
+
+Em outros ambientes, como o KDE, crie um atalho manual em Configurações do sistema que rode `congo-grey-parrot ler-janela`.
+
+Campos de senha nunca são lidos. O texto é limitado a 20 mil caracteres. O áudio gerado é apagado depois de tocar. Se o programa em foco não expuser texto, o comando avisa e não lê nada. Fontes: [documentação do AT-SPI](https://gitlab.gnome.org/GNOME/at-spi2-core) e [documentação de acessibilidade do Chromium](https://www.chromium.org/developers/accessibility/).
+
 ## Usar pela linha de comando
 
 ```bash
