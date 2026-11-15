@@ -127,3 +127,88 @@ def test_sem_gsettings_a_instalacao_explica_o_motivo(monkeypatch):
     import pytest as _pytest
     with _pytest.raises(RuntimeError, match="gsettings"):
         shortcut.install_gnome_shortcut()
+
+
+def test_cli_apaga_o_audio_depois_de_tocar(monkeypatch, tmp_path):
+    monkeypatch.setattr(cli, "active_window_text", lambda: "texto da tela")
+    monkeypatch.setattr(cli.tempfile, "mkdtemp", lambda prefix: str(tmp_path / "pasta"))
+    (tmp_path / "pasta").mkdir()
+    tocados = []
+    _, wav = cli.read_active_window(FakeSpeech(), play=lambda path: tocados.append(path.exists()) or True)
+    assert tocados == [True]
+    assert wav is None
+    assert not (tmp_path / "pasta").exists()
+
+
+def test_gi_de_pasta_que_nao_e_do_sistema_nunca_e_carregado(tmp_path, monkeypatch):
+    import sys
+    import sysconfig
+
+    from congo_grey_parrot.screen import accessibility
+
+    falso = tmp_path / "gi"
+    falso.mkdir()
+    (falso / "__init__.py").write_text("raise SystemExit('carregou codigo de pasta do usuario')\n")
+    (falso / f"_gi{sysconfig.get_config_var('EXT_SUFFIX')}").write_bytes(b"")
+    monkeypatch.delitem(sys.modules, "gi", raising=False)
+    assert accessibility._load_system_gi([tmp_path]) is False
+    assert "gi" not in sys.modules
+
+
+def test_deteccao_do_ambiente():
+    assert shortcut.detect_desktop({"XDG_CURRENT_DESKTOP": "X-Cinnamon"}) == "cinnamon"
+    assert shortcut.detect_desktop({"XDG_CURRENT_DESKTOP": "ubuntu:GNOME"}) == "gnome"
+    assert shortcut.detect_desktop({"XDG_CURRENT_DESKTOP": "KDE"}) == ""
+    assert shortcut.detect_desktop({}) == ""
+
+
+def test_comando_usa_o_caminho_absoluto_do_lancador():
+    cmd = shortcut.shortcut_command(lambda name: "/home/a b/.local/bin/congo-grey-parrot")
+    assert cmd == "'/home/a b/.local/bin/congo-grey-parrot' ler-janela"
+    assert shortcut._is_ours(cmd)
+    assert shortcut.shortcut_command(lambda name: None) == shortcut.COMMAND
+
+
+def test_tecla_invalida_e_recusada():
+    for ruim in ["", "<Control>'; rm", "<Control><Alt>r x"]:
+        with pytest.raises(ValueError):
+            shortcut.check_binding(ruim)
+
+
+def test_cinnamon_usa_o_proximo_custom_livre_e_preserva_os_outros():
+    commands = shortcut.build_cinnamon_commands(["custom0", "custom2"], lambda name: "outro")
+    assert commands[-1] == ["gsettings", "set", "org.cinnamon.desktop.keybindings", "custom-list", "['custom0', 'custom2', 'custom1']"]
+    assert any(c[2].endswith("/custom1/") and c[3] == "binding" and c[4] == "['<Control><Alt>r']" for c in commands)
+
+
+def test_cinnamon_reaproveita_o_atalho_existente_sem_duplicar():
+    commands = shortcut.build_cinnamon_commands(
+        ["custom0", "custom1"], lambda name: "congo-grey-parrot ler-janela" if name == "custom1" else "x"
+    )
+    assert all("/custom2/" not in " ".join(c) for c in commands)
+    listas = [c[-1] for c in commands if c[3] == "custom-list"]
+    assert listas == ["['custom0', 'custom1', '__dummy__']", "['custom0', 'custom1']"]
+
+
+def test_instalacao_no_cinnamon_ativa_a_acessibilidade():
+    feitos = []
+
+    def run(argv):
+        feitos.append(argv)
+        if argv[:2] == ["gsettings", "get"]:
+            return "['custom0']" if argv[-1] == "custom-list" else "'outro'"
+        return ""
+
+    desktop, _ = shortcut.install_shortcut(
+        env={"XDG_CURRENT_DESKTOP": "X-Cinnamon"}, run=run, which=lambda name: "/usr/bin/" + name
+    )
+    assert desktop == "cinnamon"
+    assert ["gsettings", "set", "org.gnome.desktop.interface", "toolkit-accessibility", "true"] in feitos
+    assert not any("org.gnome.settings-daemon" in " ".join(a) for a in feitos)
+
+
+def test_ambiente_desconhecido_explica_e_nao_grava_nada():
+    feitos = []
+    with pytest.raises(RuntimeError, match="KDE"):
+        shortcut.install_shortcut(env={"XDG_CURRENT_DESKTOP": "KDE"}, run=feitos.append, which=lambda n: "/x")
+    assert feitos == []

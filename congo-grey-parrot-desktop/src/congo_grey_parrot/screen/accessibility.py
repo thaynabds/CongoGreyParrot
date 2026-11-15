@@ -7,7 +7,12 @@ A ligação com o AT-SPI fica isolada em `_atspi_*` e só é carregada quando us
 
 from __future__ import annotations
 
+import importlib.util
+import stat
+import sys
+import sysconfig
 from collections.abc import Callable, Iterable
+from pathlib import Path
 from typing import Any
 
 READABLE_ROLES = frozenset({
@@ -51,9 +56,62 @@ def collect_text(
     return joined[:limit]
 
 
+def _system_gi_dirs() -> list[Path]:
+    minor = f"python3.{sys.version_info.minor}"
+    return [
+        Path("/usr/lib/python3/dist-packages"),
+        Path("/usr/lib") / minor / "site-packages",
+        Path("/usr/lib64") / minor / "site-packages",
+    ]
+
+
+def _trusted_dir(path: Path) -> bool:
+    """Só pastas do sistema: do root e sem escrita para grupo ou outros."""
+    try:
+        info = path.stat()
+    except OSError:
+        return False
+    return info.st_uid == 0 and not info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+
+
+def _load_system_gi(dirs: Iterable[Path] | None = None) -> bool:
+    """Carrega o PyGObject do sistema dentro do venv, sem pôr o site-packages inteiro no sys.path.
+
+    O venv do programa é isolado e o PyGObject não instala pelo pip sem compilar.
+    Aceita só um `gi` compilado para este Python, em pasta do root.
+    """
+    suffix = sysconfig.get_config_var("EXT_SUFFIX") or ""
+    for base in _system_gi_dirs() if dirs is None else dirs:
+        package = base / "gi"
+        if not (suffix and (package / f"_gi{suffix}").is_file()):
+            continue
+        if not (_trusted_dir(base) and _trusted_dir(package)):
+            continue
+        spec = importlib.util.spec_from_file_location(
+            "gi", package / "__init__.py", submodule_search_locations=[str(package)]
+        )
+        if spec is None or spec.loader is None:
+            continue
+        module = importlib.util.module_from_spec(spec)
+        sys.modules["gi"] = module
+        try:
+            spec.loader.exec_module(module)
+        except Exception:  # noqa: BLE001 - versão incompatível: tenta a próxima pasta
+            for name in [n for n in sys.modules if n == "gi" or n.startswith("gi.")]:
+                del sys.modules[name]
+            continue
+        return True
+    return False
+
+
 def _atspi_module():
     try:
         import gi  # type: ignore[import-not-found]
+    except ImportError:
+        if not _load_system_gi():
+            return None
+        import gi  # type: ignore[import-not-found]
+    try:
         gi.require_version("Atspi", "2.0")
         from gi.repository import Atspi  # type: ignore[import-not-found]
     except (ImportError, ValueError):

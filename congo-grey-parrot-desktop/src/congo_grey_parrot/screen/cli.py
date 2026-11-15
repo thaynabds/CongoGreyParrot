@@ -37,24 +37,38 @@ def read_active_window(speech: SpeechService, play=play_wav) -> tuple[str, Path 
     text = active_window_text()
     if not text.strip():
         raise AccessibilityUnavailable(
-            "A janela ativa não tem texto exposto pela acessibilidade."
+            "A janela ativa não tem texto exposto pela acessibilidade. "
+            "Rode `congo-grey-parrot instalar-atalho` uma vez para ativar a acessibilidade "
+            "do sistema e abra o navegador de novo."
         )
-    wav = Path(tempfile.mkdtemp(prefix="ler-janela-")) / "leitura.wav"
-    speech.synthesize(text, wav)
-    played = play(wav)
-    return text, (None if played else wav)
+    folder = Path(tempfile.mkdtemp(prefix="ler-janela-"))
+    wav = folder / "leitura.wav"
+    try:
+        speech.synthesize(text, wav)
+        played = play(wav)
+    except BaseException:
+        shutil.rmtree(folder, ignore_errors=True)
+        raise
+    if played:
+        # O áudio contém o texto da tela; não fica guardado depois de tocar.
+        shutil.rmtree(folder, ignore_errors=True)
+        return text, None
+    return text, wav
 
 
 def install_shortcut_main() -> int:
-    from congo_grey_parrot.screen.shortcut import DEFAULT_BINDING, install_gnome_shortcut
+    from congo_grey_parrot.screen.shortcut import DEFAULT_BINDING, install_shortcut
 
     try:
-        install_gnome_shortcut()
-    except (RuntimeError, OSError, subprocess.CalledProcessError) as error:
+        desktop, _ = install_shortcut()
+    except (RuntimeError, ValueError, OSError, subprocess.CalledProcessError) as error:
         print(f"Não consegui criar o atalho: {error}", file=sys.stderr)
         print(f"Crie um atalho manual com o comando `congo-grey-parrot ler-janela` e a tecla {DEFAULT_BINDING}.", file=sys.stderr)
         return 1
-    print(f"Atalho criado: {DEFAULT_BINDING} lê a janela ativa.")
+    name = {"cinnamon": "Cinnamon", "gnome": "GNOME"}.get(desktop, desktop)
+    print(f"Atalho criado no {name}: {DEFAULT_BINDING} lê a janela ativa.")
+    print("A acessibilidade do sistema foi ativada, para os navegadores exporem o texto.")
+    print("Feche e abra de novo os navegadores que já estavam abertos.")
     return 0
 
 
