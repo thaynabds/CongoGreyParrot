@@ -97,3 +97,33 @@ def test_sem_atspi_a_mensagem_explica_a_instalacao(monkeypatch):
     monkeypatch.setattr(accessibility, "_atspi_module", lambda: None)
     with pytest.raises(AccessibilityUnavailable, match="gir1.2-atspi-2.0"):
         accessibility.active_window_text()
+
+
+from congo_grey_parrot.screen import shortcut
+
+
+def test_lista_vazia_do_gsettings_vira_lista_python():
+    assert shortcut.parse_gsettings_list("@as []") == []
+    assert shortcut.parse_gsettings_list("['/a/', '/b/']") == ["/a/", "/b/"]
+
+
+def test_comandos_preservam_atalhos_existentes_e_nao_duplicam():
+    existing = ["/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/outro/"]
+    commands = shortcut.build_commands(existing)
+    listed = commands[0][-1]
+    assert "outro/" in listed and shortcut.keybinding_path() in listed
+    again = shortcut.build_commands(shortcut.parse_gsettings_list(f"['{shortcut.keybinding_path()}']"))
+    assert again[0][-1].count("congo-ler-janela") == 1
+
+
+def test_comando_do_atalho_e_a_tecla_configurada():
+    commands = shortcut.build_commands([], binding="<Super>k")
+    assert ["gsettings", "set", shortcut.CUSTOM_SCHEMA + ":" + shortcut.keybinding_path(), "command", shortcut.COMMAND] in commands
+    assert commands[-1][-1] == "<Super>k"
+
+
+def test_sem_gsettings_a_instalacao_explica_o_motivo(monkeypatch):
+    monkeypatch.setattr(shortcut.shutil, "which", lambda name: None)
+    import pytest as _pytest
+    with _pytest.raises(RuntimeError, match="gsettings"):
+        shortcut.install_gnome_shortcut()

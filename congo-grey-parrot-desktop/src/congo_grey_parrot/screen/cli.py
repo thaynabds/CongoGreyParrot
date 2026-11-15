@@ -45,6 +45,19 @@ def read_active_window(speech: SpeechService, play=play_wav) -> tuple[str, Path 
     return text, (None if played else wav)
 
 
+def install_shortcut_main() -> int:
+    from congo_grey_parrot.screen.shortcut import DEFAULT_BINDING, install_gnome_shortcut
+
+    try:
+        install_gnome_shortcut()
+    except (RuntimeError, OSError, subprocess.CalledProcessError) as error:
+        print(f"Não consegui criar o atalho: {error}", file=sys.stderr)
+        print(f"Crie um atalho manual com o comando `congo-grey-parrot ler-janela` e a tecla {DEFAULT_BINDING}.", file=sys.stderr)
+        return 1
+    print(f"Atalho criado: {DEFAULT_BINDING} lê a janela ativa.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     try:
         text, wav = read_active_window(SpeechService())
