@@ -19,3 +19,6 @@ congo-grey-parrot-android/local.properties
 # Gravações de voz brutas da narração ficam só neste computador.
 # O vídeo final e as legendas vão como anexo da versão no GitHub.
 congo-narracao/
+
+# Configuração local de ferramentas do editor
+.claude/
